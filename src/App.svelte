@@ -2,37 +2,43 @@
   import Header from "./lib/Header.svelte";
   import Map from "./lib/Map.svelte";
   import PropertyList from "./lib/PropertyList.svelte";
-
   import { properties } from "./assets/propertiesData";
+
+  type Filters = {
+    maxArea: number;
+    minArea: number;
+    maxPrice: number;
+    minPrice: number;
+    type: string[];
+    action: string[];
+  };
 
   let filteredProperties = properties;
 
-  function handleFilterProperties(event) {
+  function handleFilterProperties(event: CustomEvent) {
     console.log(event.detail);
 
-    const { sizeMin, sizeMax, priceMin, priceMax, type, action } = event.detail;
+    const { maxArea, minArea, maxPrice, minPrice, type, action } =
+      event.detail as Filters;
 
     filteredProperties = properties.filter((house) => {
-      if (house.popupData.price < priceMin || house.popupData.price > priceMax)
+      if (house.popupData.price < minPrice || house.popupData.price > maxPrice)
         return false;
 
-      if (house.popupData.surfaceArea < sizeMin || house.popupData.surfaceArea > sizeMax)
+      if (house.popupData.surfaceArea < minArea || house.popupData.surfaceArea > maxArea)
         return false;
 
-      if (type && house.type !== type) return false;
+      if (type.length > 0 && !type.includes(house.type)) return false;
 
-      if (action && house.action !== action) return false;
+      if (action.length > 0 && !action.includes(house.action)) return false;
 
       return true;
     });
   }
 
-  let isDrawing = false;
-  let focusedProperty = "";
+  let isDrawing: boolean = false;
 
-  function handleDrawButtonClick() {
-    isDrawing = !isDrawing;
-  }
+  let focusedProperty = "";
 
   function setFocusedProperty(property) {
     focusedProperty = property;
@@ -40,11 +46,7 @@
 </script>
 
 <main>
-  <Header
-    on:filterProperties={handleFilterProperties}
-    {handleDrawButtonClick}
-    {isDrawing}
-  />
+  <Header on:filterValuesChanged={handleFilterProperties} bind:isDrawing />
 
   <div class="map-and-list-container">
     <Map properties={filteredProperties} {isDrawing} {focusedProperty} />

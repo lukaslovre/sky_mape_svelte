@@ -1,5 +1,6 @@
 <script lang="ts">
   import CheckmarkIcon from "../../assets/icons/CheckmarkIcon.svelte";
+  import { onMount } from "svelte";
 
   export let label: string;
   export let id: string;
@@ -21,6 +22,20 @@
   function toggleDropdownOptionsVisibility() {
     isOpen = !isOpen;
   }
+
+  onMount(() => {
+    window.addEventListener("click", (e) => {
+      if (isOpen) {
+        const target = e.target as HTMLElement;
+        const isCurrentButton = target.id === id;
+        const isOptionButton = target.classList.contains("dropdown-input-option");
+
+        if (!isCurrentButton && !isOptionButton) {
+          isOpen = false;
+        }
+      }
+    });
+  });
 </script>
 
 <div class="dropdown-input">

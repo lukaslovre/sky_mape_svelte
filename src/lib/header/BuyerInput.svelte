@@ -39,8 +39,9 @@
   }
   .form-item label {
     color: #262626;
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     font-weight: 600;
+    padding-right: 0.5rem;
   }
   .form-item select {
     padding: 0.75rem 1rem;
@@ -49,7 +50,7 @@
     font-size: 1rem;
     outline: 1px solid transparent;
     border: none;
-    background-color: whitesmoke;
+    background-color: #fff;
     border: 1px solid #e6e6e6;
     transition: outline 75ms ease-out;
   }
