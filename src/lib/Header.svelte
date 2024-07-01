@@ -1,6 +1,9 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import BuyerInput from "./header/BuyerInput.svelte";
+  import SearchIcon from "../assets/icons/SearchIcon.svelte";
+  import ResetIcon from "../assets/icons/ResetIcon.svelte";
+  import FiltersContainer from "./header/FiltersContainer.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -27,12 +30,25 @@
 
     dispatch("filterProperties", parsedFilters);
   }
+
+  function handleFormReset(e: Event) {
+    e.preventDefault();
+
+    type = "";
+    action = "";
+    sizeMin = 0;
+    sizeMax = 0;
+    priceMin = 0;
+    priceMax = 0;
+  }
 </script>
 
 <header>
   <BuyerInput />
 
-  <form action="#" id="filterHouses">
+  <FiltersContainer />
+
+  <form action="#" id="filterHouses" on:reset={handleFormReset}>
     <div class="form-items">
       <!-- Vrsta nekretnine -->
       <div class="form-item">
@@ -85,7 +101,10 @@
         >
       </div>
 
-      <input type="submit" value="Search" />
+      <button type="reset" class="button secondary" style="margin-left: 2.5rem;"
+        ><ResetIcon /> Resetiraj</button
+      >
+      <button type="submit" class="button primary"><SearchIcon /> Pretraži</button>
     </div>
   </form>
 </header>
@@ -128,6 +147,7 @@
     border-radius: 0.25rem;
     font-size: 0.875rem;
     outline: 1px solid transparent;
+    box-shadow: 0 2px 1px rgba(0, 0, 0, 0.05);
     border: none;
     background-color: #ffffff;
     border: 1px solid #e6e6e6;
@@ -150,19 +170,34 @@
   form .form-items .form-item .range input:last-child {
     border-radius: 0 0.25rem 0.25rem 0;
   }
-  form input[type="submit"] {
+
+  form .button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+
     background-color: #0d65d9;
     padding: 0.75rem 1rem;
     border: 1px solid transparent;
+    box-shadow: 0 2px 1px rgba(0, 0, 0, 0.05);
     border-radius: 0.25rem;
-    color: #fafafa;
+    color: #fff;
     font-size: 0.875rem;
     font-weight: 700;
     cursor: pointer;
     transition: background-color 75ms ease-out;
   }
-  form input[type="submit"]:hover {
+  form .button:hover {
     background-color: #0b5eda;
+  }
+
+  .button.secondary {
+    background-color: #fff;
+    color: #0b5eda;
+  }
+  .button.secondary:hover {
+    background-color: #f7f7f7;
   }
 
   #draw-location-button {
