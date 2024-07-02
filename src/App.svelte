@@ -61,7 +61,6 @@
 <!-- 
 - finalni dizajn kartice
 - finalni dizajn expanded kartice
-- ispravna kalkulacije točke u polygonu
 - spremanje informacija za korisnike
 - custom dropdown za korisnike
 - switchanje između korisnika
