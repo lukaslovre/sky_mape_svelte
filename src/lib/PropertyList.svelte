@@ -2,8 +2,9 @@
   import PropertyCard from "./PropertyCard.svelte";
 
   export let properties;
-  export let focusedProperty;
-  export let setFocusedProperty;
+
+  let focusedProperty = "";
+  let setFocusedProperty = () => {};
 </script>
 
 <aside>

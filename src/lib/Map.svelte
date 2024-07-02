@@ -1,11 +1,27 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
   import L from "leaflet";
-  import type { IconOptions, LatLngExpression } from "leaflet";
   import { Map, TileLayer, Marker, Popup, Icon, Polygon } from "sveaflet";
+  import { mapOptions, markerOptions } from "../assets/mapConfigValues";
 
-  export let properties;
+  const dispatch = createEventDispatcher();
+
+  export let properties: Property[];
+  export let filteredProperties: Property[];
   export let isDrawing: boolean;
-  export let focusedProperty: string;
+  export let polygons: [number, number][][];
+
+  // Array that stores the coordinates of the polygon currently being drawn
+  let drawingPoligonCoords: [number, number][] = [];
+
+  // When the map instance is available, add a click event listener to draw polygons
+  $: if (mapInstance) {
+    mapInstance.on("click", addClickToPolygons);
+  }
+  // When the drawing state changes, save the polygon if drawing is finished
+  $: if (isDrawing === false) {
+    savePolygon();
+  }
 
   // let propertyPopupRef: {
   //   [key: string]: L.Popup;
@@ -26,54 +42,23 @@
   //   }
   // });
 
-  const mapOptions = {
-    center: [45.81, 15.98] as LatLngExpression,
-    zoom: 11.25,
-  };
-
-  const markerOptions: IconOptions = {
-    iconUrl: `/house.png`,
-    iconSize: [48, 72],
-    iconAnchor: [24, 72],
-    popupAnchor: [0, -72],
-  };
-
   let mapInstance: L.Map | undefined;
 
-  let drawingPoligonCoords: [number, number][] = [];
-  let poligons: [number, number][][] = [];
+  function savePolygon() {
+    if (drawingPoligonCoords.length === 0) return;
 
-  function addClickToPoligons(e) {
+    dispatch("saveNewPolygon", drawingPoligonCoords);
+
+    drawingPoligonCoords = [];
+  }
+
+  function addClickToPolygons(e: L.LeafletMouseEvent) {
     if (isDrawing === false) return;
 
     const { lat, lng } = e.latlng;
 
     drawingPoligonCoords = [...drawingPoligonCoords, [lat, lng]];
   }
-
-  function savePolygon() {
-    poligons = [...poligons, drawingPoligonCoords];
-    drawingPoligonCoords = [];
-  }
-
-  $: if (isDrawing === false) {
-    savePolygon();
-  }
-
-  $: if (mapInstance) {
-    // Draw a polygon on the map
-    mapInstance.on("click", addClickToPoligons);
-  }
-
-  let popupInstances: {
-    [key: string]: L.Popup;
-  } = {};
-
-  properties.forEach((property) => {
-    popupInstances[property.popupData.titleContent] = L.popup();
-  });
-
-  $: console.log(popupInstances);
 </script>
 
 <section>
@@ -81,9 +66,12 @@
     <TileLayer urlTemplate={"https://tile.openstreetmap.org/{z}/{x}/{y}.png"} />
 
     {#each properties as property (property.popupData.titleContent)}
-      <Marker latlng={property.latlng}>
+      <Marker
+        latlng={property.latlng}
+        options={{ opacity: filteredProperties.includes(property) ? 1 : 0.25 }}
+      >
         <Icon options={{ ...markerOptions, iconUrl: `/${property.type}.png` }} />
-        <Popup instance={popupInstances[property.popupData.titleContent]}>
+        <Popup>
           <!-- {#if property.popupData.titleContent === focusedProperty}
             <p>Odabrano!!!</p>
           {/if}
@@ -95,7 +83,7 @@
     {/each}
 
     <!-- Draw all polygons -->
-    {#each poligons as poligon}
+    {#each polygons as poligon}
       <Polygon latLngs={poligon} />
     {/each}
 

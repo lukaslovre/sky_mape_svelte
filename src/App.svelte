@@ -4,17 +4,16 @@
   import PropertyList from "./lib/PropertyList.svelte";
   import { properties } from "./assets/propertiesData";
 
-  type Filters = {
-    maxArea: number;
-    minArea: number;
-    maxPrice: number;
-    minPrice: number;
-    type: string[];
-    action: string[];
-  };
+  let filteredProperties: Property[] = properties;
+  let isDrawing: boolean = false;
+  let polygons: [number, number][][] = [];
 
-  let filteredProperties = properties;
-
+  // This function is called when the filter values are changed in the Header component.
+  // It receives the event object as an argument and extracts the detail property from it.
+  // The detail property contains the values of the filters that were changed.
+  // The function then deconstructs the detail object into the maxArea, minArea, maxPrice, minPrice, type, and action variables.
+  // It then filters the properties array based on the filter values provided.
+  // The filtered properties are stored in the filteredProperties variable.
   function handleFilterProperties(event: CustomEvent) {
     console.log(event.detail);
 
@@ -32,16 +31,32 @@
 
       if (action.length > 0 && !action.includes(house.action)) return false;
 
+      if (
+        polygons.length > 0 &&
+        polygons.every((polygon) => !latLngIsInPolygon(house.latlng, polygon))
+      )
+        return false;
+
       return true;
     });
   }
 
-  let isDrawing: boolean = false;
+  function saveNewPolygon(event: CustomEvent) {
+    polygons = [...polygons, event.detail];
+  }
 
-  let focusedProperty = "";
+  function latLngIsInPolygon(latLng: number[], polygon: [number, number][]): boolean {
+    const x = latLng[0];
+    const y = latLng[1];
 
-  function setFocusedProperty(property) {
-    focusedProperty = property;
+    const maxY = Math.max(...polygon.map((point) => point[0]));
+    const minY = Math.min(...polygon.map((point) => point[0]));
+    const maxX = Math.max(...polygon.map((point) => point[1]));
+    const minX = Math.min(...polygon.map((point) => point[1]));
+
+    if (x < minY || x > maxY || y < minX || y > maxX) return false;
+
+    return true;
   }
 </script>
 
@@ -49,12 +64,15 @@
   <Header on:filterValuesChanged={handleFilterProperties} bind:isDrawing />
 
   <div class="map-and-list-container">
-    <Map properties={filteredProperties} {isDrawing} {focusedProperty} />
-    <PropertyList
-      properties={filteredProperties}
-      {focusedProperty}
-      {setFocusedProperty}
+    <Map
+      {properties}
+      {filteredProperties}
+      {isDrawing}
+      {polygons}
+      on:saveNewPolygon={saveNewPolygon}
     />
+
+    <PropertyList properties={filteredProperties} />
   </div>
 </main>
 

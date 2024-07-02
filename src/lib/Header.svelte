@@ -1,9 +1,6 @@
 <script lang="ts">
-  // import { createEventDispatcher } from "svelte";
   import BuyerInput from "./header/BuyerInput.svelte";
   import FiltersContainer from "./header/FiltersContainer.svelte";
-
-  // const dispatch = createEventDispatcher();
 
   export let isDrawing: boolean;
 </script>
