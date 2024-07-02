@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { Filters } from "../types";
   import BuyerInput from "./header/BuyerInput.svelte";
   import FiltersContainer from "./header/FiltersContainer.svelte";
 

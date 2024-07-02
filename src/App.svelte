@@ -3,25 +3,21 @@
   import Map from "./lib/Map.svelte";
   import PropertyList from "./lib/PropertyList.svelte";
   import { properties } from "./assets/propertiesData";
+  import { emptyFiltersObject } from "./lib/utils/filter";
+  import type { Filters, Property } from "./types";
+  import type { LatLng } from "leaflet";
 
   let filteredProperties: Property[] = properties;
-  let filters: Filters = emptyFilters();
+  let filters: Filters = emptyFiltersObject();
   $: {
+    console.log("Filters changed: ", filters);
     // When filters change
     const parsedFilters = parseFilterValues(filters);
     handleFilterProperties(parsedFilters);
   }
 
-  let polygons: [number, number][][] = [];
-
   let isDrawing: boolean = false;
 
-  // This function is called when the filter values are changed in the Header component.
-  // It receives the event object as an argument and extracts the detail property from it.
-  // The detail property contains the values of the filters that were changed.
-  // The function then deconstructs the detail object into the maxArea, minArea, maxPrice, minPrice, type, and action variables.
-  // It then filters the properties array based on the filter values provided.
-  // The filtered properties are stored in the filteredProperties variable.
   function handleFilterProperties({
     action,
     type,
@@ -29,6 +25,7 @@
     maxArea,
     minPrice,
     maxPrice,
+    polygons,
   }: Filters) {
     filteredProperties = properties.filter((house) => {
       if (house.popupData.price < minPrice || house.popupData.price > maxPrice)
@@ -65,31 +62,21 @@
       maxPrice: maxPrice || Infinity,
       minArea: minArea || 0,
       maxArea: maxArea || Infinity,
-    };
-  }
-  function emptyFilters(): Filters {
-    return {
-      action: [],
-      type: [],
-      minPrice: 0,
-      maxPrice: 0,
-      minArea: 0,
-      maxArea: 0,
+      polygons: filters.polygons || [],
     };
   }
 
   function saveNewPolygon(event: CustomEvent) {
-    polygons = [...polygons, event.detail];
+    filters.polygons = [...filters.polygons, event.detail];
   }
+  function latLngIsInPolygon(latLng: LatLng, polygon: LatLng[]): boolean {
+    const x = latLng.lat;
+    const y = latLng.lng;
 
-  function latLngIsInPolygon(latLng: number[], polygon: [number, number][]): boolean {
-    const x = latLng[0];
-    const y = latLng[1];
-
-    const maxY = Math.max(...polygon.map((point) => point[0]));
-    const minY = Math.min(...polygon.map((point) => point[0]));
-    const maxX = Math.max(...polygon.map((point) => point[1]));
-    const minX = Math.min(...polygon.map((point) => point[1]));
+    const maxY = Math.max(...polygon.map((point) => point.lat));
+    const minY = Math.min(...polygon.map((point) => point.lat));
+    const maxX = Math.max(...polygon.map((point) => point.lng));
+    const minX = Math.min(...polygon.map((point) => point.lng));
 
     if (x < minY || x > maxY || y < minX || y > maxX) return false;
 
@@ -105,7 +92,7 @@
       {properties}
       {filteredProperties}
       {isDrawing}
-      {polygons}
+      polygons={filters.polygons}
       on:saveNewPolygon={saveNewPolygon}
     />
 

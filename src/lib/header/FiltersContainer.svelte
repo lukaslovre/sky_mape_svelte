@@ -3,19 +3,14 @@
   import MinMaxInput from "./MinMaxInput.svelte";
   import ResetIcon from "../../assets/icons/ResetIcon.svelte";
   import LocationInput from "./LocationInput.svelte";
+  import type { Filters } from "../../types";
+  import { emptyFiltersObject } from "../utils/filter";
 
   export let isDrawing: boolean;
   export let filters: Filters;
 
   function resetValues() {
-    filters = {
-      action: [],
-      type: [],
-      minPrice: 0,
-      maxPrice: 0,
-      minArea: 0,
-      maxArea: 0,
-    };
+    filters = emptyFiltersObject();
   }
 </script>
 

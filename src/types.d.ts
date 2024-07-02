@@ -1,3 +1,5 @@
+import type { LatLng } from "leaflet";
+
 type Filters = {
   maxArea: number;
   minArea: number;
@@ -5,6 +7,7 @@ type Filters = {
   minPrice: number;
   type: string[];
   action: string[];
+  polygons: LatLng[][];
 };
 
 type Property = {
@@ -16,7 +19,7 @@ type Property = {
     surfaceArea: number;
     price: number;
   };
-  latlng: number[];
+  latlng: LatLng;
   type: string;
   action: string;
 };

@@ -1,18 +1,19 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import L from "leaflet";
+  import L, { LatLng } from "leaflet";
   import { Map, TileLayer, Marker, Popup, Icon, Polygon } from "sveaflet";
   import { mapOptions, markerOptions } from "../assets/mapConfigValues";
+  import type { Property } from "../types";
 
   const dispatch = createEventDispatcher();
 
   export let properties: Property[];
   export let filteredProperties: Property[];
   export let isDrawing: boolean;
-  export let polygons: [number, number][][];
+  export let polygons: LatLng[][];
 
   // Array that stores the coordinates of the polygon currently being drawn
-  let drawingPoligonCoords: [number, number][] = [];
+  let drawingPoligonCoords: LatLng[] = [];
 
   // When the map instance is available, add a click event listener to draw polygons
   $: if (mapInstance) {
@@ -55,9 +56,7 @@
   function addClickToPolygons(e: L.LeafletMouseEvent) {
     if (isDrawing === false) return;
 
-    const { lat, lng } = e.latlng;
-
-    drawingPoligonCoords = [...drawingPoligonCoords, [lat, lng]];
+    drawingPoligonCoords = [...drawingPoligonCoords, e.latlng];
   }
 </script>
 

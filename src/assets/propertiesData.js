@@ -1,3 +1,5 @@
+import { LatLng } from "leaflet";
+
 export const properties = [
   {
     popupData: {
@@ -9,7 +11,7 @@ export const properties = [
       surfaceArea: 76,
       price: 350000,
     },
-    latlng: [45.81, 15.98],
+    latlng: new LatLng(45.81, 15.98),
     type: "house",
     action: "sale",
   },
@@ -23,7 +25,7 @@ export const properties = [
       surfaceArea: 50,
       price: 220000,
     },
-    latlng: [45.82, 15.92],
+    latlng: new LatLng(45.82, 15.92),
     type: "house",
     action: "sale",
   },
@@ -37,7 +39,7 @@ export const properties = [
       surfaceArea: 120,
       price: 450000,
     },
-    latlng: [45.79, 16.05],
+    latlng: new LatLng(45.79, 16.05),
     type: "building",
     action: "sale",
   },
@@ -51,7 +53,7 @@ export const properties = [
       surfaceArea: 90,
       price: 320000,
     },
-    latlng: [45.78, 15.94],
+    latlng: new LatLng(45.78, 15.94),
     type: "business",
     action: "rent",
   },
