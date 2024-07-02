@@ -12,14 +12,15 @@
 
   let filteredProperties: Property[] = properties;
   let filters: Filters = emptyFiltersObject();
+  let favorites;
+
+  let isDrawing: boolean = false;
+
   $: {
-    console.log("Filters changed: ", filters);
     // When filters change
     const parsedFilters = parseFilterValues(filters);
     filteredProperties = filterProperties(properties, parsedFilters);
   }
-
-  let isDrawing: boolean = false;
 
   function saveNewPolygon(event: CustomEvent) {
     filters.polygons = [...filters.polygons, event.detail];
@@ -36,11 +37,22 @@
       {isDrawing}
       polygons={filters.polygons}
       on:saveNewPolygon={saveNewPolygon}
+      on:setPolygons={(e) => (filters.polygons = e.detail)}
     />
 
     <PropertyList properties={filteredProperties} />
   </div>
 </main>
+
+<!-- 
+- stisak na favorit dodaje ga u listu favorita
+- finalni dizajn kartice
+- finalni dizajn expanded kartice
+- ispravna kalkulacije točke u polygonu
+- spremanje informacija za korisnike
+- custom dropdown za korisnike
+- switchanje između korisnika
+-->
 
 <style>
   main {

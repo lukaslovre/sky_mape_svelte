@@ -11,6 +11,7 @@ type Filters = {
 };
 
 type Property = {
+  id: string;
   popupData: {
     imgUrl: string;
     titleContent: string;
@@ -22,4 +23,12 @@ type Property = {
   latlng: LatLng;
   type: string;
   action: string;
+};
+
+type UserData = {
+  name: string;
+  contact: string;
+  note: string;
+  filters: Filters;
+  favoriteProperties: string[]; // propertyId
 };

@@ -79,6 +79,7 @@
   .card .card-right-side h2 {
     font-size: 1rem;
     font-weight: 600;
+    line-height: 1.4;
     margin-bottom: 0.5rem;
   }
 

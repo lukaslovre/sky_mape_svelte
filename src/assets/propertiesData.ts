@@ -1,7 +1,9 @@
 import { LatLng } from "leaflet";
+import type { Property } from "../types";
 
-export const properties = [
+export const properties: Property[] = [
   {
+    id: "1",
     popupData: {
       imgUrl: "https://www.houseplans.net/news/wp-content/uploads/2023/07/57260-768.jpeg",
       titleContent: "Elegantna Vila u Središtu Zagreba",
@@ -16,6 +18,7 @@ export const properties = [
     action: "sale",
   },
   {
+    id: "2",
     popupData: {
       imgUrl: "https://www.houseplans.net/news/wp-content/uploads/2023/07/57260-768.jpeg",
       titleContent: "Ugodna Kućica Blizu Zagrebačke Zelene Zone",
@@ -30,6 +33,7 @@ export const properties = [
     action: "sale",
   },
   {
+    id: "3",
     popupData: {
       imgUrl: "https://www.houseplans.net/news/wp-content/uploads/2023/07/57260-768.jpeg",
       titleContent: "Luksuzni Obiteljski Dom u Zagrebačkom Predgrađu",
@@ -44,6 +48,7 @@ export const properties = [
     action: "sale",
   },
   {
+    id: "4",
     popupData: {
       imgUrl: "https://www.houseplans.net/news/wp-content/uploads/2023/07/57260-768.jpeg",
       titleContent: "Prostrana Moderan Stan u Središtu Zagreba",

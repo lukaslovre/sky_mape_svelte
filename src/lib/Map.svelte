@@ -53,6 +53,12 @@
     drawingPoligonCoords = [];
   }
 
+  function deletePolygon(polygon: LatLng[]) {
+    polygons = polygons.filter((p) => p !== polygon);
+
+    dispatch("setPolygons", polygons);
+  }
+
   function addClickToPolygons(e: L.LeafletMouseEvent) {
     if (isDrawing === false) return;
 
@@ -83,7 +89,16 @@
 
     <!-- Draw all polygons -->
     {#each polygons as poligon}
-      <Polygon latLngs={poligon} />
+      <Polygon latLngs={poligon}>
+        <Popup>
+          <button
+            type="button"
+            on:click={() => {
+              deletePolygon(poligon);
+            }}>Obriši</button
+          >
+        </Popup>
+      </Polygon>
     {/each}
 
     <!-- Draw the polygon that is currently being drawn -->
