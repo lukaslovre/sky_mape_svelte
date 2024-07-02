@@ -1,37 +1,29 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
   import { fade } from "svelte/transition";
+  import type { Property } from "../types";
 
+  const dispatch = createEventDispatcher();
+
+  export let propertyData: Property;
   export let isFocused: boolean;
-  export let setFocusedProperty;
-
-  export let propertyData: {
-    popupData: {
-      imgUrl: string;
-      titleContent: string;
-      descriptionContent: string;
-      linkValue: string;
-      surfaceArea: number;
-      price: number;
-    };
-    latlng: number[];
-    type: string;
-  };
+  export let isFavorite: boolean;
 
   function formatPrice(price: number) {
     // format price to have commas every 3 digits
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
+
+  function toggleFavorite() {
+    dispatch("toggleFavorite", propertyData.id);
+  }
 </script>
 
-<div class="card" transition:fade class:focused={isFocused}>
-  <img src={propertyData.popupData.imgUrl} alt="Property Image" />
+<div class="card" transition:fade class:focused={isFocused} class:favorite={isFavorite}>
+  <img src={propertyData.popupData.imgUrl} alt="Property thumbnail" />
 
   <div class="card-right-side">
-    <h2
-      on:click={() => {
-        setFocusedProperty(propertyData.popupData.titleContent);
-      }}
-    >
+    <h2>
       {propertyData.popupData.titleContent}
     </h2>
     <div class="price">
@@ -40,7 +32,9 @@
     <div class="surface">{propertyData.popupData.surfaceArea} m²</div>
 
     <div class="actions-container">
-      <button type="button" class="favorite-button">Favorite</button>
+      <button type="button" class="favorite-button" on:click={toggleFavorite}
+        >Favorite</button
+      >
       <button type="button" class="more-info-button">More Info &gt;</button>
     </div>
   </div>
@@ -59,9 +53,15 @@
     border: 1px solid #ededed;
     border-radius: 0.5rem;
     box-shadow: 0 2 0.5rem rgba(0, 0, 0, 0.075);
+    outline: 2px solid transparent;
+
+    transition: outline 150ms ease-out;
   }
   .card.focused {
     outline: 2px solid #0d65d9;
+  }
+  .card.favorite {
+    outline: 2px solid #d98803;
   }
 
   .card img {
@@ -119,7 +119,13 @@
   .actions-container button.favorite-button {
     color: #d98803;
     background-color: hsla(37, 97%, 43%, 0.1);
+    transition: background-color 150ms ease-out;
   }
+  .card.favorite .actions-container button.favorite-button {
+    color: white;
+    background-color: #d98803;
+  }
+
   .actions-container button.more-info-button {
     color: #0b5eda;
     /* background-color: hsla(216, 90%, 45%, 0.1); */

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { Filters, Property } from "./types";
   import Header from "./lib/Header.svelte";
   import Map from "./lib/Map.svelte";
   import PropertyList from "./lib/PropertyList.svelte";
@@ -8,11 +9,10 @@
     parseFilterValues,
     filterProperties,
   } from "./lib/utils/filter";
-  import type { Filters, Property } from "./types";
 
   let filteredProperties: Property[] = properties;
   let filters: Filters = emptyFiltersObject();
-  let favorites;
+  let favorites: string[] = [];
 
   let isDrawing: boolean = false;
 
@@ -24,6 +24,16 @@
 
   function saveNewPolygon(event: CustomEvent) {
     filters.polygons = [...filters.polygons, event.detail];
+  }
+
+  function toggleFavorite(e: CustomEvent<string>) {
+    const propertyId = e.detail;
+
+    if (favorites.includes(propertyId)) {
+      favorites = favorites.filter((id) => id !== propertyId);
+    } else {
+      favorites = [...favorites, propertyId];
+    }
   }
 </script>
 
@@ -40,12 +50,15 @@
       on:setPolygons={(e) => (filters.polygons = e.detail)}
     />
 
-    <PropertyList properties={filteredProperties} />
+    <PropertyList
+      properties={filteredProperties}
+      {favorites}
+      on:toggleFavorite={toggleFavorite}
+    />
   </div>
 </main>
 
 <!-- 
-- stisak na favorit dodaje ga u listu favorita
 - finalni dizajn kartice
 - finalni dizajn expanded kartice
 - ispravna kalkulacije točke u polygonu

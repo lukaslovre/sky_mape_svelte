@@ -1,10 +1,11 @@
 <script lang="ts">
+  import type { Property } from "../types";
   import PropertyCard from "./PropertyCard.svelte";
 
-  export let properties;
+  export let properties: Property[];
+  export let favorites: string[];
 
   let focusedProperty = "";
-  let setFocusedProperty = () => {};
 </script>
 
 <aside>
@@ -15,7 +16,8 @@
         <PropertyCard
           propertyData={property}
           isFocused={focusedProperty === property.popupData.titleContent}
-          {setFocusedProperty}
+          isFavorite={favorites.includes(property.id)}
+          on:toggleFavorite
         />
       </li>
     {/each}
