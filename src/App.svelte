@@ -5,8 +5,16 @@
   import { properties } from "./assets/propertiesData";
 
   let filteredProperties: Property[] = properties;
-  let isDrawing: boolean = false;
+  let filters: Filters = emptyFilters();
+  $: {
+    // When filters change
+    const parsedFilters = parseFilterValues(filters);
+    handleFilterProperties(parsedFilters);
+  }
+
   let polygons: [number, number][][] = [];
+
+  let isDrawing: boolean = false;
 
   // This function is called when the filter values are changed in the Header component.
   // It receives the event object as an argument and extracts the detail property from it.
@@ -14,12 +22,14 @@
   // The function then deconstructs the detail object into the maxArea, minArea, maxPrice, minPrice, type, and action variables.
   // It then filters the properties array based on the filter values provided.
   // The filtered properties are stored in the filteredProperties variable.
-  function handleFilterProperties(event: CustomEvent) {
-    console.log(event.detail);
-
-    const { maxArea, minArea, maxPrice, minPrice, type, action } =
-      event.detail as Filters;
-
+  function handleFilterProperties({
+    action,
+    type,
+    minArea,
+    maxArea,
+    minPrice,
+    maxPrice,
+  }: Filters) {
     filteredProperties = properties.filter((house) => {
       if (house.popupData.price < minPrice || house.popupData.price > maxPrice)
         return false;
@@ -39,6 +49,33 @@
 
       return true;
     });
+  }
+  function parseFilterValues({
+    action,
+    type,
+    minArea,
+    maxArea,
+    minPrice,
+    maxPrice,
+  }: Filters): Filters {
+    return {
+      action: action || [],
+      type: type || [],
+      minPrice: minPrice || 0,
+      maxPrice: maxPrice || Infinity,
+      minArea: minArea || 0,
+      maxArea: maxArea || Infinity,
+    };
+  }
+  function emptyFilters(): Filters {
+    return {
+      action: [],
+      type: [],
+      minPrice: 0,
+      maxPrice: 0,
+      minArea: 0,
+      maxArea: 0,
+    };
   }
 
   function saveNewPolygon(event: CustomEvent) {
@@ -61,7 +98,7 @@
 </script>
 
 <main>
-  <Header on:filterValuesChanged={handleFilterProperties} bind:isDrawing />
+  <Header bind:filters bind:isDrawing />
 
   <div class="map-and-list-container">
     <Map

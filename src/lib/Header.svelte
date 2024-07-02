@@ -3,12 +3,13 @@
   import FiltersContainer from "./header/FiltersContainer.svelte";
 
   export let isDrawing: boolean;
+  export let filters: Filters;
 </script>
 
 <header>
   <BuyerInput />
 
-  <FiltersContainer on:filterValuesChanged bind:isDrawing />
+  <FiltersContainer bind:filters bind:isDrawing />
 </header>
 
 <style>

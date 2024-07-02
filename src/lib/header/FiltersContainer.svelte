@@ -1,40 +1,21 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
   import DropdownInput from "./DropdownInput.svelte";
   import MinMaxInput from "./MinMaxInput.svelte";
   import ResetIcon from "../../assets/icons/ResetIcon.svelte";
   import LocationInput from "./LocationInput.svelte";
 
-  const dispatch = createEventDispatcher();
-
   export let isDrawing: boolean;
-
-  let action: string[] = [];
-  let type: string[] = [];
-  let minPrice: number = 0;
-  let maxPrice: number = 0;
-  let minArea: number = 0;
-  let maxArea: number = 0;
-
-  $: {
-    const parsedValues = {
-      action: action || [],
-      type: type || [],
-      minPrice: minPrice || 0,
-      maxPrice: maxPrice || Infinity,
-      minArea: minArea || 0,
-      maxArea: maxArea || Infinity,
-    };
-    dispatch("filterValuesChanged", parsedValues);
-  }
+  export let filters: Filters;
 
   function resetValues() {
-    action = [];
-    type = [];
-    minPrice = 0;
-    maxPrice = 0;
-    minArea = 0;
-    maxArea = 0;
+    filters = {
+      action: [],
+      type: [],
+      minPrice: 0,
+      maxPrice: 0,
+      minArea: 0,
+      maxArea: 0,
+    };
   }
 </script>
 
@@ -43,28 +24,28 @@
     label="Akcija"
     id="action"
     options={["Prodaja", "Izdavanje"]}
-    bind:values={action}
+    bind:values={filters.action}
   />
 
   <DropdownInput
     label="Tip nekretnine"
     id="type"
     options={["Stan", "Kuća", "Poslovni prostor", "Zemljište"]}
-    bind:values={type}
+    bind:values={filters.type}
   />
 
   <MinMaxInput
     label="Cijena (€)"
     id="price"
-    bind:minValue={minPrice}
-    bind:maxValue={maxPrice}
+    bind:minValue={filters.minPrice}
+    bind:maxValue={filters.maxPrice}
   />
 
   <MinMaxInput
     label="Površina (m2)"
     id="area"
-    bind:minValue={minArea}
-    bind:maxValue={maxArea}
+    bind:minValue={filters.minArea}
+    bind:maxValue={filters.maxArea}
   />
 
   <LocationInput bind:isDrawing />
