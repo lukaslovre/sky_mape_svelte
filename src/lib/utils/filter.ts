@@ -1,4 +1,5 @@
-import type { Filters } from "../../types";
+import type { Filters, Property } from "../../types";
+import { latLngIsInPolygon } from "./geo";
 
 export function emptyFiltersObject(): Filters {
   return {
@@ -9,5 +10,50 @@ export function emptyFiltersObject(): Filters {
     minArea: 0,
     maxArea: 0,
     polygons: [],
+  };
+}
+
+export function filterProperties(properties: Property[], filters: Filters): Property[] {
+  const { action, type, minArea, maxArea, minPrice, maxPrice, polygons } = filters;
+
+  const filteredProperties = properties.filter((house) => {
+    if (house.popupData.price < minPrice || house.popupData.price > maxPrice)
+      return false;
+
+    if (house.popupData.surfaceArea < minArea || house.popupData.surfaceArea > maxArea)
+      return false;
+
+    if (type.length > 0 && !type.includes(house.type)) return false;
+
+    if (action.length > 0 && !action.includes(house.action)) return false;
+
+    if (
+      polygons.length > 0 &&
+      polygons.every((polygon) => !latLngIsInPolygon(house.latlng, polygon))
+    )
+      return false;
+
+    return true;
+  });
+
+  return filteredProperties;
+}
+export function parseFilterValues({
+  action,
+  type,
+  minArea,
+  maxArea,
+  minPrice,
+  maxPrice,
+  polygons,
+}: Filters): Filters {
+  return {
+    action: action || [],
+    type: type || [],
+    minPrice: minPrice || 0,
+    maxPrice: maxPrice || Infinity,
+    minArea: minArea || 0,
+    maxArea: maxArea || Infinity,
+    polygons: polygons || [],
   };
 }
