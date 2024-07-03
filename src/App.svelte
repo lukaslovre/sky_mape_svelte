@@ -35,10 +35,15 @@
       favorites = [...favorites, propertyId];
     }
   }
+
+  function applyUserDataToApp(e: CustomEvent) {
+    const userData = e.detail;
+    console.log(userData);
+  }
 </script>
 
 <main>
-  <Header bind:filters bind:isDrawing />
+  <Header bind:filters bind:isDrawing on:selectBuyer={applyUserDataToApp} />
 
   <div class="map-and-list-container">
     <Map
@@ -59,7 +64,6 @@
 </main>
 
 <!-- 
-  - custom dropdown za korisnike
 - finalni dizajn kartice
 - finalni dizajn expanded kartice
 - switchanje između korisnika

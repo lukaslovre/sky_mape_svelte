@@ -75,7 +75,7 @@
 
   <div class="dropdown-input-options" style:display={isOpen ? "flex" : "none"}>
     {#each users as user}
-      <BuyerInputDropdownOption userData={user} />
+      <BuyerInputDropdownOption userData={user} on:selectBuyer />
     {/each}
   </div>
 </div>

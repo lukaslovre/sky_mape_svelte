@@ -8,7 +8,7 @@
 </script>
 
 <header>
-  <BuyerInput />
+  <BuyerInput on:selectBuyer />
 
   <FiltersContainer bind:filters bind:isDrawing />
 </header>

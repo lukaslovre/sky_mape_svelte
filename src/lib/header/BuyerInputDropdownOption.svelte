@@ -1,8 +1,15 @@
 <script lang="ts">
   import ChevronIcon from "../../assets/icons/ChevronIcon.svelte";
   import type { UserData } from "../../types";
+  import { createEventDispatcher } from "svelte";
+
+  const dispatch = createEventDispatcher();
 
   export let userData: UserData;
+
+  function handleBuyerOptionClick() {
+    dispatch("selectBuyer", userData);
+  }
 </script>
 
 <button type="button" class="dropdown-input-option" on:click={handleBuyerOptionClick}>
