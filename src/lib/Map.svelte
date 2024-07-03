@@ -37,6 +37,7 @@
     if (Object.keys(markerInstances).length > 0) {
       Object.keys(markerInstances).forEach((key) => {
         const marker = markerInstances[key];
+
         marker.on("click", () => {
           console.log(`Marker clicked: ${key}`);
           selectedPropertyId = key;

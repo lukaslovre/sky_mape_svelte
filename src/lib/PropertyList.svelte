@@ -6,13 +6,18 @@
   export let favorites: string[];
 
   export let selectedPropertyId: Property["id"] | null;
+
+  $: if (selectedPropertyId) {
+    const selectedProperty = document.getElementById(`property-li-${selectedPropertyId}`);
+    selectedProperty?.scrollIntoView({ behavior: "smooth" });
+  }
 </script>
 
 <aside>
   <h2>Property List</h2>
   <ul>
-    {#each properties as property (property.popupData.titleContent)}
-      <li>
+    {#each properties as property (property.id)}
+      <li id={`property-li-${property.id}`}>
         <PropertyCard
           propertyData={property}
           isFocused={selectedPropertyId === property.id}
