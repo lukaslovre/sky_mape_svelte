@@ -2,6 +2,8 @@
   import { createEventDispatcher } from "svelte";
   import { fade } from "svelte/transition";
   import type { Property } from "../types";
+  import StarIcon from "../assets/icons/StarIcon.svelte";
+  import ChevronIcon from "../assets/icons/ChevronIcon.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -30,12 +32,15 @@
       <span>€</span> <span>{formatPrice(propertyData.popupData.price)}</span>
     </div>
     <div class="surface">{propertyData.popupData.surfaceArea} m²</div>
+    <div class="location">{propertyData.latlng}</div>
 
     <div class="actions-container">
       <button type="button" class="favorite-button" on:click={toggleFavorite}
-        >Favorite</button
+        ><StarIcon size={16} color={isFavorite ? "#fff" : "#d98803"} /> Favorite</button
       >
-      <button type="button" class="more-info-button">More Info &gt;</button>
+      <button type="button" class="more-info-button"
+        >More Info <ChevronIcon size={24} /></button
+      >
     </div>
   </div>
 </div>
@@ -66,7 +71,6 @@
 
   .card img {
     width: 7rem;
-    /* height: 5rem; */
     object-fit: cover;
     border-radius: 0.375rem;
   }
@@ -80,19 +84,24 @@
     font-size: 1rem;
     font-weight: 600;
     line-height: 1.4;
-    margin-bottom: 0.5rem;
+    /* margin-bottom: 0.5rem; */
   }
 
-  .card .card-right-side .surface {
+  .card .card-right-side .surface,
+  .card .card-right-side .location {
     font-size: 0.875rem;
+    font-weight: 400;
+    color: #1a1a1a;
   }
 
   .price {
     padding: 0.25rem 0.5rem;
-    background-color: hsla(216, 90%, 45%, 0.1);
+    /* background-color: hsla(216, 90%, 45%, 0.1); */
+    background-color: hsla(136, 91%, 25%, 0.1);
     border-radius: 0.25rem;
 
-    color: #0b5eda;
+    /* color: #0b5eda; */
+    color: hsl(136, 91%, 25%);
     font-size: 0.75rem;
     font-weight: 500;
   }
@@ -103,33 +112,54 @@
     justify-content: space-between;
 
     border-top: 1px solid #ededed;
-    padding-top: 0.5rem;
+    padding-top: 0.75rem;
+    margin-top: 0.25rem;
   }
   .actions-container button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 0.25rem;
+
     padding: 0.375rem 0.5rem;
     border-radius: 0.25rem;
     border: none;
     box-shadow: 0 2px 1px rgba(0, 0, 0, 0.075);
     background-color: transparent;
-
     font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
   }
-  .actions-container button.favorite-button {
+
+  button.favorite-button {
     color: #d98803;
     background-color: hsla(37, 97%, 43%, 0.1);
-    transition: background-color 150ms ease-out;
+    transition:
+      background-color 150ms ease-out,
+      color 150ms ease-out;
   }
-  .card.favorite .actions-container button.favorite-button {
+  button.favorite-button:hover {
+    background-color: hsla(37, 97%, 43%, 0.2);
+  }
+
+  .card.favorite button.favorite-button {
     color: white;
     background-color: #d98803;
   }
 
-  .actions-container button.more-info-button {
+  button.more-info-button {
     color: #0b5eda;
-    /* background-color: hsla(216, 90%, 45%, 0.1); */
+    background-color: hsla(216, 90%, 45%, 0);
     box-shadow: none;
     font-size: 0.875rem;
+
+    transition: background-color 150ms ease-out;
+
+    /* Chevron ima masne margine, pa treba to smanjit */
+    padding-right: 0.125rem;
+    column-gap: 0;
+  }
+  button.more-info-button:hover {
+    background-color: hsla(216, 90%, 45%, 0.1);
   }
 </style>
