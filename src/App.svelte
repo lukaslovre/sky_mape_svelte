@@ -16,6 +16,8 @@
 
   let isDrawing: boolean = false;
 
+  let selectedPropertyId: Property["id"] | null = null;
+
   $: {
     // When filters change
     const parsedFilters = parseFilterValues(filters);
@@ -53,12 +55,14 @@
       polygons={filters.polygons}
       on:saveNewPolygon={saveNewPolygon}
       on:setPolygons={(e) => (filters.polygons = e.detail)}
+      bind:selectedPropertyId
     />
 
     <PropertyList
       properties={filteredProperties}
       {favorites}
       on:toggleFavorite={toggleFavorite}
+      bind:selectedPropertyId
     />
   </div>
 </main>

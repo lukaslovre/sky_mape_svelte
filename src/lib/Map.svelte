@@ -28,26 +28,22 @@
     }
   }
 
-  // let propertyPopupRef: {
-  //   [key: string]: L.Popup;
-  // } = {};
-
-  // $: Object.keys(propertyPopupRef).forEach((key) => {
-  //   if (key === focusedProperty) {
-  //     // console.log("Focused property: ", key);
-  //     // propertyPopupRef[key]
-  //     console.log(propertyPopupRef[key]);
-  //     console.log(propertyPopupRef[key].isPopupOpen());
-  //   }
-  // });
-
-  // $: properties.forEach((property) => {
-  //   if (property.popupData.titleContent === focusedProperty) {
-  //     propertyPopupRef[property.popupData.titleContent]?.openPopup();
-  //   }
-  // });
-
   let mapInstance: L.Map | undefined;
+  let markerInstances: { [key: Property["id"]]: L.Marker } = {};
+  export let selectedPropertyId: Property["id"] | null;
+  $: {
+    console.log(markerInstances);
+
+    if (Object.keys(markerInstances).length > 0) {
+      Object.keys(markerInstances).forEach((key) => {
+        const marker = markerInstances[key];
+        marker.on("click", () => {
+          console.log(`Marker clicked: ${key}`);
+          selectedPropertyId = key;
+        });
+      });
+    }
+  }
 
   function savePolygon() {
     if (drawingPoligonCoords.length === 0) return;
@@ -78,6 +74,7 @@
       <Marker
         latlng={property.latlng}
         options={{ opacity: filteredProperties.includes(property) ? 1 : 0.25 }}
+        bind:instance={markerInstances[property.id]}
       >
         <Icon options={{ ...markerOptions, iconUrl: `/${property.type}.png` }} />
         <Popup>

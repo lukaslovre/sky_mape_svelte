@@ -5,7 +5,7 @@
   export let properties: Property[];
   export let favorites: string[];
 
-  let focusedProperty = "";
+  export let selectedPropertyId: Property["id"] | null;
 </script>
 
 <aside>
@@ -15,7 +15,7 @@
       <li>
         <PropertyCard
           propertyData={property}
-          isFocused={focusedProperty === property.popupData.titleContent}
+          isFocused={selectedPropertyId === property.id}
           isFavorite={favorites.includes(property.id)}
           on:toggleFavorite
         />
