@@ -11,6 +11,8 @@
   export let isFocused: boolean;
   export let isFavorite: boolean;
 
+  let isExpanded: boolean = false;
+
   function formatPrice(price: number) {
     // format price to have commas every 3 digits
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -21,7 +23,13 @@
   }
 </script>
 
-<div class="card" transition:fade class:focused={isFocused} class:favorite={isFavorite}>
+<div
+  class="card"
+  transition:fade
+  class:focused={isFocused}
+  class:favorite={isFavorite}
+  class:isExpanded
+>
   <img src={propertyData.popupData.imgUrl} alt="Property thumbnail" />
 
   <div class="card-right-side">
@@ -38,7 +46,10 @@
       <button type="button" class="favorite-button" on:click={toggleFavorite}
         ><StarIcon size={16} color={isFavorite ? "#fff" : "#d98803"} /> Favorite</button
       >
-      <button type="button" class="more-info-button"
+      <button
+        type="button"
+        class="more-info-button"
+        on:click={() => (isExpanded = !isExpanded)}
         >More Info <ChevronIcon size={24} /></button
       >
     </div>
@@ -121,7 +132,7 @@
     justify-content: center;
     column-gap: 0.25rem;
 
-    padding: 0.375rem 0.5rem;
+    padding: 0.125rem 0.5rem;
     border-radius: 0.25rem;
     border: none;
     box-shadow: 0 2px 1px rgba(0, 0, 0, 0.075);
@@ -161,5 +172,25 @@
   }
   button.more-info-button:hover {
     background-color: hsla(216, 90%, 45%, 0.1);
+  }
+
+  /* Expanded card  */
+  .card.isExpanded {
+    box-shadow: 0 2 0.5rem rgba(0, 0, 0, 0.15);
+    outline: 2px solid #0d65d9;
+
+    flex-direction: column;
+    row-gap: 1rem;
+  }
+  .card.isExpanded img {
+    width: 100%;
+  }
+
+  .card.isExpanded .card-right-side {
+    row-gap: 1rem;
+  }
+
+  .card.isExpanded .price {
+    font-size: 0.875rem;
   }
 </style>

@@ -64,8 +64,8 @@
 </main>
 
 <!-- 
-- finalni dizajn kartice
 - finalni dizajn expanded kartice
+- klik na mapi selecta u listi
 - switchanje između korisnika
 - spremanje informacija za korisnike
 -->
