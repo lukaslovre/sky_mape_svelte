@@ -59,11 +59,11 @@
 </main>
 
 <!-- 
+  - custom dropdown za korisnike
 - finalni dizajn kartice
 - finalni dizajn expanded kartice
-- spremanje informacija za korisnike
-- custom dropdown za korisnike
 - switchanje između korisnika
+- spremanje informacija za korisnike
 -->
 
 <style>

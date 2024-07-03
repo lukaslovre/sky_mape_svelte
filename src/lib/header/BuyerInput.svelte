@@ -1,10 +1,35 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import type { UserData } from "../../types";
+  import BuyerInputDropdownOption from "./BuyerInputDropdownOption.svelte";
+  import { emptyFiltersObject } from "../utils/filter";
 
   const label = "Korisnik";
   const id = "buyer";
-  const options = ["Pero", "Mato", "Štef"];
+
+  const users: UserData[] = [
+    {
+      name: "Marko Marković",
+      contact: "marko@email.com",
+      note: "Makro želi imati dvije nekretnine, ne želi kupaonu, i želi da može prošetati svog velikog psa odma pored kuće",
+      filters: emptyFiltersObject(),
+      favoriteProperties: [],
+    },
+    {
+      name: "Pero Perić",
+      contact: "pero@email.com",
+      note: "Pero bi volio imati vrt, i želi da mu je kuća blizu škole",
+      filters: emptyFiltersObject(),
+      favoriteProperties: ["1"],
+    },
+    {
+      name: "Ivana Ivić",
+      contact: "098 123 4567",
+      note: "Ivana želi imati bazen, i želi da joj je kuća blizu trgovine. Voli kuhati pa bi voljela veliku kuhinju",
+      filters: emptyFiltersObject(),
+      favoriteProperties: ["1", "3"],
+    },
+  ];
 
   let selectedUser: string = "";
 
@@ -25,8 +50,9 @@
         const target = e.target as HTMLElement;
         const isCurrentButton = target.id === id;
         const isOptionButton = target.classList.contains("dropdown-input-option");
+        const isOptionsButton2 = target.closest(".dropdown-input-options");
 
-        if (!isCurrentButton && !isOptionButton) {
+        if (!isCurrentButton && !isOptionButton && !isOptionsButton2) {
           isOpen = false;
         }
       }
@@ -48,17 +74,8 @@
   </button>
 
   <div class="dropdown-input-options" style:display={isOpen ? "flex" : "none"}>
-    {#each options as option}
-      <button
-        type="button"
-        class="dropdown-input-option"
-        class:selected={selectedUser === option}
-        on:click={() => {
-          handleOptionClick(option);
-        }}
-      >
-        {option}
-      </button>
+    {#each users as user}
+      <BuyerInputDropdownOption userData={user} />
     {/each}
   </div>
 </div>
@@ -108,7 +125,7 @@
     position: absolute;
     top: calc(100% + 0.5rem);
     left: 0;
-    z-index: 2;
+    z-index: 1001;
     width: max-content;
     /* right: 0; */
     /* display: none; */
@@ -118,57 +135,5 @@
     border-radius: 0.375rem;
     background-color: #ffffff;
     box-shadow: 0 0.125rem 1rem rgba(0, 0, 0, 0.4);
-  }
-  .dropdown-input-options .dropdown-input-option {
-    border: none;
-    outline: none;
-
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 0.75rem;
-
-    padding: 1rem;
-    border-radius: 0.375rem;
-    background-color: #ffffff;
-    color: #1a1a1a;
-    font-size: 1rem;
-    font-weight: 500;
-
-    transition: background-color 75ms ease-out;
-    cursor: pointer;
-  }
-
-  .dropdown-input-options .dropdown-input-option:hover,
-  .dropdown-input-options .dropdown-input-option:focus {
-    background-color: hsl(0, 0%, 95%);
-  }
-
-  .dropdown-input-options .dropdown-input-option .checkbox-square {
-    width: 1.5rem;
-    height: 1.5rem;
-    border-radius: 0.25rem;
-    background-color: transparent;
-    border: 2px solid #808080;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .dropdown-input-options .dropdown-input-option.selected .checkbox-square {
-    background-color: #0b5eda;
-    border-color: #0b5eda;
-  }
-
-  /* Divideri između opcija */
-  .dropdown-input-options .dropdown-input-option {
-    border-bottom: 1px solid #e6e6e6;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  .dropdown-input-options .dropdown-input-option:last-child {
-    border-bottom: none;
-    border-bottom-left-radius: 0.375rem;
-    border-bottom-right-radius: 0.375rem;
   }
 </style>

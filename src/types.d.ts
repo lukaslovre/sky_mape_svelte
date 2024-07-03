@@ -12,6 +12,9 @@ type Filters = {
 
 type Property = {
   id: string;
+  latlng: LatLng;
+  type: string;
+  action: string;
   popupData: {
     imgUrl: string;
     titleContent: string;
@@ -20,15 +23,12 @@ type Property = {
     surfaceArea: number;
     price: number;
   };
-  latlng: LatLng;
-  type: string;
-  action: string;
 };
 
 type UserData = {
   name: string;
   contact: string;
   note: string;
-  filters: Filters;
-  favoriteProperties: string[]; // propertyId
+  filters: Filters | null;
+  favoriteProperties: Property["id"][];
 };

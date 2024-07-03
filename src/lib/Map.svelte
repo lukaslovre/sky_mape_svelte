@@ -21,7 +21,11 @@
   }
   // When the drawing state changes, save the polygon if drawing is finished
   $: if (isDrawing === false) {
-    savePolygon();
+    if (drawingPoligonCoords.length < 3) {
+      drawingPoligonCoords = [];
+    } else if (drawingPoligonCoords.length >= 3) {
+      savePolygon();
+    }
   }
 
   // let propertyPopupRef: {

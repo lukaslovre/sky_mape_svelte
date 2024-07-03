@@ -17,7 +17,7 @@
     id="location"
     on:click={handleDrawButtonClick}
     ><DrawIcon />
-    {isDrawing ? "Završi crtanje" : "Nacrtaj"}</button
+    {isDrawing ? "Završi" : "Nacrtaj"}</button
   >
 </div>
 
