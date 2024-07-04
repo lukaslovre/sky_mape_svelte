@@ -13,6 +13,10 @@
 
   let isExpanded: boolean = false;
 
+  $: if (isExpanded) {
+    dispatch("setSelectedPropertyId", propertyData.id);
+  }
+
   function formatPrice(price: number) {
     // format price to have commas every 3 digits
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -51,7 +55,10 @@
         type="button"
         class="more-info-button"
         on:click={() => (isExpanded = !isExpanded)}
-        >More Info <ChevronIcon size={24} /></button
+      >
+        {isExpanded ? "Less Info" : "More Info"}
+
+        <ChevronIcon size={24} /></button
       >
     </div>
   </div>
@@ -180,7 +187,6 @@
   /* Expanded card  */
   .card.isExpanded {
     box-shadow: 0 2 0.5rem rgba(0, 0, 0, 0.15);
-    outline: 2px solid #0d65d9;
 
     flex-direction: column;
     row-gap: 1rem;

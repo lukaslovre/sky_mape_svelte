@@ -49,6 +49,14 @@
     }
   }
 
+  $: if (selectedPropertyId) {
+    // move the map to the selected property
+    const selectedProperty = properties.find((p) => p.id === selectedPropertyId);
+    if (selectedProperty) {
+      mapInstance?.panTo(selectedProperty.latlng);
+    }
+  }
+
   function savePolygon() {
     if (drawingPoligonCoords.length === 0) return;
 

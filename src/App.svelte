@@ -72,12 +72,12 @@
 - switchanje između korisnika
 - spremanje informacija za korisnike
 - dodavanje nekretnina preko ui-a
-- kad se klikne na lokaciju u listi, se pomakne na tu lokaciju na mapi
 - 'only favorites' filter na list
 - napraviti favorites verzije svih ikona
 - sortiranje propertya u listi
 - ispravno filtriranje akcija i tipova nekretnina
 - klik na kontakt korisnika kopira u clipboard
+- samo jedan PropertyCard može biti expanded u listi
 -->
 
 <style>

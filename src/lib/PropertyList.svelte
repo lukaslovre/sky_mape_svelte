@@ -11,6 +11,10 @@
     const selectedProperty = document.getElementById(`property-li-${selectedPropertyId}`);
     selectedProperty?.scrollIntoView({ behavior: "smooth" });
   }
+
+  function handleSelectedPropertyId(e: CustomEvent<string>) {
+    selectedPropertyId = e.detail;
+  }
 </script>
 
 <aside>
@@ -23,6 +27,7 @@
           isFocused={selectedPropertyId === property.id}
           isFavorite={favorites.includes(property.id)}
           on:toggleFavorite
+          on:setSelectedPropertyId={handleSelectedPropertyId}
         />
       </li>
     {/each}
