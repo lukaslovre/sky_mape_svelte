@@ -69,9 +69,18 @@
 
 <!-- 
 - finalni dizajn expanded kartice
-- klik na mapi selecta u listi
 - switchanje između korisnika
 - spremanje informacija za korisnike
+- dodavanje nekretnina preko ui-a
+- klik sa strane makne selektiranu nekretninu
+- samo jedna selektirana nekretnina (izdvojiti ju u parent komponentu)
+- proširiti propertyCard
+- kad se klikne na lokaciju u listi, se pomakne na tu lokaciju na mapi
+- 'only favorites' filter na list
+- napraviti favorites verzije svih ikona
+- sortiranje propertya u listi
+- max-width headera i veći padding
+- ispravno filtriranje akcija i tipova nekretnina
 -->
 
 <style>
