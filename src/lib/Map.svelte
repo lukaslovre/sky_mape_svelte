@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import L, { LatLng } from "leaflet";
+  import L, { LatLng, map } from "leaflet";
   import { Map, TileLayer, Marker, Popup, Icon, Polygon } from "sveaflet";
   import { mapOptions, markerOptions } from "../assets/mapConfigValues";
   import type { Property } from "../types";
@@ -18,6 +18,9 @@
   // When the map instance is available, add a click event listener to draw polygons
   $: if (mapInstance) {
     mapInstance.on("click", addClickToPolygons);
+    mapInstance.on("popupclose", () => {
+      selectedPropertyId = null;
+    });
   }
   // When the drawing state changes, save the polygon if drawing is finished
   $: if (isDrawing === false) {
