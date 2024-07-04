@@ -44,7 +44,8 @@
 
     <div class="actions-container">
       <button type="button" class="favorite-button" on:click={toggleFavorite}
-        ><StarIcon size={16} color={isFavorite ? "#fff" : "#d98803"} /> Favorite</button
+        ><StarIcon size={16} color={isFavorite ? "#fff" : "#d98803"} />
+        {isFavorite ? "Favorited" : "Favorite"}</button
       >
       <button
         type="button"
@@ -63,7 +64,7 @@
 
     margin-bottom: 1rem;
     padding: 1rem;
-    width: 24rem;
+    width: 30rem;
 
     background-color: #fcfcfc;
     border: 1px solid #ededed;
@@ -73,11 +74,11 @@
 
     transition: outline 150ms ease-out;
   }
-  .card.focused {
-    outline: 2px solid #0d65d9;
-  }
   .card.favorite {
     outline: 2px solid #d98803;
+  }
+  .card.focused {
+    outline: 2px solid #0d65d9;
   }
 
   .card img {
@@ -86,6 +87,8 @@
     border-radius: 0.375rem;
   }
   .card .card-right-side {
+    flex: 1;
+
     display: flex;
     flex-direction: column;
     align-items: flex-start;
