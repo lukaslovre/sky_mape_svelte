@@ -10,8 +10,7 @@
   export let propertyData: Property;
   export let isFocused: boolean;
   export let isFavorite: boolean;
-
-  let isExpanded: boolean = false;
+  export let isExpanded: boolean;
 
   $: if (isExpanded) {
     dispatch("setSelectedPropertyId", propertyData.id);
@@ -24,6 +23,15 @@
 
   function toggleFavorite() {
     dispatch("toggleFavorite", propertyData.id);
+  }
+
+  function toggleExpanded() {
+    const newExpandedId = isExpanded ? null : propertyData.id;
+    dispatch("setExpandedPropertyId", newExpandedId);
+
+    if (isExpanded) {
+      dispatch("setSelectedPropertyId", null);
+    }
   }
 </script>
 
@@ -55,11 +63,7 @@
         ><StarIcon size={16} color={isFavorite ? "#fff" : "#d98803"} />
         {isFavorite ? "Favorited" : "Favorite"}</button
       >
-      <button
-        type="button"
-        class="more-info-button"
-        on:click={() => (isExpanded = !isExpanded)}
-      >
+      <button type="button" class="more-info-button" on:click={toggleExpanded}>
         {isExpanded ? "Less Info" : "More Info"}
 
         <ChevronIcon size={24} /></button

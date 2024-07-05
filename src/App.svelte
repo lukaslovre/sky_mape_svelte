@@ -24,9 +24,7 @@
 
   let filters: Filters = emptyFiltersObject();
   let favorites: string[] = [];
-
   let isDrawing: boolean = false;
-
   let selectedPropertyId: Property["id"] | null = null;
 
   $: {

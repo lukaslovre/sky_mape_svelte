@@ -4,8 +4,9 @@
 
   export let properties: Property[];
   export let favorites: string[];
-
   export let selectedPropertyId: Property["id"] | null;
+
+  let expandedPropertyId: Property["id"] | null = null;
 
   $: if (selectedPropertyId) {
     const selectedProperty = document.getElementById(`property-li-${selectedPropertyId}`);
@@ -14,6 +15,9 @@
 
   function handleSelectedPropertyId(e: CustomEvent<string>) {
     selectedPropertyId = e.detail;
+  }
+  function handleExpandedPropertyId(e: CustomEvent<string>) {
+    expandedPropertyId = e.detail;
   }
 </script>
 
@@ -26,7 +30,9 @@
           propertyData={property}
           isFocused={selectedPropertyId === property.id}
           isFavorite={favorites.includes(property.id)}
+          isExpanded={expandedPropertyId === property.id}
           on:toggleFavorite
+          on:setExpandedPropertyId={handleExpandedPropertyId}
           on:setSelectedPropertyId={handleSelectedPropertyId}
         />
       </li>
