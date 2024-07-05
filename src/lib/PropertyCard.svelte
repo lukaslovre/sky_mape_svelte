@@ -34,16 +34,20 @@
   class:favorite={isFavorite}
   class:isExpanded
 >
-  <img src={propertyData.popupData.imgUrl} alt="Property thumbnail" />
+  <img src={propertyData.imgUrl} alt="Property thumbnail" />
 
   <div class="card-right-side">
     <h2>
-      {propertyData.popupData.titleContent}
+      {propertyData.titleContent}
     </h2>
+    {#if isExpanded}
+      <p>{propertyData.descriptionContent}</p>
+    {/if}
+
     <div class="price">
-      <span>€</span> <span>{formatPrice(propertyData.popupData.price)}</span>
+      <span>€</span> <span>{formatPrice(propertyData.price)}</span>
     </div>
-    <div class="surface">{propertyData.popupData.surfaceArea} m²</div>
+    <div class="surface">{propertyData.surfaceArea} m²</div>
     <div class="location">{propertyData.latlng}</div>
 
     <div class="actions-container">

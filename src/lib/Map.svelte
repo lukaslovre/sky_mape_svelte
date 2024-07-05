@@ -82,17 +82,20 @@
   <Map options={mapOptions} bind:instance={mapInstance}>
     <TileLayer urlTemplate={"https://tile.openstreetmap.org/{z}/{x}/{y}.png"} />
 
-    {#each properties as property (property.popupData.titleContent)}
+    {#each properties as property (property.titleContent)}
       <Marker
         latlng={property.latlng}
         options={{ opacity: filteredProperties.includes(property) ? 1 : 0.25 }}
         bind:instance={markerInstances[property.id]}
       >
-        <Icon options={{ ...markerOptions, iconUrl: `/${property.type}.png` }} />
+        <Icon
+          options={{ ...markerOptions, iconUrl: `/${property.type.toLowerCase()}.png` }}
+        />
         <Popup>
           <!-- {#if property.popupData.titleContent === focusedProperty}
             <p>Odabrano!!!</p>
           {/if}
+
           <h2>{property.popupData.titleContent}</h2>
           <div class="price"><span>€</span> <span>{property.popupData.price}</span></div>
           <div class="surface">{property.popupData.surfaceArea} m²</div> -->

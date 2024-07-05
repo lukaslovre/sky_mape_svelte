@@ -3,14 +3,25 @@
   import Header from "./lib/Header.svelte";
   import Map from "./lib/Map.svelte";
   import PropertyList from "./lib/PropertyList.svelte";
-  import { properties } from "./assets/propertiesData";
+  // import { properties } from "./assets/propertiesData";
   import {
     emptyFiltersObject,
     parseFilterValues,
     filterProperties,
   } from "./lib/utils/filter";
+  import { getProperties } from "./db/db_utils";
 
-  let filteredProperties: Property[] = properties;
+  let properties: Property[] = [];
+  let filteredProperties: Property[] = [];
+
+  getProperties()
+    .then((data) => {
+      properties = data;
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+
   let filters: Filters = emptyFiltersObject();
   let favorites: string[] = [];
 
@@ -66,19 +77,6 @@
     />
   </div>
 </main>
-
-<!-- 
-- finalni dizajn expanded kartice
-- switchanje između korisnika
-- spremanje informacija za korisnike
-- dodavanje nekretnina preko ui-a
-- 'only favorites' filter na list
-- napraviti favorites verzije svih ikona
-- sortiranje propertya u listi
-- ispravno filtriranje akcija i tipova nekretnina
-- klik na kontakt korisnika kopira u clipboard
-- samo jedan PropertyCard može biti expanded u listi
--->
 
 <style>
   main {

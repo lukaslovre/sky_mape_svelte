@@ -17,11 +17,9 @@ export function filterProperties(properties: Property[], filters: Filters): Prop
   const { action, type, minArea, maxArea, minPrice, maxPrice, polygons } = filters;
 
   const filteredProperties = properties.filter((house) => {
-    if (house.popupData.price < minPrice || house.popupData.price > maxPrice)
-      return false;
+    if (house.price < minPrice || house.price > maxPrice) return false;
 
-    if (house.popupData.surfaceArea < minArea || house.popupData.surfaceArea > maxArea)
-      return false;
+    if (house.surfaceArea < minArea || house.surfaceArea > maxArea) return false;
 
     if (type.length > 0 && !type.includes(house.type)) return false;
 
