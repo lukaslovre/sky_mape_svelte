@@ -1,6 +1,7 @@
 <script lang="ts">
   import CheckmarkIcon from "../../assets/icons/CheckmarkIcon.svelte";
   import { onMount } from "svelte";
+  import DropdownTriangleIcon from "../../assets/icons/DropdownTriangleIcon.svelte";
 
   export let label: string;
   export let id: string;
@@ -58,6 +59,7 @@
     on:click={toggleDropdownOptionsVisibility}
   >
     {values.length === 0 ? "Sve" : getLabelsFromValues()}
+    <DropdownTriangleIcon />
   </button>
 
   <div class="dropdown-input-options" style:display={isOpen ? "flex" : "none"}>
@@ -118,7 +120,8 @@
     /* width: 100%; */
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
+    gap: 0.5rem;
     padding: 0 1rem;
 
     height: 2.5rem;
@@ -131,6 +134,7 @@
     color: #1a1a1a;
     font-weight: 400;
 
+    cursor: pointer;
     transition: outline 75ms ease-out;
   }
   .dropdown-input-current:focus {

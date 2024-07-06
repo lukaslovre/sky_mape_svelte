@@ -5,6 +5,7 @@
   import { emptyFiltersObject } from "../utils/filter";
   import { createEventDispatcher } from "svelte";
   import { getUsers } from "../../db/Clients";
+  import DropdownTriangleIcon from "../../assets/icons/DropdownTriangleIcon.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -71,10 +72,9 @@
       if (isOpen) {
         const target = e.target as HTMLElement;
         const isCurrentButton = target.id === id;
-        const isOptionButton = target.classList.contains("dropdown-input-option");
-        const isOptionsButton2 = target.closest(".dropdown-input-options");
+        const isOptionsButton = target.closest(".dropdown-input-options");
 
-        if (!isCurrentButton && !isOptionButton && !isOptionsButton2) {
+        if (!isCurrentButton && !isOptionsButton) {
           isOpen = false;
         }
       }
@@ -90,9 +90,11 @@
     type="button"
     class="dropdown-input-current"
     {id}
-    on:click={toggleDropdownOptionsVisibility}
+    on:click|stopPropagation={toggleDropdownOptionsVisibility}
   >
-    {selectedUser || "Odaberi korisnika"}
+    <img src="/profile.png" alt="pfp" />
+    <span class="buyer-name">{selectedUser || "Odaberi korisnika"}</span>
+    <DropdownTriangleIcon />
   </button>
 
   <div class="dropdown-input-options" style:display={isOpen ? "flex" : "none"}>
@@ -127,6 +129,8 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    gap: 0.5rem;
+
     padding: 0 1rem;
 
     height: 2.5rem;
@@ -139,11 +143,21 @@
     color: #1a1a1a;
     font-weight: 400;
 
+    cursor: pointer;
     transition: outline 75ms ease-out;
   }
   .dropdown-input-current:focus {
     outline: 2px solid #0d65d9;
     z-index: 1;
+  }
+  .dropdown-input-current img {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    border: 1px solid #e6e6e6;
+  }
+  .dropdown-input-current .buyer-name {
+    margin-right: 2rem;
   }
 
   .dropdown-input-options {
