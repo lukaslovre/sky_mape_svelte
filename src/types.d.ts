@@ -27,6 +27,7 @@ type Property = {
 };
 
 type UserData = {
+  id: string;
   name: string;
   contact: string;
   note: string;

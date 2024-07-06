@@ -3,6 +3,7 @@ import { LatLng } from "leaflet";
 
 import { pb, transformPocketbaseUrlToAbsolute } from "./generalAndSetup";
 
+// EXAMPLE DATA
 // {
 //   action: 'Sale',
 //   collectionId: '1xq5g1wyjzp8jk7',
@@ -16,7 +17,7 @@ import { pb, transformPocketbaseUrlToAbsolute } from "./generalAndSetup";
 //   price: 350000,
 //   surfaceArea: 76,
 //   title: 'Elegantna Vila u Središtu Zagreba',
-//   type: '"House"',
+//   type: 'House',
 //   updated: '2024-07-05 18:32:11.791Z'
 // }
 

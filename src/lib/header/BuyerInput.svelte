@@ -4,38 +4,52 @@
   import BuyerInputDropdownOption from "./BuyerInputDropdownOption.svelte";
   import { emptyFiltersObject } from "../utils/filter";
   import { createEventDispatcher } from "svelte";
+  import { getUsers } from "../../db/Clients";
 
   const dispatch = createEventDispatcher();
 
   const label = "Korisnik";
   const id = "buyer";
 
-  const users: UserData[] = [
-    {
-      name: "Marko Marković",
-      contact: "marko@email.com",
-      note: "Makro želi imati dvije nekretnine, ne želi kupaonu, i želi da može prošetati svog velikog psa odma pored kuće",
-      filters: emptyFiltersObject(),
-      favoriteProperties: [],
-    },
-    {
-      name: "Pero Perić",
-      contact: "pero@email.com",
-      note: "Pero bi volio imati vrt, i želi da mu je kuća blizu škole",
-      filters: {
-        ...emptyFiltersObject(),
-        maxArea: 50,
-      },
-      favoriteProperties: ["e46cmbco64m8h29"],
-    },
-    {
-      name: "Ivana Ivić",
-      contact: "098 123 4567",
-      note: "Ivana želi imati bazen, i želi da joj je kuća blizu trgovine. Voli kuhati pa bi voljela veliku kuhinju",
-      filters: emptyFiltersObject(),
-      favoriteProperties: ["e46cmbco64m8h29", "9tkur0jfmzle2kz"],
-    },
-  ];
+  let users: UserData[] = [];
+
+  getUsers()
+    .then((data) => {
+      users = data;
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+
+  // const users: UserData[] = [
+  //   {
+  //     id: "1",
+  //     name: "Marko Marković",
+  //     contact: "marko@email.com",
+  //     note: "Makro želi imati dvije nekretnine, ne želi kupaonu, i želi da može prošetati svog velikog psa odma pored kuće",
+  //     filters: emptyFiltersObject(),
+  //     favoriteProperties: [],
+  //   },
+  //   {
+  //     id: "2",
+  //     name: "Pero Perić",
+  //     contact: "pero@email.com",
+  //     note: "Pero bi volio imati vrt, i želi da mu je kuća blizu škole",
+  //     filters: {
+  //       ...emptyFiltersObject(),
+  //       maxArea: 50,
+  //     },
+  //     favoriteProperties: ["e46cmbco64m8h29"],
+  //   },
+  //   {
+  //     id: "3",
+  //     name: "Ivana Ivić",
+  //     contact: "098 123 4567",
+  //     note: "Ivana želi imati bazen, i želi da joj je kuća blizu trgovine. Voli kuhati pa bi voljela veliku kuhinju",
+  //     filters: emptyFiltersObject(),
+  //     favoriteProperties: ["e46cmbco64m8h29", "9tkur0jfmzle2kz"],
+  //   },
+  // ];
 
   let selectedUser: string = "";
 
