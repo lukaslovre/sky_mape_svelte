@@ -4,7 +4,7 @@
 
   export let label: string;
   export let id: string;
-  export let options: string[];
+  export let options: { label: string; value: string }[];
   export let values: string[];
 
   let isOpen: boolean = false;
@@ -21,6 +21,15 @@
 
   function toggleDropdownOptionsVisibility() {
     isOpen = !isOpen;
+  }
+
+  function getLabelsFromValues(separator: string = ", ") {
+    return values
+      .map((value) => {
+        const option = options.find((option) => option.value === value);
+        return option?.label;
+      })
+      .join(separator);
   }
 
   onMount(() => {
@@ -48,7 +57,7 @@
     {id}
     on:click={toggleDropdownOptionsVisibility}
   >
-    {values.length === 0 ? "Sve" : values.join(", ")}
+    {values.length === 0 ? "Sve" : getLabelsFromValues()}
   </button>
 
   <div class="dropdown-input-options" style:display={isOpen ? "flex" : "none"}>
@@ -67,22 +76,22 @@
       Sve</button
     >
 
-    {#each options as option}
+    {#each options as { label, value }}
       <button
         type="button"
         class="dropdown-input-option"
-        class:selected={values.includes(option)}
+        class:selected={values.includes(value)}
         on:click={() => {
-          handleOptionClick(option);
+          handleOptionClick(value);
         }}
       >
         <div class="checkbox-square">
-          {#if values.includes(option)}
+          {#if values.includes(value)}
             <CheckmarkIcon />
           {/if}
         </div>
 
-        {option}
+        {label}
       </button>
     {/each}
   </div>

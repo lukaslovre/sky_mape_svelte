@@ -14,18 +14,29 @@
   }
 </script>
 
+<!-- type PropertyType = "Apartment" | "House" | "Land" | "Commercial";
+type PropertyAction = "Rent" | "Sale"; -->
+
 <div class="filters-container">
   <DropdownInput
     label="Akcija"
     id="action"
-    options={["Prodaja", "Izdavanje"]}
+    options={[
+      { label: "Prodaja", value: "Sale" },
+      { label: "Najam", value: "Rent" },
+    ]}
     bind:values={filters.action}
   />
 
   <DropdownInput
     label="Tip nekretnine"
     id="type"
-    options={["Stan", "Kuća", "Poslovni prostor", "Zemljište"]}
+    options={[
+      { label: "Stan", value: "Apartment" },
+      { label: "Kuća", value: "House" },
+      { label: "Poslovni prostor", value: "Commercial" },
+      { label: "Zemljište", value: "Land" },
+    ]}
     bind:values={filters.type}
   />
 
