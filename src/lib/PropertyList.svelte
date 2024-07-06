@@ -43,10 +43,11 @@
 <style>
   aside {
     flex-shrink: 0;
-    z-index: 1;
+    z-index: 401;
 
     padding: 2rem 1rem;
     background-color: #f2f2f2;
+    box-shadow: 0 0 0.375rem rgba(0, 0, 0, 0.4);
 
     overflow-y: auto;
     height: 79vh;

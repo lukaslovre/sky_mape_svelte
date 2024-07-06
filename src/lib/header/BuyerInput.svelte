@@ -94,12 +94,11 @@
 
 <style>
   .dropdown-input {
-    flex: 1;
     position: relative;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    /* width: fit-content; */
+    width: fit-content;
   }
 
   label {

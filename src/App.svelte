@@ -9,7 +9,7 @@
     parseFilterValues,
     filterProperties,
   } from "./lib/utils/filter";
-  import { getProperties } from "./db/db_utils";
+  import { getProperties } from "./db/Properties";
 
   let properties: Property[] = [];
   let filteredProperties: Property[] = [];
