@@ -6,13 +6,19 @@
   const dispatch = createEventDispatcher();
 
   export let userData: UserData;
+  export let isSelected: boolean;
 
   function handleBuyerOptionClick() {
     dispatch("selectBuyer", userData);
   }
 </script>
 
-<button type="button" class="dropdown-input-option" on:click={handleBuyerOptionClick}>
+<button
+  type="button"
+  class="dropdown-input-option"
+  on:click={handleBuyerOptionClick}
+  class:isSelected
+>
   <div class="left">
     <div class="pfp-name-and-contact-container">
       <img src="/profile.png" alt="default profile icon" />

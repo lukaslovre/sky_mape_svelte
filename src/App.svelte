@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Filters, Property } from "./types";
+  import type { Filters, Property, UserData } from "./types";
   import Header from "./lib/Header.svelte";
   import Map from "./lib/Map.svelte";
   import PropertyList from "./lib/PropertyList.svelte";
@@ -23,7 +23,7 @@
     });
 
   let filters: Filters = emptyFiltersObject();
-  let favorites: string[] = [];
+  let favorites: Property["id"][] = [];
   let isDrawing: boolean = false;
   let selectedPropertyId: Property["id"] | null = null;
 
@@ -47,9 +47,17 @@
     }
   }
 
-  function applyUserDataToApp(e: CustomEvent) {
+  function applyUserDataToApp(e: CustomEvent<UserData>) {
     const userData = e.detail;
     console.log(userData);
+
+    if (userData.filters) {
+      filters = {
+        ...userData.filters,
+      };
+    }
+
+    favorites = userData.favoriteProperties;
   }
 </script>
 
@@ -61,6 +69,7 @@
       {properties}
       {filteredProperties}
       {isDrawing}
+      {favorites}
       polygons={filters.polygons}
       on:saveNewPolygon={saveNewPolygon}
       on:setPolygons={(e) => (filters.polygons = e.detail)}

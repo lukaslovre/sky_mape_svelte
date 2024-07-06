@@ -3,6 +3,9 @@
   import type { UserData } from "../../types";
   import BuyerInputDropdownOption from "./BuyerInputDropdownOption.svelte";
   import { emptyFiltersObject } from "../utils/filter";
+  import { createEventDispatcher } from "svelte";
+
+  const dispatch = createEventDispatcher();
 
   const label = "Korisnik";
   const id = "buyer";
@@ -19,15 +22,18 @@
       name: "Pero Perić",
       contact: "pero@email.com",
       note: "Pero bi volio imati vrt, i želi da mu je kuća blizu škole",
-      filters: emptyFiltersObject(),
-      favoriteProperties: ["1"],
+      filters: {
+        ...emptyFiltersObject(),
+        maxArea: 50,
+      },
+      favoriteProperties: ["e46cmbco64m8h29"],
     },
     {
       name: "Ivana Ivić",
       contact: "098 123 4567",
       note: "Ivana želi imati bazen, i želi da joj je kuća blizu trgovine. Voli kuhati pa bi voljela veliku kuhinju",
       filters: emptyFiltersObject(),
-      favoriteProperties: ["1", "3"],
+      favoriteProperties: ["e46cmbco64m8h29", "9tkur0jfmzle2kz"],
     },
   ];
 
@@ -35,13 +41,15 @@
 
   let isOpen: boolean = false;
 
-  function handleOptionClick(value: string) {
-    console.log("handleOptionClick", value);
-    selectedUser === value;
-  }
-
   function toggleDropdownOptionsVisibility() {
     isOpen = !isOpen;
+  }
+
+  function handleSelectBuyer(e: CustomEvent<UserData>) {
+    selectedUser = e.detail.name;
+    // isOpen = false;
+
+    dispatch("selectBuyer", e.detail);
   }
 
   onMount(() => {
@@ -75,7 +83,11 @@
 
   <div class="dropdown-input-options" style:display={isOpen ? "flex" : "none"}>
     {#each users as user}
-      <BuyerInputDropdownOption userData={user} on:selectBuyer />
+      <BuyerInputDropdownOption
+        userData={user}
+        isSelected={selectedUser === user.name}
+        on:selectBuyer={handleSelectBuyer}
+      />
     {/each}
   </div>
 </div>

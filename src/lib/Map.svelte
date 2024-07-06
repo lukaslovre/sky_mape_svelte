@@ -9,6 +9,7 @@
 
   export let properties: Property[];
   export let filteredProperties: Property[];
+  export let favorites: Property["id"][];
   export let isDrawing: boolean;
   export let polygons: LatLng[][];
 
@@ -82,23 +83,22 @@
   <Map options={mapOptions} bind:instance={mapInstance}>
     <TileLayer urlTemplate={"https://tile.openstreetmap.org/{z}/{x}/{y}.png"} />
 
-    {#each properties as property (property.titleContent)}
+    {#each properties as property (property.id)}
       <Marker
         latlng={property.latlng}
         options={{ opacity: filteredProperties.includes(property) ? 1 : 0.25 }}
         bind:instance={markerInstances[property.id]}
       >
         <Icon
-          options={{ ...markerOptions, iconUrl: `/${property.type.toLowerCase()}.png` }}
+          options={{
+            ...markerOptions,
+            iconUrl: `/${property.type.toLowerCase()}${favorites.includes(property.id) ? "-favorited" : ""}.png`,
+          }}
         />
         <Popup>
-          <!-- {#if property.popupData.titleContent === focusedProperty}
-            <p>Odabrano!!!</p>
-          {/if}
-
-          <h2>{property.popupData.titleContent}</h2>
-          <div class="price"><span>€</span> <span>{property.popupData.price}</span></div>
-          <div class="surface">{property.popupData.surfaceArea} m²</div> -->
+          <h2>{property.titleContent}</h2>
+          <div class="price"><span>€</span> <span>{property.price}</span></div>
+          <div class="surface">{property.surfaceArea} m²</div>
         </Popup>
       </Marker>
     {/each}
