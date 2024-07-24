@@ -1,0 +1,137 @@
+<script lang="ts">
+  import EuroIcon from "../../assets/icons/EuroIcon.svelte";
+  import LocationIcon from "../../assets/icons/LocationIcon.svelte";
+  import StarIcon from "../../assets/icons/StarIcon.svelte";
+  import SurfaceIcon from "../../assets/icons/SurfaceIcon.svelte";
+  import type { Property } from "../../types";
+  import { formatPrice } from "../../utils/numbers";
+
+  export let property: Property;
+  export let isFavorite: boolean = false;
+  export let toggleFavorite: (propertyId: Property["id"]) => void;
+</script>
+
+<div class="property-card">
+  <div class="property-card-image">
+    <img src={property.imgUrl} alt={property.imgUrl} />
+
+    <!-- buttons over image -->
+    <div class="buttons-over-image-container">
+      <button
+        type="button"
+        style:background-color={isFavorite ? "#d98803" : undefined}
+        on:click|stopPropagation={() => {
+          toggleFavorite(property.id);
+        }}
+      >
+        <StarIcon color="#fff" />
+      </button>
+    </div>
+  </div>
+  <div class="property-card-content">
+    <div class="content-row">
+      <EuroIcon />
+      <p>{formatPrice(property.price)}</p>
+    </div>
+
+    <div class="content-row">
+      <SurfaceIcon />
+      <p>{property.surfaceArea} m²</p>
+    </div>
+
+    <div class="content-row">
+      <LocationIcon />
+      <button type="button" class="location-text-button">{property.latlng}</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .property-card {
+    display: flex;
+    border-radius: 0.5rem;
+    background-color: #fff;
+
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.125);
+  }
+
+  .property-card-image {
+    width: 9rem;
+    height: 9rem;
+
+    position: relative;
+  }
+  .property-card-image::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.1);
+
+    border-radius: 0.5rem 0 0 0.5rem;
+  }
+  .property-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0.5rem 0 0 0.5rem;
+  }
+
+  .property-card-image .buttons-over-image-container {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    bottom: 0;
+    padding: 0.5rem;
+
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+  }
+
+  .property-card-image button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 2rem;
+    height: 2rem;
+    background-color: #0b5eda;
+    border-radius: 0.5rem;
+  }
+
+  .property-card-content {
+    /* flex: 1; */
+    padding: 0.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .property-card-content .content-row {
+    display: flex;
+    align-items: center;
+    column-gap: 0.5rem;
+  }
+
+  .property-card-content p {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: #1a1a1a;
+  }
+
+  .location-text-button {
+    /* remove default button styles */
+    background: none;
+    border: none;
+    padding: 0;
+
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: #0b5eda;
+    /* text-decoration: underline; */
+
+    cursor: pointer;
+  }
+</style>

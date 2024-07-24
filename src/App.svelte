@@ -10,6 +10,8 @@
     filterProperties,
   } from "./utils/filter";
   import { getProperties } from "./db/Properties";
+  import Dialog from "./lib/Dialog.svelte";
+  import PropertyCard from "./lib/Property/PropertyCard.svelte";
 
   let properties: Property[] = [];
   let filteredProperties: Property[] = [];
@@ -37,15 +39,15 @@
     filters.polygons = [...filters.polygons, event.detail];
   }
 
-  function toggleFavorite(e: CustomEvent<string>) {
-    const propertyId = e.detail;
+  // function toggleFavorite(e: CustomEvent<string>) {
+  //   const propertyId = e.detail;
 
-    if (favorites.includes(propertyId)) {
-      favorites = favorites.filter((id) => id !== propertyId);
-    } else {
-      favorites = [...favorites, propertyId];
-    }
-  }
+  //   if (favorites.includes(propertyId)) {
+  //     favorites = favorites.filter((id) => id !== propertyId);
+  //   } else {
+  //     favorites = [...favorites, propertyId];
+  //   }
+  // }
 
   function applyUserDataToApp(e: CustomEvent<UserData>) {
     const userData = e.detail;
@@ -59,7 +61,26 @@
 
     favorites = userData.favoriteProperties;
   }
+
+  // new function
+  function toggleFavorite(propertyId: Property["id"]) {
+    if (favorites.includes(propertyId)) {
+      favorites = favorites.filter((id) => id !== propertyId);
+    } else {
+      favorites = [...favorites, propertyId];
+    }
+  }
 </script>
+
+<Dialog title="Popis nekretnina">
+  {#each properties as property}
+    <PropertyCard
+      {property}
+      isFavorite={favorites.includes(property.id)}
+      {toggleFavorite}
+    />
+  {/each}
+</Dialog>
 
 <main>
   <Header bind:filters bind:isDrawing on:selectBuyer={applyUserDataToApp} />
