@@ -4,6 +4,7 @@
   import { Map, TileLayer, Marker, Popup, Icon, Polygon } from "sveaflet";
   import { mapOptions, markerOptions } from "../assets/mapConfigValues";
   import type { Property } from "../types";
+  import PropertyCard from "./Property/PropertyCard.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -96,10 +97,17 @@
             iconUrl: `/${property.type.toLowerCase()}.png`,
           }}
         />
-        <Popup>
-          <h2>{property.titleContent}</h2>
-          <div class="price"><span>€</span> <span>{property.price}</span></div>
-          <div class="surface">{property.surfaceArea} m²</div>
+        <Popup
+          options={{
+            closeButton: false,
+            maxWidth: 1000,
+          }}
+        >
+          <PropertyCard
+            {property}
+            isFavorite={favorites.includes(property.id)}
+            toggleFavorite={() => {}}
+          />
         </Popup>
       </Marker>
     {/each}
@@ -128,5 +136,22 @@
     /* flex: 1; */
     width: 100%;
     height: 100%;
+  }
+
+  /* Global overrides of leaflet defaults */
+  :global(.leaflet-popup-content-wrapper) {
+    padding: 0;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.4);
+  }
+
+  :global(.leaflet-popup-content) {
+    margin: 0;
+    line-height: normal;
+    min-height: 1px;
+  }
+
+  :global(.leaflet-popup-content p) {
+    margin: 0;
   }
 </style>

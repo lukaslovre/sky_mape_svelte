@@ -56,6 +56,8 @@
   }
 
   .property-card-image {
+    flex-shrink: 0;
+
     width: 9rem;
     height: 9rem;
 
@@ -91,7 +93,7 @@
     justify-content: flex-end;
   }
 
-  .property-card-image button {
+  .property-card-image .buttons-over-image-container button {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -103,7 +105,7 @@
   }
 
   .property-card-content {
-    /* flex: 1; */
+    flex: 1;
     padding: 0.5rem 1rem;
     display: flex;
     flex-direction: column;
