@@ -92,7 +92,8 @@
         <Icon
           options={{
             ...markerOptions,
-            iconUrl: `/${property.type.toLowerCase()}${favorites.includes(property.id) ? "-favorited" : ""}.png`,
+            // iconUrl: `/${property.type.toLowerCase()}${favorites.includes(property.id) ? "-favorited" : ""}.png`,
+            iconUrl: `/${property.type.toLowerCase()}.png`,
           }}
         />
         <Popup>
