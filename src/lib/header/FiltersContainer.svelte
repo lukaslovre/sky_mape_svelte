@@ -4,7 +4,7 @@
   import ResetIcon from "../../assets/icons/ResetIcon.svelte";
   import LocationInput from "./LocationInput.svelte";
   import type { Filters } from "../../types";
-  import { emptyFiltersObject } from "../utils/filter";
+  import { emptyFiltersObject } from "../../utils/filter";
 
   export let isDrawing: boolean;
   export let filters: Filters;

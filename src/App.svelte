@@ -8,7 +8,7 @@
     emptyFiltersObject,
     parseFilterValues,
     filterProperties,
-  } from "./lib/utils/filter";
+  } from "./utils/filter";
   import { getProperties } from "./db/Properties";
 
   let properties: Property[] = [];

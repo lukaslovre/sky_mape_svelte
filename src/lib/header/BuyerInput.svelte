@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import type { UserData } from "../../types";
   import BuyerInputDropdownOption from "./BuyerInputDropdownOption.svelte";
-  import { emptyFiltersObject } from "../utils/filter";
+  import { emptyFiltersObject } from "../../utils/filter";
   import { createEventDispatcher } from "svelte";
   import { getUsers } from "../../db/Clients";
   import DropdownTriangleIcon from "../../assets/icons/DropdownTriangleIcon.svelte";
