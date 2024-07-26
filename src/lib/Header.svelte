@@ -6,14 +6,36 @@
 
   export let isDrawing: boolean;
   export let filters: Filters;
+
+  export let openDialog: string | null;
 </script>
 
 <header>
   <div>
-    <div class="buyer-container">
-      <BuyerInput on:selectBuyer />
-      <button type="button" class="button"><SaveIcon />Save</button>
+    <div class="upper-row">
+      <button
+        on:click={() => {
+          openDialog = "property";
+        }}>Show properties</button
+      >
+      <button
+        on:click={() => {
+          openDialog = "buyer";
+        }}>Show buyers</button
+      >
     </div>
+
+    <!-- <div class="top-row">
+      <div>
+        <BuyerInput on:selectBuyer />
+        <button type="button" class="button"><SaveIcon />Save</button>
+      </div>
+
+      <div>
+        <BuyerInput on:selectBuyer />
+        <button type="button" class="button"><SaveIcon />Save</button>
+      </div>
+    </div> -->
 
     <FiltersContainer bind:filters bind:isDrawing />
   </div>
@@ -40,13 +62,23 @@
     max-width: 80rem;
   }
 
-  .buyer-container {
+  /* .top-row {
+    display: flex;
+    justify-content: space-around;
+    gap: 1rem;
+  }
+  .top-row > div {
     display: flex;
     align-items: flex-end;
     gap: 1rem;
+  } */
+
+  .upper-row {
+    display: flex;
+    gap: 1rem;
   }
 
-  .button {
+  button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -67,10 +99,10 @@
       outline 75ms ease-out;
   }
 
-  .button:hover {
+  button:hover {
     background-color: #0b5eda;
   }
-  .button:focus {
+  button:focus {
     outline: 2px solid #0d65d9;
     z-index: 1;
   }

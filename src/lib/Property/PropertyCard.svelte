@@ -1,9 +1,11 @@
 <script lang="ts">
+  import type { Property } from "../../types";
   import EuroIcon from "../../assets/icons/EuroIcon.svelte";
   import LocationIcon from "../../assets/icons/LocationIcon.svelte";
   import StarIcon from "../../assets/icons/StarIcon.svelte";
   import SurfaceIcon from "../../assets/icons/SurfaceIcon.svelte";
-  import type { Property } from "../../types";
+  import InternetIcon from "../../assets/icons/InternetIcon.svelte";
+  import EditIcon from "../../assets/icons/EditIcon.svelte";
   import { formatPrice } from "../../utils/numbers";
 
   export let property: Property;
@@ -19,12 +21,30 @@
     <div class="buttons-over-image-container">
       <button
         type="button"
+        on:click|stopPropagation={() => {
+          console.log("clicked on the map button");
+        }}
+      >
+        <EditIcon size={20} />
+      </button>
+
+      <button
+        type="button"
         style:background-color={isFavorite ? "#d98803" : undefined}
         on:click|stopPropagation={() => {
           toggleFavorite(property.id);
         }}
       >
         <StarIcon color="#fff" />
+      </button>
+
+      <button
+        type="button"
+        on:click|stopPropagation={() => {
+          console.log("clicked on the map button");
+        }}
+      >
+        <InternetIcon size={20} />
       </button>
     </div>
   </div>
@@ -90,7 +110,7 @@
 
     display: flex;
     gap: 0.5rem;
-    justify-content: flex-end;
+    justify-content: space-between;
   }
 
   .property-card-image .buttons-over-image-container button {

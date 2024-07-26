@@ -107,7 +107,12 @@
 </Dialog>
 
 <main>
-  <Header bind:filters bind:isDrawing on:selectBuyer={applyUserDataToApp} />
+  <Header
+    bind:openDialog
+    bind:filters
+    bind:isDrawing
+    on:selectBuyer={applyUserDataToApp}
+  />
 
   <button
     type="button"
