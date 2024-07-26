@@ -18,13 +18,13 @@ type Property = {
   latlng: LatLng;
   type: PropertyType;
   action: PropertyAction;
-  imgUrl: string;
+  imgUrl: string[];
   titleContent: string;
   descriptionContent: string;
   linkValue: string;
   surfaceArea: number;
   price: number;
-};
+} & PocketbaseAttributes;
 
 type UserData = {
   id: string;
@@ -33,4 +33,10 @@ type UserData = {
   note: string;
   filters: Filters | null;
   favoriteProperties: Property["id"][];
+};
+
+type PocketbaseAttributes = {
+  id: string;
+  created: string;
+  updated: string;
 };

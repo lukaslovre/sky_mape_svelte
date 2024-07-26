@@ -23,6 +23,17 @@
     mapInstance.on("popupclose", () => {
       selectedPropertyId = null;
     });
+    // mapInstance.on("mousemove", (e) => {
+    //   if (isDrawing === false) return;
+
+    //   if (drawingPoligonCoords.length === 0) return;
+
+    //   drawingPoligonCoords[drawingPoligonCoords.length - 1] = e.latlng;
+
+    //   drawingPoligonCoords = [...drawingPoligonCoords];
+
+    //   console.log(e.latlng);
+    // });
   }
   // When the drawing state changes, save the polygon if drawing is finished
   $: if (isDrawing === false) {

@@ -2,17 +2,17 @@
   export let title: string = "Dialog Title";
   export let beforeClose = () => {};
 
-  let open: boolean = true;
+  export let isOpen: boolean = true;
 
   function close() {
     beforeClose();
 
     // close dialog
-    open = false;
+    // isOpen = false;
   }
 </script>
 
-{#if open}
+{#if isOpen}
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div class="backdrop" on:click={close} typeof="button">
@@ -53,9 +53,11 @@
     flex-direction: column;
     gap: 2rem;
 
-    min-width: 15rem;
     max-width: calc(100% - 4rem);
-    width: 50rem;
+    min-width: 15rem;
+    width: 60rem;
+    min-height: 10rem;
+    height: 75vh;
 
     background-color: #f7f7f7;
     padding: 1.5rem;
@@ -72,12 +74,6 @@
   .dialog-actions {
     display: flex;
     gap: 1rem;
-  }
-
-  .dialog-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-    gap: 2rem;
   }
 
   h2 {
