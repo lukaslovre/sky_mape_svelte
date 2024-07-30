@@ -3,14 +3,10 @@
   import MinMaxInput from "./MinMaxInput.svelte";
   import ResetIcon from "../../assets/icons/ResetIcon.svelte";
   import LocationInput from "./LocationInput.svelte";
-  import type { Filters } from "../../types";
-  import { emptyFiltersObject } from "../../utils/filter";
-
-  export let isDrawing: boolean;
-  export let filters: Filters;
+  import { filters, resetFilters } from "../../store";
 
   function resetValues() {
-    filters = emptyFiltersObject();
+    resetFilters();
   }
 </script>
 
@@ -25,7 +21,7 @@ type PropertyAction = "Rent" | "Sale"; -->
       { label: "Prodaja", value: "Sale" },
       { label: "Najam", value: "Rent" },
     ]}
-    bind:values={filters.action}
+    bind:values={$filters.action}
   />
 
   <DropdownInput
@@ -37,24 +33,24 @@ type PropertyAction = "Rent" | "Sale"; -->
       { label: "Poslovni prostor", value: "Commercial" },
       { label: "Zemljište", value: "Land" },
     ]}
-    bind:values={filters.type}
+    bind:values={$filters.type}
   />
 
   <MinMaxInput
     label="Cijena (€)"
     id="price"
-    bind:minValue={filters.minPrice}
-    bind:maxValue={filters.maxPrice}
+    bind:minValue={$filters.minPrice}
+    bind:maxValue={$filters.maxPrice}
   />
 
   <MinMaxInput
     label="Površina (m2)"
     id="area"
-    bind:minValue={filters.minArea}
-    bind:maxValue={filters.maxArea}
+    bind:minValue={$filters.minArea}
+    bind:maxValue={$filters.maxArea}
   />
 
-  <LocationInput bind:isDrawing />
+  <LocationInput on:isDrawingChange />
 
   <button type="reset" class="button" style="margin-left: 2.5rem;" on:click={resetValues}>
     <ResetIcon /> Resetiraj
@@ -63,6 +59,9 @@ type PropertyAction = "Rent" | "Sale"; -->
 
 <style>
   .filters-container {
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e6e6e6;
+
     width: 100%;
 
     display: flex;

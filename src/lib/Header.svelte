@@ -1,43 +1,13 @@
 <script lang="ts">
-  import SaveIcon from "../assets/icons/SaveIcon.svelte";
-  import type { Filters } from "../types";
-  import BuyerInput from "./header/BuyerInput.svelte";
   import FiltersContainer from "./header/FiltersContainer.svelte";
-
-  export let isDrawing: boolean;
-  export let filters: Filters;
-
-  export let openDialog: string | null;
+  import TabMenu from "./header/TabMenu.svelte";
 </script>
 
 <header>
-  <div>
-    <div class="upper-row">
-      <button
-        on:click={() => {
-          openDialog = "property";
-        }}>Show properties</button
-      >
-      <button
-        on:click={() => {
-          openDialog = "buyer";
-        }}>Show buyers</button
-      >
-    </div>
+  <div class="max-width-div">
+    <FiltersContainer on:isDrawingChange />
 
-    <!-- <div class="top-row">
-      <div>
-        <BuyerInput on:selectBuyer />
-        <button type="button" class="button"><SaveIcon />Save</button>
-      </div>
-
-      <div>
-        <BuyerInput on:selectBuyer />
-        <button type="button" class="button"><SaveIcon />Save</button>
-      </div>
-    </div> -->
-
-    <FiltersContainer bind:filters bind:isDrawing />
+    <TabMenu />
   </div>
 </header>
 
@@ -49,15 +19,15 @@
     display: flex;
     justify-content: center;
 
-    background-color: #f7f7f7;
-    padding: 1.5rem 2rem;
-    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.4);
+    background-color: #f2f2f2;
+    padding: 1.5rem;
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.4);
   }
 
-  header > div {
+  .max-width-div {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.5rem;
 
     max-width: 80rem;
   }

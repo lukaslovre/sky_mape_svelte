@@ -8,11 +8,10 @@
 
   const dispatch = createEventDispatcher();
 
-  export let properties: Property[];
-  export let filteredProperties: Property[];
+  import { properties, filteredProperties, filters, savePolygon } from "../store";
+
   export let favorites: Property["id"][];
   export let isDrawing: boolean;
-  export let polygons: LatLng[][];
 
   // Array that stores the coordinates of the polygon currently being drawn
   let drawingPoligonCoords: LatLng[] = [];
@@ -40,7 +39,7 @@
     if (drawingPoligonCoords.length < 3) {
       drawingPoligonCoords = [];
     } else if (drawingPoligonCoords.length >= 3) {
-      savePolygon();
+      savePolygonINS();
     }
   }
 
@@ -64,24 +63,27 @@
 
   $: if (selectedPropertyId) {
     // move the map to the selected property
-    const selectedProperty = properties.find((p) => p.id === selectedPropertyId);
+    const selectedProperty = $properties.find((p) => p.id === selectedPropertyId);
     if (selectedProperty) {
       mapInstance?.panTo(selectedProperty.latlng);
     }
   }
 
-  function savePolygon() {
+  function savePolygonINS() {
     if (drawingPoligonCoords.length === 0) return;
 
-    dispatch("saveNewPolygon", drawingPoligonCoords);
+    savePolygon(drawingPoligonCoords);
 
     drawingPoligonCoords = [];
   }
 
   function deletePolygon(polygon: LatLng[]) {
-    polygons = polygons.filter((p) => p !== polygon);
-
-    dispatch("setPolygons", polygons);
+    filters.update((f) => {
+      return {
+        ...f,
+        polygons: f.polygons.filter((p) => p !== polygon),
+      };
+    });
   }
 
   function addClickToPolygons(e: L.LeafletMouseEvent) {
@@ -95,10 +97,10 @@
   <Map options={mapOptions} bind:instance={mapInstance}>
     <TileLayer urlTemplate={"https://tile.openstreetmap.org/{z}/{x}/{y}.png"} />
 
-    {#each properties as property (property.id)}
+    {#each $properties as property (property.id)}
       <Marker
         latlng={property.latlng}
-        options={{ opacity: filteredProperties.includes(property) ? 1 : 0.25 }}
+        options={{ opacity: $filteredProperties.includes(property) ? 1 : 0.25 }}
         bind:instance={markerInstances[property.id]}
       >
         <Icon
@@ -124,7 +126,7 @@
     {/each}
 
     <!-- Draw all polygons -->
-    {#each polygons as poligon}
+    {#each $filters.polygons as poligon}
       <Polygon latLngs={poligon}>
         <Popup>
           <button

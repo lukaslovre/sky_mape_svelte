@@ -1,4 +1,4 @@
-import type { Filters, Property } from "../../types";
+import type { Filters, Property } from "../types";
 import { latLngIsInPolygon } from "./geo";
 
 export function emptyFiltersObject(): Filters {

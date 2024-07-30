@@ -1,7 +1,12 @@
 <script lang="ts">
   import DrawIcon from "../../assets/icons/DrawIcon.svelte";
+  import { createEventDispatcher } from "svelte";
 
-  export let isDrawing: boolean;
+  const dispatch = createEventDispatcher();
+
+  let isDrawing: boolean = false;
+
+  $: dispatch("isDrawingChange", isDrawing);
 
   function handleDrawButtonClick() {
     isDrawing = !isDrawing;
