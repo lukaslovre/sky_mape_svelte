@@ -8,7 +8,7 @@
   import PropertyCard from "./lib/Property/PropertyCard.svelte";
   import Table from "./lib/Table.svelte";
 
-  import { activeTab, filters, properties, users } from "./store";
+  import { activeTab, filteredProperties, filters, properties, users } from "./store";
 
   let favorites: Property["id"][] = [];
   let isDrawing: boolean = false;
@@ -78,7 +78,7 @@
       <Map {isDrawing} {favorites} bind:selectedPropertyId />
     {:else if $activeTab === "Properties"}
       <div class="properties-inside-dialog-container">
-        {#each $properties as property}
+        {#each $filteredProperties as property (property.id)}
           <PropertyCard
             {property}
             isFavorite={favorites.includes(property.id)}
@@ -111,7 +111,7 @@
     padding: 2.5rem;
 
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
     gap: 2rem;
   }
 

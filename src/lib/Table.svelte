@@ -50,13 +50,30 @@
   td {
     /* border: 1px solid hsl(0, 0%, 90%); */
     border-bottom: 1px solid hsl(0, 0%, 90%);
-    padding: 0.5rem 1.5rem;
+    padding: 0.75rem 1.5rem;
     font-size: 0.875rem;
     text-align: left;
   }
 
   th {
     background-color: #fff;
+  }
+
+  td {
+    background-color: hsla(0, 0%, 100%, 0.5);
+  }
+
+  tr th:first-child {
+    border-top-left-radius: 0.5rem;
+  }
+  tr th:last-child {
+    border-top-right-radius: 0.5rem;
+  }
+  tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 0.5rem;
+  }
+  tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 0.5rem;
   }
 
   .copyable {
