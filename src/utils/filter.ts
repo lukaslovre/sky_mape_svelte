@@ -1,3 +1,4 @@
+import { LatLng } from "leaflet";
 import type { Filters, Property } from "../types";
 import { latLngIsInPolygon } from "./geo";
 
@@ -27,7 +28,9 @@ export function filterProperties(properties: Property[], filters: Filters): Prop
 
     if (
       polygons.length > 0 &&
-      polygons.every((polygon) => !latLngIsInPolygon(house.latlng, polygon))
+      polygons.every(
+        (polygon) => !latLngIsInPolygon(new LatLng(house.lat, house.lng), polygon)
+      )
     )
       return false;
 

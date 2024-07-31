@@ -70,7 +70,7 @@
     // move the map to the selected property
     const selectedProperty = $properties.find((p) => p.id === selectedPropertyId);
     if (selectedProperty) {
-      mapInstance?.panTo(selectedProperty.latlng);
+      mapInstance?.panTo(new LatLng(selectedProperty.lat, selectedProperty.lng));
     }
   }
 
@@ -104,7 +104,7 @@
 
     {#each $properties as property (property.id)}
       <Marker
-        latlng={property.latlng}
+        latlng={new LatLng(property.lat, property.lng)}
         options={{ opacity: $filteredProperties.includes(property) ? 1 : 0.25 }}
         bind:instance={markerInstances[property.id]}
       >

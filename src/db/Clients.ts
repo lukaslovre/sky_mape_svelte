@@ -30,36 +30,12 @@ import { pb, transformPocketbaseUrlToAbsolute } from "./generalAndSetup";
 //     "updated": "2024-07-06 16:38:32.192Z"
 //   }
 
-type dbClient = {
-  collectionId: string;
-  collectionName: string;
-  created: string;
-  updated: string;
-  id: string;
-} & UserData;
-
 export async function getUsers(): Promise<UserData[]> {
-  const data = await pb.collection<dbClient>("Clients").getFullList();
+  const data = await pb.collection<UserData>("Clients").getFullList();
 
   console.log(data);
 
-  const transformedData = data.map(transformFromDbToClientType);
-
-  console.log(transformedData);
-
-  return transformedData;
-}
-
-function transformFromDbToClientType(dbClient: dbClient): UserData {
-  return {
-    id: dbClient.id,
-    name: dbClient.name,
-    phone: dbClient.phone,
-    email: dbClient.email,
-    note: dbClient.note,
-    filters: dbClient.filters,
-    favoriteProperties: dbClient.favoriteProperties,
-  };
+  return data;
 }
 
 // CREATE
@@ -75,7 +51,7 @@ export async function createUser(user: Omit<UserData, "id">): Promise<void> {
   };
 
   try {
-    const record = await pb.collection<dbClient>("Clients").create(data);
+    const record = await pb.collection<UserData>("Clients").create(data);
   } catch (error) {
     console.error(error);
   }

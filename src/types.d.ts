@@ -16,30 +16,32 @@ type Filters = {
 };
 
 type Property = {
-  id: string;
-  latlng: LatLng;
+  lat: number;
+  lng: number;
   type: PropertyType;
   action: PropertyAction;
   imgUrl: string[];
-  titleContent: string;
-  descriptionContent: string;
-  linkValue: string;
+  title: string;
+  description: string;
   surfaceArea: number;
   price: number;
+  websiteUrl: string;
+  hiddenOnWebsite: boolean;
 } & PocketbaseAttributes;
 
 type UserData = {
-  id: string;
   name: string;
   phone: string;
   email: string;
   note: string;
   filters: Filters | null;
   favoriteProperties: Property["id"][];
-};
+} & PocketbaseAttributes;
 
 type PocketbaseAttributes = {
   id: string;
   created: string;
   updated: string;
+  collectionId: string;
+  collectionName: string;
 };

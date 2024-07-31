@@ -21,45 +21,20 @@ import { pb, transformPocketbaseUrlToAbsolute } from "./generalAndSetup";
 //   updated: '2024-07-05 18:32:11.791Z'
 // }
 
-type dbProperty = {
-  collectionId: string;
-  collectionName: string;
-  created: string;
-  updated: string;
-  id: string;
-  lat: number;
-  lng: number;
-  type: string;
-  action: string;
-  imgUrl: string[];
-  title: string;
-  description: string;
-  price: number;
-  surfaceArea: number;
-};
 export async function getProperties(): Promise<Property[]> {
   // you can also fetch all records at once via getFullList
-  const data = (await pb.collection("Properties").getFullList()) as dbProperty[];
+  const data = await pb.collection<Property>("Properties").getFullList();
 
   console.log(data);
-  return data.map(transformFromDbToClientProperty);
+
+  return data.map(parsePropertyData);
 }
 
-function transformFromDbToClientProperty(dbProperty: dbProperty): Property {
+function parsePropertyData(property: Property): Property {
   return {
-    id: dbProperty.id,
-    latlng: new LatLng(dbProperty.lat, dbProperty.lng),
-    type: dbProperty.type as any,
-    action: dbProperty.action as any,
-    imgUrl: transformPocketbaseUrlToAbsolute(
-      dbProperty.imgUrl[0],
-      dbProperty.collectionName,
-      dbProperty.id
+    ...property,
+    imgUrl: property.imgUrl.map((url) =>
+      transformPocketbaseUrlToAbsolute(url, property.collectionName, property.id)
     ),
-    titleContent: dbProperty.title,
-    descriptionContent: dbProperty.description,
-    linkValue: dbProperty.id,
-    surfaceArea: dbProperty.surfaceArea,
-    price: dbProperty.price,
   };
 }

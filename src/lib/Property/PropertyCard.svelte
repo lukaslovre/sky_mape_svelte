@@ -24,7 +24,7 @@
 
 <div class="property-card">
   <div class="property-card-image">
-    <img src={property.imgUrl} alt={property.imgUrl} />
+    <img src={property.imgUrl[0] || null} alt={property.imgUrl[0] || "nothing"} />
 
     <!-- buttons over image -->
     <div class="buttons-over-image-container">
@@ -68,7 +68,9 @@
 
     <div class="content-row">
       <LocationIcon />
-      <button type="button" class="location-text-button">{property.latlng}</button>
+      <button type="button" class="location-text-button">
+        {property.lat.toFixed(2) + ", " + property.lng.toFixed(2)}
+      </button>
     </div>
   </div>
 </div>
