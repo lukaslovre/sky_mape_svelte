@@ -7,10 +7,19 @@
   import InternetIcon from "../../assets/icons/InternetIcon.svelte";
   import EditIcon from "../../assets/icons/EditIcon.svelte";
   import { formatPrice } from "../../utils/numbers";
+  import { favoriteProperties } from "../../store";
 
   export let property: Property;
-  export let isFavorite: boolean = false;
-  export let toggleFavorite: (propertyId: Property["id"]) => void;
+
+  $: isFavorite = $favoriteProperties.includes(property.id);
+
+  function toggleFavorite() {
+    if ($favoriteProperties.includes(property.id)) {
+      favoriteProperties.update((prev) => prev.filter((id) => id !== property.id));
+    } else {
+      favoriteProperties.update((prev) => [...prev, property.id]);
+    }
+  }
 </script>
 
 <div class="property-card">
@@ -31,9 +40,7 @@
       <button
         type="button"
         style:background-color={isFavorite ? "#d98803" : undefined}
-        on:click|stopPropagation={() => {
-          toggleFavorite(property.id);
-        }}
+        on:click|stopPropagation={toggleFavorite}
       >
         <StarIcon color="#fff" />
       </button>

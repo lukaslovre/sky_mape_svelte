@@ -8,9 +8,14 @@
 
   const dispatch = createEventDispatcher();
 
-  import { properties, filteredProperties, filters, savePolygon } from "../store";
+  import {
+    properties,
+    filteredProperties,
+    filters,
+    savePolygon,
+    favoriteProperties,
+  } from "../store";
 
-  export let favorites: Property["id"][];
   export let isDrawing: boolean;
 
   // Array that stores the coordinates of the polygon currently being drawn
@@ -116,11 +121,7 @@
             maxWidth: 1000,
           }}
         >
-          <PropertyCard
-            {property}
-            isFavorite={favorites.includes(property.id)}
-            toggleFavorite={() => {}}
-          />
+          <PropertyCard {property} />
         </Popup>
       </Marker>
     {/each}

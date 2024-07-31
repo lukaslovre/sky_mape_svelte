@@ -8,9 +8,16 @@
   import PropertyCard from "./lib/Property/PropertyCard.svelte";
   import Table from "./lib/Table.svelte";
 
-  import { activeTab, filteredProperties, filters, properties, users } from "./store";
+  import {
+    activeTab,
+    filteredProperties,
+    filters,
+    properties,
+    users,
+    favoriteProperties,
+  } from "./store";
+  import BuyerForm from "./lib/Buyer/BuyerForm.svelte";
 
-  let favorites: Property["id"][] = [];
   let isDrawing: boolean = false;
   let selectedPropertyId: Property["id"] | null = null;
 
@@ -29,45 +36,19 @@
     favorites = userData.favoriteProperties;
   }
 
-  function toggleFavorite(propertyId: Property["id"]) {
-    if (favorites.includes(propertyId)) {
-      favorites = favorites.filter((id) => id !== propertyId);
-    } else {
-      favorites = [...favorites, propertyId];
-    }
-  }
-
-  type DialogType = "property" | "buyer";
+  type DialogType = "saveBuyer";
 
   let openDialog: DialogType | null = null;
 </script>
 
 <Dialog
-  title="Popis nekretnina"
-  isOpen={openDialog === "property"}
+  title="Spremi novog kupca"
+  isOpen={openDialog === "saveBuyer"}
   beforeClose={() => {
     openDialog = null;
   }}
 >
-  <div class="properties-inside-dialog-container">
-    {#each $properties as property}
-      <PropertyCard
-        {property}
-        isFavorite={favorites.includes(property.id)}
-        {toggleFavorite}
-      />
-    {/each}
-  </div>
-</Dialog>
-
-<Dialog
-  title="Popis kupaca"
-  isOpen={openDialog === "buyer"}
-  beforeClose={() => {
-    openDialog = null;
-  }}
->
-  <Table showHeader={true} headers={Object.keys($users[0] || {})} data={$users} />
+  <BuyerForm />
 </Dialog>
 
 <main>
@@ -75,19 +56,23 @@
 
   <div class="content">
     {#if $activeTab === "Map"}
-      <Map {isDrawing} {favorites} bind:selectedPropertyId />
+      <Map {isDrawing} bind:selectedPropertyId />
     {:else if $activeTab === "Properties"}
       <div class="properties-inside-dialog-container">
         {#each $filteredProperties as property (property.id)}
-          <PropertyCard
-            {property}
-            isFavorite={favorites.includes(property.id)}
-            {toggleFavorite}
-          />
+          <PropertyCard {property} />
         {/each}
       </div>
     {:else if $activeTab === "Buyers"}
       <div class="buyers-container">
+        <h2>Popis kupaca</h2>
+
+        <button
+          on:click={() => {
+            openDialog = "saveBuyer";
+          }}>Spremi novog kupca</button
+        >
+
         <Table showHeader={true} headers={Object.keys($users[0] || {})} data={$users} />
       </div>
     {/if}
@@ -100,6 +85,13 @@
 
     display: flex;
     flex-direction: column;
+  }
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1a1a1a;
+
+    margin-bottom: 1.5rem;
   }
 
   .content {
@@ -117,5 +109,12 @@
 
   .buyers-container {
     padding: 2.5rem;
+  }
+  .buyers-container button {
+    margin-bottom: 1.5rem;
+
+    padding: 0.5rem 1rem;
+    background-color: hsl(0, 0%, 80%);
+    border-radius: 0.25rem;
   }
 </style>

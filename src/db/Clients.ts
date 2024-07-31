@@ -61,3 +61,22 @@ function transformFromDbToClientType(dbClient: dbClient): UserData {
     favoriteProperties: dbClient.favoriteProperties,
   };
 }
+
+// CREATE
+
+export async function createUser(user: Omit<UserData, "id">): Promise<void> {
+  const data = {
+    name: "test",
+    phone: "test",
+    email: "test",
+    note: "test",
+    filters: "JSON",
+    favoriteProperties: ["RELATION_RECORD_ID"],
+  };
+
+  try {
+    const record = await pb.collection<dbClient>("Clients").create(data);
+  } catch (error) {
+    console.error(error);
+  }
+}

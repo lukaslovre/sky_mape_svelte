@@ -16,14 +16,14 @@
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div class="backdrop" on:click={close} typeof="button">
-    <section class="dialog">
+    <section class="dialog" on:click|stopPropagation>
       <div class="dialog-header">
         <h2>{title}</h2>
         <button on:click={close}>Close</button>
       </div>
-      <div class="dialog-actions">
+      <!-- <div class="dialog-actions">
         <button>Click!</button>
-      </div>
+      </div> -->
       <div class="dialog-content">
         <slot />
       </div>
@@ -53,11 +53,11 @@
     flex-direction: column;
     gap: 2rem;
 
-    max-width: calc(100% - 4rem);
+    /* max-width: calc(100% - 4rem); */
     min-width: 15rem;
-    width: 60rem;
+    width: 90%;
     min-height: 10rem;
-    height: 75vh;
+    height: 80vh;
 
     background-color: #f7f7f7;
     padding: 1.5rem;
@@ -74,6 +74,12 @@
   .dialog-actions {
     display: flex;
     gap: 1rem;
+  }
+
+  .dialog-content {
+    /* flex: 1; */
+    padding: 0.5rem;
+    overflow-y: auto;
   }
 
   h2 {

@@ -10,7 +10,7 @@ const initialFilters: Filters = emptyFiltersObject();
 const initialTab: Tabs = "Map";
 
 // Create a writable store
-export const filters = writable(initialFilters);
+export const filters: Writable<Filters> = writable(initialFilters);
 export const activeTab: Writable<Tabs> = writable(initialTab);
 export const properties: Writable<Property[]> = writable([]);
 export const users: Writable<UserData[]> = writable([]);
@@ -20,6 +20,7 @@ export const filteredProperties: Readable<Property[]> = derived(
     return filterProperties($properties, parseFilterValues($filters));
   }
 );
+export const favoriteProperties: Writable<Property["id"][]> = writable([]);
 
 getProperties()
   .then((data) => {
