@@ -6,7 +6,7 @@
 
 <div class="input">
   <label for={id}>{label}</label>
-  <input type="text" name={id} {id} {value} />
+  <input type="text" name={id} {id} bind:value />
 </div>
 
 <style>

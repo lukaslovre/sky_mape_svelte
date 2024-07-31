@@ -15,30 +15,31 @@
   //     ]
   // };
 
-  //   type UserData = {
-  //   id: string;
-  //   name: string;
-  //   phone: string;
-  //   email: string;
-  //   note: string;
-  //   filters: Filters | null;
-  //   favoriteProperties: Property["id"][];
-  // };
+  let name = "";
+  let phone = "";
+  let email = "";
+  let note = "";
 
-  function tempSubmit(e) {
-    e.preventDefault();
-    console.log(e);
+  function tempSubmit() {
+    console.log({
+      name,
+      phone,
+      email,
+      note,
+      filters: $filters,
+      favoriteProperties: $favoriteProperties,
+    });
   }
 </script>
 
-<form on:submit={tempSubmit}>
-  <Input label="Ime" id="name" value="test" />
+<form on:submit|preventDefault={tempSubmit}>
+  <Input label="Ime" id="name" bind:value={name} />
 
-  <Input label="Telefon" id="phone" value="test" />
+  <Input label="Telefon" id="phone" bind:value={phone} />
 
-  <Input label="Email" id="email" value="test" />
+  <Input label="Email" id="email" bind:value={email} />
 
-  <Textarea label="Napomena" id="note" value="test" />
+  <Textarea label="Napomena" id="note" bind:value={note} />
 
   <div>
     <label for="filters">Filteri</label>

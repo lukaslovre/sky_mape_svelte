@@ -6,7 +6,7 @@
 
 <div class="textarea">
   <label for={id}>{label}</label>
-  <textarea {id} name={id} {value}></textarea>
+  <textarea {id} name={id} bind:value></textarea>
 </div>
 
 <style>
