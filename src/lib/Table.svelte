@@ -26,8 +26,12 @@
               {:else}
                 <td>{JSON.stringify(value, null, 1)}</td>
               {/if}
+            {:else if value === ""}
+              <td class="empty">N/A</td>
+            {:else if ["email", "phone"].includes(key)}
+              <td class="copyable">{value}</td>
             {:else}
-              <td class:copyable={key === "contact"}>{value}</td>
+              <td>{value}</td>
             {/if}
           {/each}
         </tr>
@@ -78,5 +82,9 @@
 
   .copyable {
     color: #0b5eda;
+  }
+
+  .empty {
+    color: hsl(0, 0%, 50%);
   }
 </style>

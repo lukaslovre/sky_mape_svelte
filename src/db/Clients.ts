@@ -7,7 +7,8 @@ import { pb, transformPocketbaseUrlToAbsolute } from "./generalAndSetup";
 // {
 //     "collectionId": "zp7401tafuzep0j",
 //     "collectionName": "Clients",
-//     "contact": "098766886",
+//     "email": "pero@gmail.com",
+//     "phone": "0987654321",
 //     "created": "2024-07-06 16:38:32.192Z",
 //     "favoriteProperties": [
 //       "e46cmbco64m8h29"
@@ -38,9 +39,12 @@ type dbClient = {
 } & UserData;
 
 export async function getUsers(): Promise<UserData[]> {
-  const data = (await pb.collection("Clients").getFullList()) as dbClient[];
+  const data = await pb.collection<dbClient>("Clients").getFullList();
+
   console.log(data);
+
   const transformedData = data.map(transformFromDbToClientType);
+
   console.log(transformedData);
 
   return transformedData;
@@ -50,7 +54,8 @@ function transformFromDbToClientType(dbClient: dbClient): UserData {
   return {
     id: dbClient.id,
     name: dbClient.name,
-    contact: dbClient.contact,
+    phone: dbClient.phone,
+    email: dbClient.email,
     note: dbClient.note,
     filters: dbClient.filters,
     favoriteProperties: dbClient.favoriteProperties,

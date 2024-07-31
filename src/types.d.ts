@@ -31,7 +31,8 @@ type Property = {
 type UserData = {
   id: string;
   name: string;
-  contact: string;
+  phone: string;
+  email: string;
   note: string;
   filters: Filters | null;
   favoriteProperties: Property["id"][];
