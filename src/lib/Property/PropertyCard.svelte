@@ -87,8 +87,8 @@
   .property-card-image {
     flex-shrink: 0;
 
-    width: 9rem;
-    height: 9rem;
+    width: 10rem;
+    height: 10rem;
 
     position: relative;
   }

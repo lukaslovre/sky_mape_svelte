@@ -27,6 +27,23 @@
     mapInstance.on("popupclose", () => {
       selectedPropertyId = null;
     });
+
+    // On a ctrl + click, save the lat and lng to the clipboard, if unable to save, alert the lat and lng
+
+    mapInstance.on("click", (e) => {
+      if (e.originalEvent.ctrlKey) {
+        navigator.clipboard.writeText(`${e.latlng.lat}, ${e.latlng.lng}`).then(
+          () => {
+            console.log("Lat and Lng copied to clipboard");
+          },
+          (err) => {
+            console.error("Failed to copy: ", err);
+            alert(`${e.latlng.lat}, ${e.latlng.lng}`);
+          }
+        );
+      }
+    });
+
     // mapInstance.on("mousemove", (e) => {
     //   if (isDrawing === false) return;
 
