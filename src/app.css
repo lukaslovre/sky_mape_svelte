@@ -17,6 +17,12 @@ body {
   margin: 0 auto; */
 }
 
+h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
 button {
   /* remove all default styles */
   border: none;

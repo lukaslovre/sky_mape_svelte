@@ -1,6 +1,6 @@
 import PocketBase from "pocketbase";
 
-const pocketbaseUrl = "http://127.0.0.1:9991";
+const pocketbaseUrl = "http://49.13.64.0:9992";
 
 export const pb = new PocketBase(pocketbaseUrl);
 

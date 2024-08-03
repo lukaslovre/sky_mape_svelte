@@ -1,12 +1,11 @@
 <script lang="ts">
-  import type { Filters, Property, UserData } from "./types";
+  import type { DialogType, Filters, Property, UserData } from "./types";
   import Header from "./lib/Header.svelte";
   import Map from "./lib/Map.svelte";
   // import { properties } from "./assets/propertiesData";
 
   import Dialog from "./lib/Dialog.svelte";
   import PropertyCard from "./lib/Property/PropertyCard.svelte";
-  import Table from "./lib/Table.svelte";
 
   import {
     activeTab,
@@ -17,6 +16,7 @@
     favoriteProperties,
   } from "./store";
   import BuyerForm from "./lib/Buyer/BuyerForm.svelte";
+  import BuyersPage from "./lib/Buyers tab/BuyersPage.svelte";
 
   let isDrawing: boolean = false;
   let selectedPropertyId: Property["id"] | null = null;
@@ -25,20 +25,23 @@
     isDrawing = e.detail;
   }
 
-  function applyUserDataToApp(e: CustomEvent<UserData>) {
-    const userData = e.detail;
-    console.log(userData);
+  // function applyUserDataToApp(e: CustomEvent<UserData>) {
+  //   const userData = e.detail;
+  //   console.log(userData);
 
-    if (userData.filters) {
-      filters.set(userData.filters); // ovdje treba vidjet da uvijek vraća objekt
-    }
+  //   if (userData.filters) {
+  //     filters.set(userData.filters); // ovdje treba vidjet da uvijek vraća objekt
+  //   }
 
-    favorites = userData.favoriteProperties;
-  }
-
-  type DialogType = "saveBuyer";
+  //   favorites = userData.favoriteProperties;
+  // }
 
   let openDialog: DialogType | null = null;
+
+  function setDialog(dialog: DialogType | null) {
+    openDialog = dialog;
+    console.log(openDialog);
+  }
 </script>
 
 <Dialog
@@ -64,17 +67,7 @@
         {/each}
       </div>
     {:else if $activeTab === "Buyers"}
-      <div class="buyers-container">
-        <h2>Popis kupaca</h2>
-
-        <button
-          on:click={() => {
-            openDialog = "saveBuyer";
-          }}>Spremi novog kupca</button
-        >
-
-        <Table showHeader={true} headers={Object.keys($users[0] || {})} data={$users} />
-      </div>
+      <BuyersPage {setDialog} />
     {/if}
   </div>
 </main>
@@ -85,13 +78,6 @@
 
     display: flex;
     flex-direction: column;
-  }
-  h2 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #1a1a1a;
-
-    margin-bottom: 1.5rem;
   }
 
   .content {
@@ -105,16 +91,5 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
     gap: 2rem;
-  }
-
-  .buyers-container {
-    padding: 2.5rem;
-  }
-  .buyers-container button {
-    margin-bottom: 1.5rem;
-
-    padding: 0.5rem 1rem;
-    background-color: hsl(0, 0%, 80%);
-    border-radius: 0.25rem;
   }
 </style>

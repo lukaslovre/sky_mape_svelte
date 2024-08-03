@@ -1,3 +1,5 @@
+<!-- Ovo je namijenjeno prvo kao generalni table ali mislim da ću specificirati za popis kupaca samo -->
+
 <script lang="ts">
   export let showHeader: boolean = true;
   export let headers: string[] = [];
