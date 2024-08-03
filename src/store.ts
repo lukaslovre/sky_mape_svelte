@@ -22,6 +22,8 @@ export const filteredProperties: Readable<Property[]> = derived(
 );
 export const favoriteProperties: Writable<Property["id"][]> = writable([]);
 
+//   Fetch data from database and set it to the store
+
 getProperties()
   .then((data) => {
     properties.set(data);

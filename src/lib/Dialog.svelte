@@ -21,9 +21,7 @@
         <h2>{title}</h2>
         <button on:click={close}>Close</button>
       </div>
-      <!-- <div class="dialog-actions">
-        <button>Click!</button>
-      </div> -->
+
       <div class="dialog-content">
         <slot />
       </div>
@@ -55,7 +53,7 @@
 
     /* max-width: calc(100% - 4rem); */
     min-width: 15rem;
-    width: 90%;
+    width: 85%;
     min-height: 10rem;
     height: 80vh;
 
@@ -71,15 +69,11 @@
     align-items: center;
   }
 
-  .dialog-actions {
-    display: flex;
-    gap: 1rem;
-  }
-
   .dialog-content {
-    /* flex: 1; */
-    padding: 0.5rem;
+    flex: 1;
+    /* height: 100%; */
     overflow-y: auto;
+    padding: 0 0.5rem;
   }
 
   h2 {

@@ -1,17 +1,30 @@
 <!-- Ovo je namijenjeno prvo kao generalni table ali mislim da ću specificirati za popis kupaca samo -->
 
 <script lang="ts">
+  import type { UserData } from "../types";
+
   export let showHeader: boolean = true;
-  export let headers: string[] = [];
-  export let data: Record<string, any>[] = [];
+  export let data: UserData[] = [];
+
+  function parseData(data: UserData[]) {
+    return data.map((user) => {
+      const { collectionId, collectionName, ...columnsToKeep } = user;
+
+      return {
+        ...columnsToKeep,
+        created: new Date(columnsToKeep.created).toLocaleDateString("hr-HR"),
+        updated: new Date(columnsToKeep.updated).toLocaleDateString("hr-HR"),
+      };
+    });
+  }
 </script>
 
 <section class="table-container">
   <table>
-    {#if showHeader}
+    {#if showHeader && data.length > 0}
       <thead>
         <tr>
-          {#each headers as header}
+          {#each Object.keys(parseData(data)[0]) as header}
             <th>{header}</th>
           {/each}
         </tr>
@@ -19,12 +32,16 @@
     {/if}
 
     <tbody>
-      {#each data as row}
+      {#each parseData(data) as user}
         <tr>
-          {#each Object.entries(row) as [key, value]}
+          {#each Object.entries(user) as [key, value]}
             {#if typeof value === "object"}
-              {#if value.length}
-                <td>{value.join(", ")}</td>
+              {#if value.length !== undefined}
+                {#if value.length > 0}
+                  <td>{value.join(", ")}</td>
+                {:else}
+                  <td class="empty">N/A</td>
+                {/if}
               {:else}
                 <td>{JSON.stringify(value, null, 1)}</td>
               {/if}

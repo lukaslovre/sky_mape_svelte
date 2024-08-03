@@ -15,7 +15,7 @@
     }}>Spremi novog kupca</button
   >
 
-  <Table showHeader={true} headers={Object.keys($users[0] || {})} data={$users} />
+  <Table showHeader={true} data={$users} />
 </div>
 
 <style>

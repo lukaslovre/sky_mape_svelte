@@ -1,4 +1,4 @@
-import type { UserData } from "../types";
+import type { PocketbaseAttributes, UserData } from "../types";
 // import { LatLng } from "leaflet";
 
 import { pb, transformPocketbaseUrlToAbsolute } from "./generalAndSetup";
@@ -40,19 +40,10 @@ export async function getUsers(): Promise<UserData[]> {
 
 // CREATE
 
-export async function createUser(user: Omit<UserData, "id">): Promise<void> {
-  const data = {
-    name: "test",
-    phone: "test",
-    email: "test",
-    note: "test",
-    filters: "JSON",
-    favoriteProperties: ["RELATION_RECORD_ID"],
-  };
+export async function createUser(
+  data: Omit<UserData, keyof PocketbaseAttributes>
+): Promise<UserData> {
+  const record = await pb.collection<UserData>("Clients").create(data);
 
-  try {
-    const record = await pb.collection<UserData>("Clients").create(data);
-  } catch (error) {
-    console.error(error);
-  }
+  return record;
 }

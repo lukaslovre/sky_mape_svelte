@@ -1,5 +1,7 @@
 <script lang="ts">
+  import { createUser } from "../../db/Clients";
   import { filters, favoriteProperties } from "../../store";
+  import type { PocketbaseAttributes, UserData } from "../../types";
   import Input from "../FormItems/Input.svelte";
   import Textarea from "../FormItems/Textarea.svelte";
 
@@ -20,15 +22,24 @@
   let email = "";
   let note = "";
 
-  function tempSubmit() {
-    console.log({
+  async function tempSubmit() {
+    const user: Omit<UserData, keyof PocketbaseAttributes> = {
       name,
       phone,
       email,
       note,
       filters: $filters,
       favoriteProperties: $favoriteProperties,
-    });
+    };
+
+    console.log(user);
+
+    try {
+      const createdRecord = await createUser(user);
+      console.log(createdRecord);
+    } catch (error) {
+      console.log(error);
+    }
   }
 </script>
 
@@ -85,5 +96,13 @@
 
     max-height: 10rem;
     overflow-y: auto;
+  }
+
+  button[type="submit"] {
+    padding: 0.5rem 1rem;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 0.25rem;
+    cursor: pointer;
   }
 </style>
