@@ -1,0 +1,12 @@
+version: "3.7"
+services:
+  pocketbase:
+    image: spectado/pocketbase:latest
+    container_name: pocketbase
+    restart: unless-stopped
+    ports:
+      - "9992:80"
+    volumes:
+      - backend-pocketbase-files/pb_data:/pb_data
+      # - /path/to/public:/pb_public
+      - backend-pocketbase-files/pb_migrations:/pb_migrations
