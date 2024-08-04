@@ -1,6 +1,6 @@
 import { derived, writable, type Readable, type Writable } from "svelte/store";
 import type { Filters, Property, Tabs, UserData } from "./types";
-import { emptyFiltersObject, parseFilterValues, filterProperties } from "./utils/filter";
+import { emptyFiltersObject, filterProperties } from "./utils/filter";
 import { getProperties } from "./db/Properties";
 import { getUsers } from "./db/Clients";
 import type { LatLng } from "leaflet";
@@ -13,14 +13,20 @@ const initialTab: Tabs = "Map";
 export const filters: Writable<Filters> = writable(initialFilters);
 export const activeTab: Writable<Tabs> = writable(initialTab);
 export const properties: Writable<Property[]> = writable([]);
-export const users: Writable<UserData[]> = writable([]);
 export const filteredProperties: Readable<Property[]> = derived(
   [properties, filters],
   ([$properties, $filters]) => {
-    return filterProperties($properties, parseFilterValues($filters));
+    return filterProperties($properties, $filters);
   }
 );
 export const favoriteProperties: Writable<Property["id"][]> = writable([]);
+export const users: Writable<UserData[]> = writable([]);
+export const filteredUsers: Readable<UserData[]> = derived(
+  [users, filteredProperties],
+  ([$users, $filteredProperties]) => {
+    // return
+  }
+);
 
 //   Fetch data from database and set it to the store
 

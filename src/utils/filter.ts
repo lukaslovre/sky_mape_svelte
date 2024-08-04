@@ -1,5 +1,5 @@
 import { LatLng } from "leaflet";
-import type { Filters, Property } from "../types";
+import type { Filters, Property, UserData } from "../types";
 import { latLngIsInPolygon } from "./geo";
 
 export function emptyFiltersObject(): Filters {
@@ -15,7 +15,8 @@ export function emptyFiltersObject(): Filters {
 }
 
 export function filterProperties(properties: Property[], filters: Filters): Property[] {
-  const { action, type, minArea, maxArea, minPrice, maxPrice, polygons } = filters;
+  const { action, type, minArea, maxArea, minPrice, maxPrice, polygons } =
+    parseFilterValues(filters);
 
   const filteredProperties = properties.filter((house) => {
     if (house.price < minPrice || house.price > maxPrice) return false;
@@ -39,6 +40,7 @@ export function filterProperties(properties: Property[], filters: Filters): Prop
 
   return filteredProperties;
 }
+
 export function parseFilterValues({
   action,
   type,
@@ -58,3 +60,5 @@ export function parseFilterValues({
     polygons: polygons || [],
   };
 }
+
+export function filterBuyers(buyers: UserData[]);
