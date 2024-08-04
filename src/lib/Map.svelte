@@ -17,32 +17,21 @@
   } from "../store";
 
   export let isDrawing: boolean;
+  export let selectedPropertyId: Property["id"] | null;
 
   // Array that stores the coordinates of the polygon currently being drawn
   let drawingPoligonCoords: LatLng[] = [];
 
+  // Instances of leaflet elements
+  let mapInstance: L.Map | undefined;
+  let markerInstances: { [key: Property["id"]]: L.Marker } = {};
+
   // When the map instance is available, add a click event listener to draw polygons
   $: if (mapInstance) {
     mapInstance.on("click", addClickToPolygons);
-    mapInstance.on("popupclose", () => {
-      selectedPropertyId = null;
-    });
-
-    // On a ctrl + click, save the lat and lng to the clipboard, if unable to save, alert the lat and lng
-
-    mapInstance.on("click", (e) => {
-      if (e.originalEvent.ctrlKey) {
-        navigator.clipboard.writeText(`${e.latlng.lat}, ${e.latlng.lng}`).then(
-          () => {
-            console.log("Lat and Lng copied to clipboard");
-          },
-          (err) => {
-            console.error("Failed to copy: ", err);
-            alert(`${e.latlng.lat}, ${e.latlng.lng}`);
-          }
-        );
-      }
-    });
+    mapInstance.on("popupclose", resetSelectedProperty);
+    // On a ctrl + click
+    mapInstance.on("click", saveLatLngToClipboard);
 
     // mapInstance.on("mousemove", (e) => {
     //   if (isDrawing === false) return;
@@ -56,46 +45,38 @@
     //   console.log(e.latlng);
     // });
   }
+
+  // When the markerInstances are available, add click event listeners to each marker
+  $: if (Object.keys(markerInstances).length > 0) {
+    console.log("MarkerInstances changed", markerInstances);
+    Object.keys(markerInstances).forEach((propertyId) => {
+      const marker = markerInstances[propertyId];
+
+      addClickEventToMarker(marker, propertyId);
+      setAppropriateMarkerIcon(propertyId);
+    });
+  }
+
   // When the drawing state changes, save the polygon if drawing is finished
-  $: if (isDrawing === false) {
-    if (drawingPoligonCoords.length < 3) {
-      drawingPoligonCoords = [];
-    } else if (drawingPoligonCoords.length >= 3) {
-      savePolygonINS();
-    }
-  }
+  $: if (isDrawing === false) savePolygonINS();
 
-  let mapInstance: L.Map | undefined;
-  let markerInstances: { [key: Property["id"]]: L.Marker } = {};
-  export let selectedPropertyId: Property["id"] | null;
-  $: {
-    console.log(markerInstances);
+  // When the selected property changes, pan to the selected property
+  $: if (selectedPropertyId) panToPropertyById(selectedPropertyId);
 
-    if (Object.keys(markerInstances).length > 0) {
-      Object.keys(markerInstances).forEach((key) => {
-        const marker = markerInstances[key];
-
-        marker.on("click", () => {
-          console.log(`Marker clicked: ${key}`);
-          selectedPropertyId = key;
-        });
-      });
-    }
-  }
-
-  $: if (selectedPropertyId) {
-    // move the map to the selected property
-    const selectedProperty = $properties.find((p) => p.id === selectedPropertyId);
-    if (selectedProperty) {
-      mapInstance?.panTo(new LatLng(selectedProperty.lat, selectedProperty.lng));
-    }
+  // When favoriteProperties changes, update the marker icons
+  $: if ($favoriteProperties.length > 0) {
+    $favoriteProperties.forEach((propertyId) => {
+      setAppropriateMarkerIcon(propertyId);
+    });
   }
 
   function savePolygonINS() {
-    if (drawingPoligonCoords.length === 0) return;
+    if (drawingPoligonCoords.length < 3) {
+      drawingPoligonCoords = [];
+      return;
+    }
 
     savePolygon(drawingPoligonCoords);
-
     drawingPoligonCoords = [];
   }
 
@@ -113,6 +94,52 @@
 
     drawingPoligonCoords = [...drawingPoligonCoords, e.latlng];
   }
+
+  function resetSelectedProperty() {
+    selectedPropertyId = null;
+  }
+
+  function saveLatLngToClipboard(e: L.LeafletMouseEvent) {
+    if (e.originalEvent.ctrlKey) {
+      navigator.clipboard.writeText(`${e.latlng.lat}, ${e.latlng.lng}`).then(
+        () => {
+          console.log("Lat and Lng copied to clipboard");
+        },
+        (err) => {
+          console.error("Failed to copy: ", err);
+          alert(`${e.latlng.lat}, ${e.latlng.lng}`);
+        }
+      );
+    }
+  }
+
+  function panToPropertyById(id: Property["id"]) {
+    const property = $properties.find((p) => p.id === id);
+    if (property) {
+      mapInstance?.panTo(new LatLng(property.lat, property.lng));
+    }
+  }
+
+  function addClickEventToMarker(marker: L.Marker, propertyId: Property["id"]) {
+    marker.on("click", () => {
+      console.log(`Marker clicked: ${propertyId}`);
+      selectedPropertyId = propertyId;
+    });
+  }
+
+  function setAppropriateMarkerIcon(propertyId: Property["id"]) {
+    const property = $properties.find((p) => p.id === propertyId);
+    const marker = markerInstances[propertyId];
+
+    if (!property || !marker) return;
+
+    marker.setIcon(
+      new L.Icon({
+        ...markerOptions,
+        iconUrl: `/${property.type.toLowerCase()}${$favoriteProperties.includes(property.id) ? "-favorited" : ""}.png`,
+      })
+    );
+  }
 </script>
 
 <section>
@@ -125,13 +152,13 @@
         options={{ opacity: $filteredProperties.includes(property) ? 1 : 0.25 }}
         bind:instance={markerInstances[property.id]}
       >
-        <Icon
+        <!-- <Icon
           options={{
             ...markerOptions,
             // iconUrl: `/${property.type.toLowerCase()}${favorites.includes(property.id) ? "-favorited" : ""}.png`,
             iconUrl: `/${property.type.toLowerCase()}.png`,
           }}
-        />
+        /> -->
         <Popup
           options={{
             closeButton: false,
