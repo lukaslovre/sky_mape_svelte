@@ -6,8 +6,10 @@
   import SurfaceIcon from "../../assets/icons/SurfaceIcon.svelte";
   import InternetIcon from "../../assets/icons/InternetIcon.svelte";
   import EditIcon from "../../assets/icons/EditIcon.svelte";
-  import { formatPrice } from "../../utils/numbers";
+  import { formatWithCommas } from "../../utils/numbers";
   import { favoriteProperties } from "../../store";
+  import EyeIcon from "../../assets/icons/EyeIcon.svelte";
+  import EyeOffIcon from "../../assets/icons/EyeOffIcon.svelte";
 
   export let property: Property;
 
@@ -57,13 +59,30 @@
   </div>
   <div class="property-card-content">
     <div class="content-row">
+      <SurfaceIcon />
+      <p>{property.type}</p>
+    </div>
+
+    <div class="content-row">
       <EuroIcon />
-      <p>{formatPrice(property.price)}</p>
+      <p>
+        {`${formatWithCommas(property.price)} ${property.action === "Rent" ? "/ mj." : ""}`}
+      </p>
     </div>
 
     <div class="content-row">
       <SurfaceIcon />
-      <p>{property.surfaceArea} m²</p>
+      <p>{`${formatWithCommas(property.surfaceArea)} m²`}</p>
+    </div>
+
+    <div class="content-row">
+      {#if property.hiddenOnWebsite === true}
+        <EyeOffIcon size={16} />
+        <p>Hidden</p>
+      {:else}
+        <EyeIcon size={16} />
+        <p>Visible</p>
+      {/if}
     </div>
 
     <div class="content-row">
