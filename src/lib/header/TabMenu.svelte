@@ -1,5 +1,11 @@
 <script lang="ts">
-  import { activeTab, properties, users, filteredProperties } from "../../store";
+  import {
+    activeTab,
+    properties,
+    users,
+    filteredProperties,
+    filteredUsers,
+  } from "../../store";
   import type { Tabs } from "../../types";
 
   let tabs_values: Tabs[] = ["Map", "Properties", "Buyers"];
@@ -20,7 +26,7 @@
             ({$filteredProperties.length})
           {/if}
           {#if tab === "Buyers"}
-            ({$users.length})
+            ({$filteredUsers.length})
           {/if}
         </button>
       </li>

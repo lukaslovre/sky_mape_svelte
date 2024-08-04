@@ -14,33 +14,6 @@ export function emptyFiltersObject(): Filters {
   };
 }
 
-export function filterProperties(properties: Property[], filters: Filters): Property[] {
-  const { action, type, minArea, maxArea, minPrice, maxPrice, polygons } =
-    parseFilterValues(filters);
-
-  const filteredProperties = properties.filter((house) => {
-    if (house.price < minPrice || house.price > maxPrice) return false;
-
-    if (house.surfaceArea < minArea || house.surfaceArea > maxArea) return false;
-
-    if (type.length > 0 && !type.includes(house.type)) return false;
-
-    if (action.length > 0 && !action.includes(house.action)) return false;
-
-    if (
-      polygons.length > 0 &&
-      polygons.every(
-        (polygon) => !latLngIsInPolygon(new LatLng(house.lat, house.lng), polygon)
-      )
-    )
-      return false;
-
-    return true;
-  });
-
-  return filteredProperties;
-}
-
 export function parseFilterValues({
   action,
   type,
@@ -61,4 +34,58 @@ export function parseFilterValues({
   };
 }
 
-export function filterBuyers(buyers: UserData[]);
+export function filtersIsEmpty(filters: Filters): boolean {
+  const { action, type, minArea, maxArea, minPrice, maxPrice, polygons } =
+    parseFilterValues(filters);
+
+  return (
+    action.length === 0 &&
+    type.length === 0 &&
+    minArea === 0 &&
+    maxArea === Infinity &&
+    minPrice === 0 &&
+    maxPrice === Infinity &&
+    polygons.length === 0
+  );
+}
+
+export function propertyMatchesFilter(property: Property, filters: Filters): boolean {
+  const { action, type, minArea, maxArea, minPrice, maxPrice, polygons } =
+    parseFilterValues(filters);
+
+  if (property.price < minPrice || property.price > maxPrice) return false;
+
+  if (property.surfaceArea < minArea || property.surfaceArea > maxArea) return false;
+
+  if (type.length > 0 && !type.includes(property.type)) return false;
+
+  if (action.length > 0 && !action.includes(property.action)) return false;
+
+  if (polygons.length > 0) {
+    const propertyLatLng = new LatLng(property.lat, property.lng);
+
+    if (polygons.every((polygon) => !latLngIsInPolygon(propertyLatLng, polygon)))
+      return false;
+  }
+
+  return true;
+}
+
+// Imam: usere i filtrirane propertye
+// Trebam: za svaki property vidjeti koji useri (filter dakle) ga matchaju
+// Trebam: i onda napraviti uniju tih usera
+
+// TODO: buduća optimizacija: jednom kada se user matcha s propertyem (dakle kada upadne u popis),
+//  ne treba ga ponovno matchati
+export function usersMatchingProperties(
+  users: UserData[],
+  properties: Property[]
+): UserData[] {
+  const usersMatchingProperties = users.filter((user) => {
+    if (!user.filters) return false;
+
+    return properties.some((property) => propertyMatchesFilter(property, user.filters!));
+  });
+
+  return usersMatchingProperties;
+}

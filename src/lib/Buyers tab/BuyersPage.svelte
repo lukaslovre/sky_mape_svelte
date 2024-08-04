@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { DialogType } from "../../types";
   import Table from "../Table.svelte";
-  import { users } from "../../store";
+  import { users, filteredUsers } from "../../store";
 
   export let setDialog: (dialog: DialogType | null) => void;
 </script>
@@ -15,7 +15,7 @@
     }}>Spremi novog kupca</button
   >
 
-  <Table showHeader={true} data={$users} />
+  <Table showHeader={true} data={$filteredUsers} />
 </div>
 
 <style>

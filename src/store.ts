@@ -1,6 +1,11 @@
 import { derived, writable, type Readable, type Writable } from "svelte/store";
 import type { Filters, Property, Tabs, UserData } from "./types";
-import { emptyFiltersObject, filterProperties } from "./utils/filter";
+import {
+  emptyFiltersObject,
+  filtersIsEmpty,
+  propertyMatchesFilter,
+  usersMatchingProperties,
+} from "./utils/filter";
 import { getProperties } from "./db/Properties";
 import { getUsers } from "./db/Clients";
 import type { LatLng } from "leaflet";
@@ -16,15 +21,21 @@ export const properties: Writable<Property[]> = writable([]);
 export const filteredProperties: Readable<Property[]> = derived(
   [properties, filters],
   ([$properties, $filters]) => {
-    return filterProperties($properties, $filters);
+    if (filtersIsEmpty($filters)) return $properties;
+
+    return $properties.filter((property) => propertyMatchesFilter(property, $filters));
   }
 );
 export const favoriteProperties: Writable<Property["id"][]> = writable([]);
 export const users: Writable<UserData[]> = writable([]);
 export const filteredUsers: Readable<UserData[]> = derived(
-  [users, filteredProperties],
-  ([$users, $filteredProperties]) => {
-    // return
+  [users, filteredProperties, properties],
+  ([$users, $filteredProperties, $properties]) => {
+    console.log("filteredUsers derived function called!");
+
+    if ($filteredProperties.length === $properties.length) return $users;
+
+    return usersMatchingProperties($users, $filteredProperties);
   }
 );
 
