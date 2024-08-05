@@ -28,10 +28,6 @@
 
   // When the map instance is available, add a click event listener to draw polygons
   $: if (mapInstance) {
-    if ($propertiesBoundingBox !== null) {
-      mapInstance.fitBounds($propertiesBoundingBox);
-    }
-
     mapInstance.on("click", addClickToPolygons);
     mapInstance.on("popupclose", resetSelectedProperty);
     // On a ctrl + click
@@ -50,6 +46,11 @@
     // });
   }
 
+  $: if ($propertiesBoundingBox !== null && mapInstance !== undefined) {
+    console.log("Fitting bounds");
+    mapInstance.fitBounds($propertiesBoundingBox);
+  }
+
   // When the markerInstances are available, add click event listeners to each marker
   $: if (Object.keys(markerInstances).length > 0) {
     console.log("MarkerInstances changed", markerInstances);
@@ -62,7 +63,12 @@
   }
 
   // When the drawing state changes, save the polygon if drawing is finished
-  $: if (isDrawing === false) savePolygonINS();
+  $: if (isDrawing === false) {
+    savePolygonINS();
+    if ($propertiesBoundingBox !== null) {
+      mapInstance?.fitBounds($propertiesBoundingBox);
+    }
+  }
 
   // When the selected property changes, pan to the selected property
   $: if (selectedPropertyId) panToPropertyById(selectedPropertyId);

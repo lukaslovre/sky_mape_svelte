@@ -2,7 +2,7 @@ import type { IconOptions, LatLngExpression, MapOptions } from "leaflet";
 
 export const mapOptions: MapOptions = {
   center: [45.81, 15.98] as LatLngExpression,
-  zoom: 11.25,
+  zoom: 10,
   zoomSnap: 0.1,
 };
 

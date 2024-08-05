@@ -23,6 +23,8 @@ export const filteredProperties: Readable<Property[]> = derived(
   ([$properties, $filters]) => {
     if (filtersIsEmpty($filters)) return $properties;
 
+    console.log("filteredProperties derived function called!");
+
     return $properties.filter((property) => propertyMatchesFilter(property, $filters));
   }
 );
@@ -43,6 +45,8 @@ export const propertiesBoundingBox: Readable<LatLngBounds | null> = derived(
   filteredProperties,
   ($filteredProperties) => {
     if ($filteredProperties.length === 0) return null;
+
+    console.log("propertiesBoundingBox derived function called!");
 
     const { maxLat, maxLng, minLat, minLng } = $filteredProperties.reduce(
       (acc, property) => {
@@ -67,6 +71,8 @@ export const propertiesBoundingBox: Readable<LatLngBounds | null> = derived(
       [minLat, minLng],
       [maxLat, maxLng],
     ]);
+
+    console.log("Bounds: ", bounds);
 
     return bounds.pad(0.15);
   }
