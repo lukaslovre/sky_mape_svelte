@@ -8,7 +8,7 @@ import {
 } from "./utils/filter";
 import { getProperties } from "./db/Properties";
 import { getUsers } from "./db/Clients";
-import type { LatLng } from "leaflet";
+import { bounds, LatLng, LatLngBounds } from "leaflet";
 
 // Define your initial store state
 const initialFilters: Filters = emptyFiltersObject();
@@ -36,6 +36,39 @@ export const filteredUsers: Readable<UserData[]> = derived(
     if ($filteredProperties.length === $properties.length) return $users;
 
     return usersMatchingProperties($users, $filteredProperties);
+  }
+);
+
+export const propertiesBoundingBox: Readable<LatLngBounds | null> = derived(
+  filteredProperties,
+  ($filteredProperties) => {
+    if ($filteredProperties.length === 0) return null;
+
+    const { maxLat, maxLng, minLat, minLng } = $filteredProperties.reduce(
+      (acc, property) => {
+        const { lat, lng } = property;
+
+        if (lat > acc.maxLat) acc.maxLat = lat;
+        if (lng > acc.maxLng) acc.maxLng = lng;
+        if (lat < acc.minLat) acc.minLat = lat;
+        if (lng < acc.minLng) acc.minLng = lng;
+
+        return acc;
+      },
+      {
+        maxLat: -Infinity,
+        maxLng: -Infinity,
+        minLat: Infinity,
+        minLng: Infinity,
+      }
+    );
+
+    const bounds: LatLngBounds = new LatLngBounds([
+      [minLat, minLng],
+      [maxLat, maxLng],
+    ]);
+
+    return bounds.pad(0.15);
   }
 );
 

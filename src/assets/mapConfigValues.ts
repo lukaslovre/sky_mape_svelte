@@ -1,8 +1,9 @@
-import type { IconOptions, LatLngExpression } from "leaflet";
+import type { IconOptions, LatLngExpression, MapOptions } from "leaflet";
 
-export const mapOptions = {
+export const mapOptions: MapOptions = {
   center: [45.81, 15.98] as LatLngExpression,
   zoom: 11.25,
+  zoomSnap: 0.1,
 };
 
 export const markerOptions: IconOptions = {

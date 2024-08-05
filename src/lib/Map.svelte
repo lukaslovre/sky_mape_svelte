@@ -1,20 +1,20 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
-  import L, { LatLng, map } from "leaflet";
-  import { Map, TileLayer, Marker, Popup, Icon, Polygon } from "sveaflet";
-  import { mapOptions, markerOptions } from "../assets/mapConfigValues";
   import type { Property } from "../types";
   import PropertyCard from "./Property/PropertyCard.svelte";
-
-  const dispatch = createEventDispatcher();
-
+  import { createEventDispatcher } from "svelte";
+  import L, { LatLng, map, type MapOptions } from "leaflet";
+  import { Map, TileLayer, Marker, Popup, Icon, Polygon } from "sveaflet";
+  import { mapOptions, markerOptions } from "../assets/mapConfigValues";
   import {
     properties,
     filteredProperties,
     filters,
     savePolygon,
     favoriteProperties,
+    propertiesBoundingBox,
   } from "../store";
+
+  const dispatch = createEventDispatcher();
 
   export let isDrawing: boolean;
   export let selectedPropertyId: Property["id"] | null;
@@ -28,6 +28,10 @@
 
   // When the map instance is available, add a click event listener to draw polygons
   $: if (mapInstance) {
+    if ($propertiesBoundingBox !== null) {
+      mapInstance.fitBounds($propertiesBoundingBox);
+    }
+
     mapInstance.on("click", addClickToPolygons);
     mapInstance.on("popupclose", resetSelectedProperty);
     // On a ctrl + click
@@ -64,11 +68,7 @@
   $: if (selectedPropertyId) panToPropertyById(selectedPropertyId);
 
   // When favoriteProperties changes, update the marker icons
-  $: if ($favoriteProperties.length > 0) {
-    $favoriteProperties.forEach((propertyId) => {
-      setAppropriateMarkerIcon(propertyId);
-    });
-  }
+  $: if ($favoriteProperties) setAppropriateMarkerIcons();
 
   function savePolygonINS() {
     if (drawingPoligonCoords.length < 3) {
@@ -124,6 +124,12 @@
     marker.on("click", () => {
       console.log(`Marker clicked: ${propertyId}`);
       selectedPropertyId = propertyId;
+    });
+  }
+
+  function setAppropriateMarkerIcons() {
+    Object.keys(markerInstances).forEach((propertyId) => {
+      setAppropriateMarkerIcon(propertyId);
     });
   }
 
