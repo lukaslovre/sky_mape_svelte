@@ -9,6 +9,7 @@ import {
 import { getProperties } from "./db/Properties";
 import { getUsers } from "./db/Clients";
 import { bounds, LatLng, LatLngBounds } from "leaflet";
+import { getPropertyFromId } from "./utils/propertes";
 
 // Define your initial store state
 const initialFilters: Filters = emptyFiltersObject();
@@ -17,6 +18,7 @@ const initialTab: Tabs = "Map";
 // Create a writable store
 export const filters: Writable<Filters> = writable(initialFilters);
 export const activeTab: Writable<Tabs> = writable(initialTab);
+export const selectedPropertyId: Writable<Property["id"] | null> = writable(null);
 export const properties: Writable<Property[]> = writable([]);
 export const filteredProperties: Readable<Property[]> = derived(
   [properties, filters],
@@ -31,13 +33,23 @@ export const filteredProperties: Readable<Property[]> = derived(
 export const favoriteProperties: Writable<Property["id"][]> = writable([]);
 export const users: Writable<UserData[]> = writable([]);
 export const filteredUsers: Readable<UserData[]> = derived(
-  [users, filteredProperties, properties],
-  ([$users, $filteredProperties, $properties]) => {
+  [users, filteredProperties, properties, selectedPropertyId],
+  ([$users, $filteredProperties, $properties, $selectedPropertyId]) => {
     console.log("filteredUsers derived function called!");
 
-    if ($filteredProperties.length === $properties.length) return $users;
+    // If property is selected, match only for that one property,
+    // otherwise match for all filtered properties
+    if ($selectedPropertyId !== null) {
+      const selectedProperty = getPropertyFromId($selectedPropertyId);
 
-    return usersMatchingProperties($users, $filteredProperties);
+      if (!selectedProperty) return [];
+
+      return usersMatchingProperties($users, [selectedProperty]);
+    } else {
+      if ($filteredProperties.length === $properties.length) return $users;
+
+      return usersMatchingProperties($users, $filteredProperties);
+    }
   }
 );
 
@@ -49,22 +61,8 @@ export const propertiesBoundingBox: Readable<LatLngBounds | null> = derived(
     console.log("propertiesBoundingBox derived function called!");
 
     const { maxLat, maxLng, minLat, minLng } = $filteredProperties.reduce(
-      (acc, property) => {
-        const { lat, lng } = property;
-
-        if (lat > acc.maxLat) acc.maxLat = lat;
-        if (lng > acc.maxLng) acc.maxLng = lng;
-        if (lat < acc.minLat) acc.minLat = lat;
-        if (lng < acc.minLng) acc.minLng = lng;
-
-        return acc;
-      },
-      {
-        maxLat: -Infinity,
-        maxLng: -Infinity,
-        minLat: Infinity,
-        minLng: Infinity,
-      }
+      getBoundsReducer,
+      emptyBoundsObject()
     );
 
     const bounds: LatLngBounds = new LatLngBounds([
@@ -72,9 +70,7 @@ export const propertiesBoundingBox: Readable<LatLngBounds | null> = derived(
       [maxLat, maxLng],
     ]);
 
-    console.log("Bounds: ", bounds);
-
-    return bounds.pad(0.15);
+    return bounds.pad(0.2);
   }
 );
 
@@ -107,4 +103,23 @@ export function savePolygon(polygon: LatLng[]) {
 
 export function resetFilters() {
   filters.set(emptyFiltersObject());
+}
+
+function getBoundsReducer(acc: any, property: Property) {
+  const { lat, lng } = property;
+
+  if (lat > acc.maxLat) acc.maxLat = lat;
+  if (lng > acc.maxLng) acc.maxLng = lng;
+  if (lat < acc.minLat) acc.minLat = lat;
+  if (lng < acc.minLng) acc.minLng = lng;
+
+  return acc;
+}
+function emptyBoundsObject() {
+  return {
+    maxLat: -Infinity,
+    maxLng: -Infinity,
+    minLat: Infinity,
+    minLng: Infinity,
+  };
 }

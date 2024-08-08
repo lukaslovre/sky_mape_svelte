@@ -19,7 +19,6 @@
   import BuyersPage from "./lib/Buyers tab/BuyersPage.svelte";
 
   let isDrawing: boolean = false;
-  let selectedPropertyId: Property["id"] | null = null;
 
   function handleIsDrawingChange(e: CustomEvent<boolean>) {
     isDrawing = e.detail;
@@ -59,7 +58,7 @@
 
   <div class="content">
     {#if $activeTab === "Map"}
-      <Map {isDrawing} bind:selectedPropertyId />
+      <Map {isDrawing} />
     {:else if $activeTab === "Properties"}
       <div class="properties-inside-dialog-container">
         {#each $filteredProperties as property (property.id)}

@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Property } from "../types";
   import PropertyCard from "./Property/PropertyCard.svelte";
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, onDestroy } from "svelte";
   import L, { LatLng, map, type MapOptions } from "leaflet";
   import { Map, TileLayer, Marker, Popup, Icon, Polygon } from "sveaflet";
   import { mapOptions, markerOptions } from "../assets/mapConfigValues";
@@ -12,12 +12,14 @@
     savePolygon,
     favoriteProperties,
     propertiesBoundingBox,
+    selectedPropertyId,
   } from "../store";
 
   const dispatch = createEventDispatcher();
 
   export let isDrawing: boolean;
-  export let selectedPropertyId: Property["id"] | null;
+
+  let isUnmounting = false;
 
   // Array that stores the coordinates of the polygon currently being drawn
   let drawingPoligonCoords: LatLng[] = [];
@@ -71,7 +73,7 @@
   }
 
   // When the selected property changes, pan to the selected property
-  $: if (selectedPropertyId) panToPropertyById(selectedPropertyId);
+  $: if ($selectedPropertyId) panToPropertyById($selectedPropertyId);
 
   // When favoriteProperties changes, update the marker icons
   $: if ($favoriteProperties) setAppropriateMarkerIcons();
@@ -102,7 +104,9 @@
   }
 
   function resetSelectedProperty() {
-    selectedPropertyId = null;
+    if (!isUnmounting) {
+      selectedPropertyId.set(null);
+    }
   }
 
   function saveLatLngToClipboard(e: L.LeafletMouseEvent) {
@@ -129,7 +133,7 @@
   function addClickEventToMarker(marker: L.Marker, propertyId: Property["id"]) {
     marker.on("click", () => {
       console.log(`Marker clicked: ${propertyId}`);
-      selectedPropertyId = propertyId;
+      selectedPropertyId.set(propertyId);
     });
   }
 
@@ -152,6 +156,10 @@
       })
     );
   }
+
+  onDestroy(() => {
+    isUnmounting = true;
+  });
 </script>
 
 <section>

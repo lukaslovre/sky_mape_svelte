@@ -6,6 +6,6 @@
 - [ ] Klik na adresu u kartici prebacuje na `Map` tab i prikazuje adresu na mapi
 - [ ] Klik na `Nacrtaj` filter prebaci na `Map` tab ako nije već tamo
 - [ ] BUGFIX: Riješiti one property cardove koji se vide iza mape
-- [ ] klik na property ispravno filtrira korisnike i sve kako treba
+- [x] klik na property ispravno filtrira korisnike i sve kako treba
 - [ ] poboljšati dizajna kartice za ova nova polja (type i hidden)
 - [ ] dodati i hidden ikone na mapi
