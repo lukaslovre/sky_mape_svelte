@@ -2,6 +2,8 @@
   import type { DialogType } from "../../types";
   import Table from "../Table.svelte";
   import { users, filteredUsers } from "../../store";
+  import SecondaryButton from "../General components/SecondaryButton.svelte";
+  import SaveIcon from "../../assets/icons/SaveIcon.svelte";
 
   export let setDialog: (dialog: DialogType | null) => void;
 </script>
@@ -9,28 +11,21 @@
 <div class="buyers-container">
   <h2>Popis kupaca</h2>
 
-  <button
-    on:click={() => {
-      setDialog("saveBuyer");
-    }}>Spremi novog kupca</button
-  >
+  <div class="buttons-container">
+    <SecondaryButton text="Spremi novog kupca" onClick={() => setDialog("saveBuyer")}>
+      <SaveIcon size={24} color={"#1a1a1a"} />
+    </SecondaryButton>
+  </div>
 
   <Table showHeader={true} data={$filteredUsers} />
 </div>
 
 <style>
-  h2 {
-    margin-bottom: 1.5rem;
-  }
-
   .buyers-container {
     padding: 2.5rem;
-  }
-  .buyers-container button {
-    margin-bottom: 1.5rem;
 
-    padding: 0.5rem 1rem;
-    background-color: hsl(0, 0%, 80%);
-    border-radius: 0.25rem;
+    display: flex;
+    flex-direction: column;
+    row-gap: 2rem;
   }
 </style>

@@ -17,6 +17,7 @@
     z-index: 1000;
     background-color: rgba(0, 0, 0, 0.85);
     color: white;
+    line-height: 1.5;
     padding: 1rem;
     border-radius: 0.5rem;
     pointer-events: none; /* Prevents the popup from interfering with mouse events */

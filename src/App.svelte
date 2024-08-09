@@ -17,6 +17,7 @@
   } from "./store";
   import BuyerForm from "./lib/Buyer/BuyerForm.svelte";
   import BuyersPage from "./lib/Buyers tab/BuyersPage.svelte";
+  import PropertyTab from "./lib/Property/PropertyTab.svelte";
 
   let isDrawing: boolean = false;
 
@@ -60,11 +61,7 @@
     {#if $activeTab === "Map"}
       <Map {isDrawing} />
     {:else if $activeTab === "Properties"}
-      <div class="properties-inside-dialog-container">
-        {#each $filteredProperties as property (property.id)}
-          <PropertyCard {property} />
-        {/each}
-      </div>
+      <PropertyTab />
     {:else if $activeTab === "Buyers"}
       <BuyersPage {setDialog} />
     {/if}
@@ -82,13 +79,5 @@
   .content {
     height: 100%;
     width: 100%;
-  }
-
-  .properties-inside-dialog-container {
-    padding: 2.5rem;
-
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
-    gap: 2rem;
   }
 </style>
