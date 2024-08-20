@@ -4,6 +4,8 @@
   import { users, filteredUsers } from "../../store";
   import SecondaryButton from "../General components/SecondaryButton.svelte";
   import SaveIcon from "../../assets/icons/SaveIcon.svelte";
+  import ColoredButton from "../General components/ColoredButton.svelte";
+  import SpreadsheetIcon from "../../assets/icons/SpreadsheetIcon.svelte";
 
   export let setDialog: (dialog: DialogType | null) => void;
 </script>
@@ -15,6 +17,10 @@
     <SecondaryButton text="Spremi novog kupca" onClick={() => setDialog("saveBuyer")}>
       <SaveIcon size={24} color={"#1a1a1a"} />
     </SecondaryButton>
+
+    <ColoredButton text="Spremi kao tablicu" color="#067925">
+      <SpreadsheetIcon size={24} />
+    </ColoredButton>
   </div>
 
   <Table showHeader={true} data={$filteredUsers} />
@@ -27,5 +33,14 @@
     display: flex;
     flex-direction: column;
     row-gap: 2rem;
+  }
+
+  .buttons-container {
+    display: flex;
+    justify-content: space-between;
+  }
+  .buttons-container > div {
+    display: flex;
+    column-gap: 1.25rem;
   }
 </style>

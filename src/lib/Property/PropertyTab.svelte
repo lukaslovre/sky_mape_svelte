@@ -5,6 +5,8 @@
   import SortIcon from "../../assets/icons/SortIcon.svelte";
   import { filteredProperties } from "../../store";
   import type { Property } from "../../types";
+  import ColoredButton from "../General components/ColoredButton.svelte";
+  import SpreadsheetIcon from "../../assets/icons/SpreadsheetIcon.svelte";
 
   const sortOptions: (keyof Property)[] = ["surfaceArea", "price", "created"];
 
@@ -32,22 +34,51 @@
       });
     }
   }
+
+  //  Save to spreadsheet
+
+  // make a POST request to localhost:3000 with the data in the body
+  async function saveToSpreadsheet() {
+    try {
+      const response = await fetch("http://localhost:3000", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify($filteredProperties),
+      });
+
+      const data = await response.text();
+      console.log("Success:", data);
+
+      // Go to the url that was sent back in the response, so that it downloads the file
+      window.location.href = `http://localhost:3000/${data}`;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 </script>
 
 <div class="properties-container">
   <h2>Popis nekretnina</h2>
 
   <div class="buttons-container">
-    <SecondaryButton text="Spremi novu nekretninu">
-      <SaveIcon size={24} color={"#1a1a1a"} />
-    </SecondaryButton>
+    <div>
+      <SecondaryButton text="Spremi novu nekretninu">
+        <SaveIcon size={24} color={"#1a1a1a"} />
+      </SecondaryButton>
 
-    <SecondaryButton
-      text={`Sortiraj (po ${sortOptions[selectedSortOptionIndex]})`}
-      onClick={changeSortOption}
-    >
-      <SortIcon size={24} color={"#1a1a1a"} />
-    </SecondaryButton>
+      <SecondaryButton
+        text={`Sortiraj (po ${sortOptions[selectedSortOptionIndex]})`}
+        onClick={changeSortOption}
+      >
+        <SortIcon size={24} color={"#1a1a1a"} />
+      </SecondaryButton>
+    </div>
+
+    <ColoredButton text="Spremi kao tablicu" color="#067925" onClick={saveToSpreadsheet}>
+      <SpreadsheetIcon size={24} />
+    </ColoredButton>
   </div>
   <div class="properties-grid-container">
     {#each sortProperties($filteredProperties, selectedSortOptionIndex) as property (property.id)}
@@ -65,6 +96,10 @@
   }
 
   .buttons-container {
+    display: flex;
+    justify-content: space-between;
+  }
+  .buttons-container > div {
     display: flex;
     column-gap: 1.25rem;
   }
