@@ -164,11 +164,11 @@
 
 <section>
   <Map options={mapOptions} bind:instance={mapInstance}>
-    <TileLayer urlTemplate={"https://tile.openstreetmap.org/{z}/{x}/{y}.png"} />
+    <TileLayer url={"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"} />
 
     {#each $properties as property (property.id)}
       <Marker
-        latlng={new LatLng(property.lat, property.lng)}
+        latLng={new LatLng(property.lat, property.lng)}
         options={{ opacity: $filteredProperties.includes(property) ? 1 : 0.25 }}
         bind:instance={markerInstances[property.id]}
       >
