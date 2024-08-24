@@ -18,4 +18,7 @@
 
 - [ ] Nova kategorija (slobodno, in progress, sold)
 
-- maknut "sve" sa dropdowna
+- [ ] maknut "sve" sa dropdowna
+- [ ] apply filters from person
+
+- [ ] temporary nekretnina

@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { DialogType } from "../../types";
-  import Table from "../Table.svelte";
-  import { users, filteredUsers } from "../../store";
+  import Table from "../Table/Table.svelte";
+  import { filteredUsers } from "../../store";
   import SecondaryButton from "../General components/SecondaryButton.svelte";
   import SaveIcon from "../../assets/icons/SaveIcon.svelte";
   import ColoredButton from "../General components/ColoredButton.svelte";
