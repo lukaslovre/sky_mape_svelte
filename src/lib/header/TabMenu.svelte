@@ -42,11 +42,13 @@
     gap: 1rem;
   }
   nav ul li button {
-    padding: 0.75rem 1.5rem;
+    height: 3rem;
+    padding: 0 1.5rem;
+
     background-color: #fff;
-    border: 1px solid #bfbfbf;
-    outline: 0px solid #0b5eda;
-    border-radius: 0.5rem;
+    border: 0.125rem solid #bfbfbf;
+    outline: none;
+    border-radius: 0.5rem 0.5rem 0.25rem 0.25rem;
     box-shadow: none;
 
     font-size: 1rem;
@@ -54,11 +56,19 @@
     color: #4d4d4d;
 
     transition:
-      outline 75ms ease-out,
-      color 75ms ease-out;
+      border-color 75ms ease-out,
+      color 75ms ease-out,
+      border-radius 75ms ease-out;
+  }
+  button:hover,
+  button:focus {
+    color: #1a1a1a;
+    border-radius: 0.5rem;
+    border-color: #1a1a1a;
   }
   button.active {
-    outline: 2px solid #0b5eda;
+    border-color: #0b5eda;
     color: #1a1a1a;
+    border-radius: 0.5rem;
   }
 </style>

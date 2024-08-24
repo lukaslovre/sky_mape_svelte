@@ -9,9 +9,5 @@
 
 - [ ] Poboljšati table
 
-- [ ] BUGFIX: Riješiti one property cardove koji se vide iza mape
-
 - [ ] poboljšati dizajna kartice za ova nova polja (type i hidden)
 - [ ] dodati i hidden ikone na mapi
-
-- [ ] sortiranje property list
