@@ -12,7 +12,8 @@
     savePolygon,
     favoriteProperties,
     propertiesBoundingBox,
-    selectedPropertyId,
+    selectedPropertyIds,
+    toggleSelectedProperty,
   } from "../store";
 
   const dispatch = createEventDispatcher();
@@ -28,27 +29,15 @@
   let mapInstance: L.Map | undefined;
   let markerInstances: { [key: Property["id"]]: L.Marker } = {};
 
-  let liveDrawingEnabled = false;
-  function prepareStateForLiveDrawing() {
-    if (!isDrawing) return;
-    // if (!liveDrawingEnabled) {
-    //   liveDrawingEnabled = true;
-    // }
-  }
-
   // When the map instance is available, add a click event listener to draw polygons
   $: if (mapInstance) {
     mapInstance.on("click", addClickToPolygons);
-    // mapInstance.on("click", prepareStateForLiveDrawing);
-    mapInstance.on("click", saveLatLngToClipboard); // Ctrl
+    mapInstance.on("click", saveLatLngToClipboard); // Alt
     mapInstance.on("popupclose", resetSelectedProperty);
 
     mapInstance.on("mousemove", (e) => {
       if (isDrawing === false) return;
       if (drawingPoligonCoords.length === 0) return;
-
-      // drawingPoligonCoords[drawingPoligonCoords.length - 1] = e.latlng;
-      // drawingPoligonCoords = [...drawingPoligonCoords];
 
       drawingPoligonCoords = [...drawingPoligonCoords.slice(0, -1), e.latlng];
     });
@@ -79,7 +68,8 @@
   }
 
   // When the selected property changes, pan to the selected property
-  $: if ($selectedPropertyId) panToPropertyById($selectedPropertyId);
+  $: if ($selectedPropertyIds)
+    panToPropertyById($selectedPropertyIds[$selectedPropertyIds.length - 1] || null);
 
   // When favoriteProperties changes, update the marker icons
   $: if ($favoriteProperties) setAppropriateMarkerIcons();
@@ -117,12 +107,12 @@
 
   function resetSelectedProperty() {
     if (!isUnmounting) {
-      selectedPropertyId.set(null);
+      selectedPropertyIds.set([]);
     }
   }
 
   function saveLatLngToClipboard(e: L.LeafletMouseEvent) {
-    if (e.originalEvent.ctrlKey) {
+    if (e.originalEvent.shiftKey) {
       navigator.clipboard.writeText(`${e.latlng.lat}, ${e.latlng.lng}`).then(
         () => {
           console.log("Lat and Lng copied to clipboard");
@@ -135,7 +125,9 @@
     }
   }
 
-  function panToPropertyById(id: Property["id"]) {
+  function panToPropertyById(id: Property["id"] | null) {
+    if (!id) return;
+
     const property = $properties.find((p) => p.id === id);
     if (property) {
       mapInstance?.panTo(new LatLng(property.lat, property.lng));
@@ -143,9 +135,20 @@
   }
 
   function addClickEventToMarker(marker: L.Marker, propertyId: Property["id"]) {
-    marker.on("click", () => {
+    marker.on("click", (e) => {
       console.log(`Marker clicked: ${propertyId}`);
-      selectedPropertyId.set(propertyId);
+
+      // multi select
+      if (e.originalEvent.ctrlKey) {
+        console.log("Ctrl key pressed");
+
+        toggleSelectedProperty(propertyId);
+      } else {
+        // single select
+        selectedPropertyIds.set([propertyId]);
+      }
+
+      console.log("Selected properties: ", $selectedPropertyIds);
     });
   }
 
@@ -220,6 +223,7 @@
     <Polygon latLngs={drawingPoligonCoords} />
   </Map>
 </section>
+selectedProperty
 
 <style>
   section {

@@ -1,6 +1,7 @@
 <!-- Ovo je namijenjeno prvo kao generalni table ali mislim da ću specificirati za popis kupaca samo -->
 
 <script lang="ts">
+  import CheckmarkIcon from "../assets/icons/CheckmarkIcon.svelte";
   import type { Filters, UserData } from "../types";
   import Popup from "./General components/Popup.svelte";
 
@@ -20,6 +21,30 @@
     "favoriteProperties",
     "filters",
   ];
+
+  let columnNames: Record<keyof ParsedUserData, string> = {
+    id: "ID",
+    name: "Ime",
+    email: "Email",
+    phone: "Telefon",
+    note: "Napomena",
+    created: "Kreirano",
+    updated: "Ažurirano",
+    favoriteProperties: "Favoriti",
+    filters: "Filteri",
+  };
+
+  let checkboxes: Record<string, boolean> = {};
+  let selectAllCheckboxState: boolean = false;
+
+  $: if (selectAllCheckboxState === true) {
+    checkboxes = data.reduce((acc, user) => {
+      acc[user.id] = true;
+      return acc;
+    }, {});
+  } else {
+    checkboxes = {};
+  }
 
   function parseData(data: UserData[]) {
     return data.map((user) => {
@@ -84,8 +109,19 @@
     {#if showHeader && data.length > 0}
       <thead>
         <tr>
+          <th>
+            <input
+              type="checkbox"
+              name="selectAll"
+              id="selectAll"
+              bind:checked={selectAllCheckboxState}
+            />
+            <label for="selectAll">
+              <CheckmarkIcon />
+            </label>
+          </th>
           {#each columnOrder as header}
-            <th>{header}</th>
+            <th>{columnNames[header]}</th>
           {/each}
         </tr>
       </thead>
@@ -93,7 +129,24 @@
 
     <tbody>
       {#each parseData(data) as user}
-        <tr>
+        <tr
+          on:click={() => {
+            checkboxes[user.id] = !checkboxes[user.id];
+          }}
+        >
+          <td>
+            <input
+              type="checkbox"
+              name={`selected-${user.id}`}
+              id={`selected-${user.id}`}
+              checked={checkboxes[user.id]}
+            />
+            <label for={`selected-${user.id}`} on:click|stopPropagation>
+              {#if checkboxes[user.id]}
+                <CheckmarkIcon />
+              {/if}
+            </label>
+          </td>
           {#each columnOrder as key}
             {#if typeof user[key] === "object"}
               {#if user[key].length !== undefined}
@@ -117,7 +170,31 @@
             {:else if user[key] === ""}
               <td class="empty">N/A</td>
             {:else if ["email", "phone"].includes(key)}
-              <td class="copyable">{user[key]}</td>
+              <td
+                class="copyable"
+                on:click|stopPropagation={async () => {
+                  try {
+                    await navigator.clipboard.writeText(user[key]);
+
+                    // TEMPORARY:
+                    // change the cursor to a checkmark for a brief moment
+                    document.body.style.cursor = "grab";
+                    document.querySelectorAll(".copyable").forEach((el) => {
+                      el.style.cursor = "wait";
+                    });
+                    setTimeout(() => {
+                      document.body.style.cursor = "auto";
+                      document.querySelectorAll(".copyable").forEach((el) => {
+                        el.style.cursor = "pointer";
+                      });
+                    }, 1000);
+
+                    // alert("Kopirano!");
+                  } catch (err) {
+                    return;
+                  }
+                }}>{user[key]}</td
+              >
             {:else}
               <td>{user[key]}</td>
             {/if}
@@ -145,6 +222,8 @@
     padding: 0.75rem 1.5rem;
     font-size: 0.875rem;
     text-align: left;
+
+    transition: background-color 100ms ease-out;
   }
 
   th {
@@ -153,6 +232,10 @@
 
   td {
     background-color: hsla(0, 0%, 100%, 0.5);
+  }
+
+  tr:hover td {
+    background-color: hsla(0, 0%, 100%, 0.75);
   }
 
   tr th:first-child {
@@ -170,10 +253,36 @@
 
   .copyable {
     color: #0b5eda;
+    cursor: pointer;
+  }
+  .copyable:hover {
+    text-decoration: underline;
   }
 
   .empty {
     color: hsl(0, 0%, 50%);
+  }
+
+  input[type="checkbox"] {
+    display: none;
+  }
+  label {
+    cursor: pointer;
+
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 0.25rem;
+    background-color: transparent;
+    border: 2px solid #808080;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  input[type="checkbox"]:checked + label {
+    background-color: #0b5eda;
+    border-color: #0b5eda;
   }
 
   button.applyFiltersButton {

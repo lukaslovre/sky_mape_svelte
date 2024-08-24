@@ -136,7 +136,11 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.1);
+    background: linear-gradient(
+      rgba(0, 0, 0, 0.05) 0%,
+      rgba(0, 0, 0, 0.15) 66%,
+      rgba(0, 0, 0, 0.75) 100%
+    );
 
     border-radius: 0.5rem 0 0 0.5rem;
   }

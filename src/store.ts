@@ -18,14 +18,17 @@ const initialTab: Tabs = "Map";
 // Create a writable store
 export const filters: Writable<Filters> = writable(initialFilters);
 export const activeTab: Writable<Tabs> = writable(initialTab);
-export const selectedPropertyId: Writable<Property["id"] | null> = writable(null);
+export const selectedPropertyIds: Writable<Property["id"][]> = writable([]);
 export const properties: Writable<Property[]> = writable([]);
 export const filteredProperties: Readable<Property[]> = derived(
-  [properties, filters],
-  ([$properties, $filters]) => {
-    if (filtersIsEmpty($filters)) return $properties;
+  [properties, filters, selectedPropertyIds],
+  ([$properties, $filters, $selectedPropertyIds]) => {
+    if ($selectedPropertyIds.length > 1) {
+      console.log("there are many selected properties!");
+      return $properties.filter((property) => $selectedPropertyIds.includes(property.id));
+    }
 
-    console.log("filteredProperties derived function called!");
+    if (filtersIsEmpty($filters)) return $properties;
 
     return $properties.filter((property) => propertyMatchesFilter(property, $filters));
   }
@@ -33,18 +36,18 @@ export const filteredProperties: Readable<Property[]> = derived(
 export const favoriteProperties: Writable<Property["id"][]> = writable([]);
 export const users: Writable<UserData[]> = writable([]);
 export const filteredUsers: Readable<UserData[]> = derived(
-  [users, filteredProperties, properties, selectedPropertyId],
-  ([$users, $filteredProperties, $properties, $selectedPropertyId]) => {
+  [users, filteredProperties, properties, selectedPropertyIds],
+  ([$users, $filteredProperties, $properties, $selectedPropertyIds]) => {
     console.log("filteredUsers derived function called!");
 
     // If property is selected, match only for that one property,
     // otherwise match for all filtered properties
-    if ($selectedPropertyId !== null) {
-      const selectedProperty = getPropertyFromId($selectedPropertyId);
+    if ($selectedPropertyIds.length === 1) {
+      const selectedProperty = getPropertyFromId($selectedPropertyIds);
 
       if (!selectedProperty) return [];
 
-      return usersMatchingProperties($users, [selectedProperty]);
+      return usersMatchingProperties($users, selectedProperty);
     } else {
       if ($filteredProperties.length === $properties.length) return $users;
 
@@ -122,4 +125,14 @@ function emptyBoundsObject() {
     minLat: Infinity,
     minLng: Infinity,
   };
+}
+
+export function toggleSelectedProperty(propertyId: Property["id"]) {
+  selectedPropertyIds.update((currentSelectedPropertyIds) => {
+    if (currentSelectedPropertyIds.includes(propertyId)) {
+      return currentSelectedPropertyIds.filter((id) => id !== propertyId);
+    } else {
+      return [...currentSelectedPropertyIds, propertyId];
+    }
+  });
 }

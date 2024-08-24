@@ -1,23 +1,14 @@
 <script lang="ts">
-  import type { DialogType, Filters, Property, UserData } from "./types";
+  import type { DialogType } from "./types";
   import Header from "./lib/Header.svelte";
   import Map from "./lib/Map.svelte";
-  // import { properties } from "./assets/propertiesData";
 
   import Dialog from "./lib/Dialog.svelte";
-  import PropertyCard from "./lib/Property/PropertyCard.svelte";
 
-  import {
-    activeTab,
-    filteredProperties,
-    filters,
-    properties,
-    users,
-    favoriteProperties,
-  } from "./store";
+  import { activeTab } from "./store";
   import BuyerForm from "./lib/Buyer/BuyerForm.svelte";
-  import BuyersPage from "./lib/Buyers tab/BuyersPage.svelte";
-  import PropertyTab from "./lib/Property/PropertyTab.svelte";
+  import BuyersPage from "./lib/Buyer/BuyersPage.svelte";
+  import PropertyPage from "./lib/Property/PropertyPage.svelte";
 
   let isDrawing: boolean = false;
 
@@ -61,7 +52,7 @@
     {#if $activeTab === "Map"}
       <Map {isDrawing} />
     {:else if $activeTab === "Properties"}
-      <PropertyTab />
+      <PropertyPage />
     {:else if $activeTab === "Buyers"}
       <BuyersPage {setDialog} />
     {/if}
