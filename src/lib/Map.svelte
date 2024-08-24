@@ -28,24 +28,30 @@
   let mapInstance: L.Map | undefined;
   let markerInstances: { [key: Property["id"]]: L.Marker } = {};
 
+  let liveDrawingEnabled = false;
+  function prepareStateForLiveDrawing() {
+    if (!isDrawing) return;
+    // if (!liveDrawingEnabled) {
+    //   liveDrawingEnabled = true;
+    // }
+  }
+
   // When the map instance is available, add a click event listener to draw polygons
   $: if (mapInstance) {
     mapInstance.on("click", addClickToPolygons);
+    // mapInstance.on("click", prepareStateForLiveDrawing);
+    mapInstance.on("click", saveLatLngToClipboard); // Ctrl
     mapInstance.on("popupclose", resetSelectedProperty);
-    // On a ctrl + click
-    mapInstance.on("click", saveLatLngToClipboard);
 
-    // mapInstance.on("mousemove", (e) => {
-    //   if (isDrawing === false) return;
+    mapInstance.on("mousemove", (e) => {
+      if (isDrawing === false) return;
+      if (drawingPoligonCoords.length === 0) return;
 
-    //   if (drawingPoligonCoords.length === 0) return;
+      // drawingPoligonCoords[drawingPoligonCoords.length - 1] = e.latlng;
+      // drawingPoligonCoords = [...drawingPoligonCoords];
 
-    //   drawingPoligonCoords[drawingPoligonCoords.length - 1] = e.latlng;
-
-    //   drawingPoligonCoords = [...drawingPoligonCoords];
-
-    //   console.log(e.latlng);
-    // });
+      drawingPoligonCoords = [...drawingPoligonCoords.slice(0, -1), e.latlng];
+    });
   }
 
   $: if ($propertiesBoundingBox !== null && mapInstance !== undefined) {
@@ -84,6 +90,8 @@
       return;
     }
 
+    drawingPoligonCoords.pop();
+
     savePolygon(drawingPoligonCoords);
     drawingPoligonCoords = [];
   }
@@ -100,7 +108,11 @@
   function addClickToPolygons(e: L.LeafletMouseEvent) {
     if (isDrawing === false) return;
 
-    drawingPoligonCoords = [...drawingPoligonCoords, e.latlng];
+    if (drawingPoligonCoords.length === 0) {
+      drawingPoligonCoords = [e.latlng, e.latlng];
+    } else {
+      drawingPoligonCoords = [...drawingPoligonCoords, e.latlng];
+    }
   }
 
   function resetSelectedProperty() {
