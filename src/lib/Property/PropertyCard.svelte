@@ -10,6 +10,7 @@
   import { favoriteProperties } from "../../store";
   import EyeIcon from "../../assets/icons/EyeIcon.svelte";
   import EyeOffIcon from "../../assets/icons/EyeOffIcon.svelte";
+  import { pocketbaseUrl } from "../../db/generalAndSetup";
 
   export let property: Property;
 
@@ -22,6 +23,28 @@
       favoriteProperties.update((prev) => [...prev, property.id]);
     }
   }
+
+  function openPropertyEditor() {
+    const url = getPocketbaseRecordUrl();
+
+    console.log("openPropertyEditor", url);
+
+    window.open(url, "_blank");
+  }
+
+  function getPocketbaseRecordUrl() {
+    // http://49.13.64.0:9992/_/#/collections?collectionId=1xq5g1wyjzp8jk7&filter=&sort=-created&recordId=2zbtkfe3chmp6ta
+    const { collectionId, id } = property;
+
+    const baseUrl = `${pocketbaseUrl}/_/#/collections`;
+
+    const queryParams = new URLSearchParams({
+      collectionId,
+      recordId: id,
+    });
+
+    return `${baseUrl}?${queryParams.toString()}`;
+  }
 </script>
 
 <div class="property-card">
@@ -30,12 +53,7 @@
 
     <!-- buttons over image -->
     <div class="buttons-over-image-container">
-      <button
-        type="button"
-        on:click|stopPropagation={() => {
-          console.log("clicked on the map button");
-        }}
-      >
+      <button type="button" on:click|stopPropagation={openPropertyEditor}>
         <EditIcon size={20} />
       </button>
 

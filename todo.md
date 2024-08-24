@@ -11,3 +11,9 @@
 
 - [ ] poboljšati dizajna kartice za ova nova polja (type i hidden)
 - [ ] dodati i hidden ikone na mapi
+
+- [ ] Shift click -> multiple select -> promjeni se kursor
+
+- [ ] Nova kategorija (slobodno, in progress, sold)
+
+- [ ] Live crtanje
