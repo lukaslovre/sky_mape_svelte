@@ -1,33 +1,37 @@
 <script lang="ts">
-  import {
-    activeTab,
-    properties,
-    users,
-    filteredProperties,
-    filteredUsers,
-  } from "../../store";
+  import { activeTab, filteredProperties, filteredUsers } from "../../store";
   import type { Tabs } from "../../types";
 
-  let tabs_values: Tabs[] = ["Map", "Properties", "Buyers"];
+  let tabs: Tabs[] = ["Map", "Properties", "Buyers"];
+
+  function handleTabClick(tab: Tabs) {
+    $activeTab = tab;
+  }
+
+  type TabLabels = {
+    [key in Tabs]: string;
+  };
+
+  let tabLabels = {} as TabLabels;
+
+  $: tabLabels = tabs.reduce((acc: TabLabels, tab: Tabs) => {
+    if (tab === "Properties") {
+      acc[tab] = `${$filteredProperties.length} ${tab}`;
+    } else if (tab === "Buyers") {
+      acc[tab] = `${$filteredUsers.length} ${tab}`;
+    } else {
+      acc[tab] = tab;
+    }
+    return acc;
+  }, {} as TabLabels);
 </script>
 
 <nav>
   <ul class="tab-menu">
-    {#each tabs_values as tab}
+    {#each tabs as tab}
       <li>
-        <button
-          class:active={tab === $activeTab}
-          on:click={() => {
-            $activeTab = tab;
-          }}
-        >
-          {tab}
-          {#if tab === "Properties"}
-            ({$filteredProperties.length})
-          {/if}
-          {#if tab === "Buyers"}
-            ({$filteredUsers.length})
-          {/if}
+        <button class:active={tab === $activeTab} on:click={() => handleTabClick(tab)}>
+          {tabLabels[tab]}
         </button>
       </li>
     {/each}
