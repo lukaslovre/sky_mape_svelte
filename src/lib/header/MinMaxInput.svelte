@@ -9,8 +9,8 @@
   <label for={id}>{label}</label>
 
   <div class="inputsContainer">
-    <input type="number" name={id + "-min"} id={id + "-min"} bind:value={minValue} />
-    <input type="number" name={id + "-max"} id={id + "-max"} bind:value={maxValue} />
+    <input type="text" name={id + "-min"} id={id + "-min"} bind:value={minValue} />
+    <input type="text" name={id + "-max"} id={id + "-max"} bind:value={maxValue} />
   </div>
 </div>
 
@@ -21,6 +21,8 @@
     flex-direction: column;
     gap: 0.5rem;
     /* width: fit-content; */
+
+    max-width: 20rem;
   }
 
   label {
@@ -36,6 +38,7 @@
   input {
     position: relative;
     width: 100%;
+    flex: 1;
 
     /* width: 100%; */
     /* display: flex;

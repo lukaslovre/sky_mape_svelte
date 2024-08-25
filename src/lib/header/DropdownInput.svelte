@@ -63,7 +63,7 @@
   </button>
 
   <div class="dropdown-input-options" style:display={isOpen ? "flex" : "none"}>
-    <button
+    <!-- <button
       type="button"
       class="dropdown-input-option"
       class:selected={values.length === 0}
@@ -75,8 +75,8 @@
         {/if}
       </div>
 
-      Sve</button
-    >
+      Sve
+    </button> -->
 
     {#each options as { label, value }}
       <button
@@ -107,6 +107,7 @@
     flex-direction: column;
     gap: 0.5rem;
     /* width: fit-content; */
+    max-width: 20rem;
   }
 
   label {
@@ -148,9 +149,7 @@
     left: 0;
     z-index: 2;
     width: max-content;
-    /* right: 0; */
-    /* display: none; */
-    /* display: flex; */
+
     flex-direction: column;
 
     border-radius: 0.375rem;
@@ -167,6 +166,8 @@
     gap: 0.75rem;
 
     padding: 1rem;
+    padding-right: 2rem;
+
     border-radius: 0.375rem;
     background-color: #ffffff;
     color: #1a1a1a;

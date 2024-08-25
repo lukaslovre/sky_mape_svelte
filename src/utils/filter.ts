@@ -14,6 +14,11 @@ export function emptyFiltersObject(): Filters {
   };
 }
 
+function parseNumber(value: any, defaultValue: number): number {
+  const parsedValue = parseFloat(value);
+  return isNaN(parsedValue) ? defaultValue : parsedValue || defaultValue;
+}
+
 export function parseFilterValues({
   action,
   type,
@@ -26,10 +31,10 @@ export function parseFilterValues({
   return {
     action: action || [],
     type: type || [],
-    minPrice: minPrice || 0,
-    maxPrice: maxPrice || Infinity,
-    minArea: minArea || 0,
-    maxArea: maxArea || Infinity,
+    minPrice: parseNumber(minPrice, 0),
+    maxPrice: parseNumber(maxPrice, Infinity),
+    minArea: parseNumber(minArea, 0),
+    maxArea: parseNumber(maxArea, Infinity),
     polygons: polygons || [],
   };
 }

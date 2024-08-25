@@ -23,6 +23,8 @@ export const properties: Writable<Property[]> = writable([]);
 export const filteredProperties: Readable<Property[]> = derived(
   [properties, filters, selectedPropertyIds],
   ([$properties, $filters, $selectedPropertyIds]) => {
+    console.log($filters);
+
     if ($selectedPropertyIds.length > 1) {
       console.log("there are many selected properties!");
       return $properties.filter((property) => $selectedPropertyIds.includes(property.id));

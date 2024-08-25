@@ -14,6 +14,8 @@ export function sortProperties(
 ): Property[] {
   if (sortByAttribute === null) return properties;
 
+  if (properties.length === 0) return properties;
+
   if (typeof properties[0][sortByAttribute] === "number") {
     return properties.sort(
       (a, b) => (a[sortByAttribute] as number) - (b[sortByAttribute] as number)

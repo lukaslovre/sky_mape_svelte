@@ -10,49 +10,48 @@
   }
 </script>
 
-<!-- type PropertyType = "Apartment" | "House" | "Land" | "Commercial";
-type PropertyAction = "Rent" | "Sale"; -->
-
 <div class="filters-container">
-  <DropdownInput
-    label="Akcija"
-    id="action"
-    options={[
-      { label: "Prodaja", value: "Sale" },
-      { label: "Najam", value: "Rent" },
-    ]}
-    bind:values={$filters.action}
-  />
+  <div>
+    <DropdownInput
+      label="Tip nekretnine"
+      id="type"
+      options={[
+        { label: "Stan", value: "Apartment" },
+        { label: "Kuća", value: "House" },
+        { label: "Poslovni prostor", value: "Commercial" },
+        { label: "Zemljište", value: "Land" },
+      ]}
+      bind:values={$filters.type}
+    />
 
-  <DropdownInput
-    label="Tip nekretnine"
-    id="type"
-    options={[
-      { label: "Stan", value: "Apartment" },
-      { label: "Kuća", value: "House" },
-      { label: "Poslovni prostor", value: "Commercial" },
-      { label: "Zemljište", value: "Land" },
-    ]}
-    bind:values={$filters.type}
-  />
+    <DropdownInput
+      label="Akcija"
+      id="action"
+      options={[
+        { label: "Prodaja", value: "Sale" },
+        { label: "Najam", value: "Rent" },
+      ]}
+      bind:values={$filters.action}
+    />
 
-  <MinMaxInput
-    label="Cijena (€)"
-    id="price"
-    bind:minValue={$filters.minPrice}
-    bind:maxValue={$filters.maxPrice}
-  />
+    <MinMaxInput
+      label="Cijena (€)"
+      id="price"
+      bind:minValue={$filters.minPrice}
+      bind:maxValue={$filters.maxPrice}
+    />
 
-  <MinMaxInput
-    label="Površina (m2)"
-    id="area"
-    bind:minValue={$filters.minArea}
-    bind:maxValue={$filters.maxArea}
-  />
+    <MinMaxInput
+      label="Površina (m2)"
+      id="area"
+      bind:minValue={$filters.minArea}
+      bind:maxValue={$filters.maxArea}
+    />
 
-  <LocationInput on:isDrawingChange />
+    <LocationInput on:isDrawingChange />
+  </div>
 
-  <button type="reset" class="button" style="margin-left: 2.5rem;" on:click={resetValues}>
+  <button type="reset" class="button" style="margin-left: auto" on:click={resetValues}>
     <ResetIcon /> Resetiraj
   </button>
 </div>
@@ -65,8 +64,14 @@ type PropertyAction = "Rent" | "Sale"; -->
     width: 100%;
 
     display: flex;
-    flex-direction: row;
     align-items: flex-end;
+    justify-content: space-between;
+    gap: 3rem;
+  }
+  .filters-container > div {
+    flex: 1;
+
+    display: flex;
     gap: 1rem;
   }
 

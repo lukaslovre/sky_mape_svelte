@@ -5,20 +5,26 @@
 - [x] klik na property ispravno filtrira korisnike i sve kako treba
 - [x] Live crtanje
 
-- [ ] Klik na adresu u kartici prebacuje na `Map` tab i prikazuje adresu na mapi
-- [ ] Klik na `Nacrtaj` filter prebaci na `Map` tab ako nije već tamo
+## Do sastanka
 
-- [ ] Poboljšati table
+- [x] maknut "sve" sa dropdowna
+- [ ] pretvoriti min-max u text input i onda paziti da se ne zezne data-type negdje
+- [ ] apply filters from person
+- [ ] temporary nekretnina
+- Dockerfile sa backendom
 
+## Ako stignem
+
+- [ ] Shift click -> multiple select -> promjeni se kursor
+
+## Kasnije
+
+- [ ] Nova kategorija (slobodno, in progress, sold)
 - [ ] poboljšati dizajna kartice za ova nova polja (type i hidden)
 - [ ] dodati i hidden ikone na mapi
 - [ ] visibility filter
 
-- [ ] Shift click -> multiple select -> promjeni se kursor
+## Kasnije od kasnije
 
-- [ ] Nova kategorija (slobodno, in progress, sold)
-
-- [ ] maknut "sve" sa dropdowna
-- [ ] apply filters from person
-
-- [ ] temporary nekretnina
+- [ ] Klik na adresu u kartici prebacuje na `Map` tab i prikazuje adresu na mapi
+- [ ] Klik na `Nacrtaj` filter prebaci na `Map` tab ako nije već tamo
