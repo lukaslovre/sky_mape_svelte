@@ -1,5 +1,6 @@
 <script lang="ts">
   import CheckmarkIcon from "../../../assets/icons/CheckmarkIcon.svelte";
+  import { applyUserFilters } from "../../../store";
   import type { Filters, UserData } from "../../../types";
   import { parsePocketbaseUserData } from "../../../utils/buyers";
   import Popup from "../../General components/Popup.svelte";
@@ -93,8 +94,13 @@
                 on:mouseenter={(e) => {
                   showFiltersPopup(user.id, e);
                 }}
-                on:mouseleave={hideFiltersPopup}>Primjeni</button
+                on:mouseleave={hideFiltersPopup}
+                on:click={() => {
+                  applyUserFilters(user.filters, user.favoriteProperties);
+                }}
               >
+                Primjeni
+              </button>
             </td>
           {/if}
         {:else if user[column] === ""}

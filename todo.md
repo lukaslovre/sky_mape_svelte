@@ -9,8 +9,8 @@
 
 - [x] maknut "sve" sa dropdowna
 - [x] pretvoriti min-max u text input i onda paziti da se ne zezne data-type negdje
-- [ ] apply filters from person
-- [ ] temporary nekretnina
+- [x] apply filters from person
+- [x] temporary nekretnina
 - Dockerfile sa backendom
 
 ## Ako stignem
@@ -21,7 +21,7 @@
 
 - [ ] Nova kategorija (slobodno, in progress, sold)
 - [ ] poboljšati dizajna kartice za ova nova polja (type i hidden)
-- [ ] dodati i hidden ikone na mapi
+- [x] dodati i hidden ikone na mapi
 - [ ] visibility filter
 
 ## Kasnije od kasnije

@@ -138,3 +138,11 @@ export function toggleSelectedProperty(propertyId: Property["id"]) {
     }
   });
 }
+
+export function applyUserFilters(
+  userFilters: UserData["filters"],
+  userFavoriteProperties: Property["id"][]
+) {
+  filters.set(userFilters || emptyFiltersObject());
+  favoriteProperties.set(userFavoriteProperties);
+}
