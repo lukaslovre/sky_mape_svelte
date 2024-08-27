@@ -15,6 +15,7 @@
     selectedPropertyIds,
     toggleSelectedProperty,
   } from "../store";
+  import { getIconForProperty } from "../utils/propertyIcons";
 
   const dispatch = createEventDispatcher();
 
@@ -33,6 +34,7 @@
   $: if (mapInstance) {
     mapInstance.on("click", addClickToPolygons);
     mapInstance.on("click", saveLatLngToClipboard); // Alt
+    mapInstance.on("click", addTemporaryProperty); // Ctrl
     mapInstance.on("popupclose", resetSelectedProperty);
 
     mapInstance.on("mousemove", (e) => {
@@ -125,6 +127,36 @@
     }
   }
 
+  function addTemporaryProperty(e: L.LeafletMouseEvent) {
+    if (e.originalEvent.ctrlKey) {
+      properties.update((p) => {
+        return [
+          ...p,
+          {
+            // generate uuid
+            id: `temporary-${Math.random().toString(36).slice(2)}`,
+            lat: e.latlng.lat,
+            lng: e.latlng.lng,
+            type: "House",
+            price: 0,
+            description: "",
+            action: "Sale",
+            imgUrl: [""],
+            title: "Temporary property",
+            surfaceArea: 0,
+            websiteUrl: "",
+            hiddenOnWebsite: false,
+
+            created: "",
+            updated: "",
+            collectionId: "",
+            collectionName: "",
+          },
+        ];
+      });
+    }
+  }
+
   function panToPropertyById(id: Property["id"] | null) {
     if (!id) return;
 
@@ -167,7 +199,7 @@
     marker.setIcon(
       new L.Icon({
         ...markerOptions,
-        iconUrl: `/${property.type.toLowerCase()}${$favoriteProperties.includes(property.id) ? "-favorited" : ""}.png`,
+        iconUrl: getIconForProperty(property, $favoriteProperties),
       })
     );
   }
