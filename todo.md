@@ -8,7 +8,7 @@
 ## Do sastanka
 
 - [x] maknut "sve" sa dropdowna
-- [ ] pretvoriti min-max u text input i onda paziti da se ne zezne data-type negdje
+- [x] pretvoriti min-max u text input i onda paziti da se ne zezne data-type negdje
 - [ ] apply filters from person
 - [ ] temporary nekretnina
 - Dockerfile sa backendom

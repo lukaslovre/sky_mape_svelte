@@ -8,45 +8,66 @@
   function resetValues() {
     resetFilters();
   }
-</script>
 
-<div class="filters-container">
-  <div>
-    <DropdownInput
-      label="Tip nekretnine"
-      id="type"
-      options={[
+  const inputs = [
+    {
+      type: "dropdown",
+      label: "Tip nekretnine",
+      id: "type",
+      options: [
         { label: "Stan", value: "Apartment" },
         { label: "Kuća", value: "House" },
         { label: "Poslovni prostor", value: "Commercial" },
         { label: "Zemljište", value: "Land" },
-      ]}
-      bind:values={$filters.type}
-    />
-
-    <DropdownInput
-      label="Akcija"
-      id="action"
-      options={[
+      ],
+      filtersBind: "type",
+    },
+    {
+      type: "dropdown",
+      label: "Akcija",
+      id: "action",
+      options: [
         { label: "Prodaja", value: "Sale" },
         { label: "Najam", value: "Rent" },
-      ]}
-      bind:values={$filters.action}
-    />
+      ],
+      filtersBind: "action",
+    },
+    {
+      type: "min-max",
+      label: "Cijena (€)",
+      id: "price",
+      filtersBindMin: "minPrice",
+      filtersBindMax: "maxPrice",
+    },
+    {
+      type: "min-max",
+      label: "Površina (m2)",
+      id: "area",
+      filtersBindMin: "minArea",
+      filtersBindMax: "maxArea",
+    },
+  ];
+</script>
 
-    <MinMaxInput
-      label="Cijena (€)"
-      id="price"
-      bind:minValue={$filters.minPrice}
-      bind:maxValue={$filters.maxPrice}
-    />
-
-    <MinMaxInput
-      label="Površina (m2)"
-      id="area"
-      bind:minValue={$filters.minArea}
-      bind:maxValue={$filters.maxArea}
-    />
+<div class="filters-container">
+  <div>
+    {#each inputs as input}
+      {#if input.type === "dropdown"}
+        <DropdownInput
+          label={input.label}
+          id={input.id}
+          options={input.options}
+          bind:values={$filters[input.filtersBind]}
+        />
+      {:else if input.type === "min-max"}
+        <MinMaxInput
+          label={input.label}
+          id={input.id}
+          bind:minValue={$filters[input.filtersBindMin]}
+          bind:maxValue={$filters[input.filtersBindMax]}
+        />
+      {/if}
+    {/each}
 
     <LocationInput on:isDrawingChange />
   </div>
