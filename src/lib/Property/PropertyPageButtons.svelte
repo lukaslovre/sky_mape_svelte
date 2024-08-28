@@ -25,6 +25,7 @@
   // make a POST request to localhost:3000 with the data in the body
   async function saveToSpreadsheet() {
     const spreadsheetUrl = "http://49.13.64.0:9993";
+    // const spreadsheetUrl = "http://localhost:3000";
 
     try {
       const response = await axios.post(spreadsheetUrl, $filteredProperties);

@@ -52,6 +52,8 @@ app.post("/", async (req, res) => {
     const fileName = generateRandomFileName("public", ".csv");
 
     writeFileAsync(fileName, csvContent);
+
+    return res.send(fileName);
   } catch (err) {
     return res.status(500).send("Internal Server Error." + err);
   }
