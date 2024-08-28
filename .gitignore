@@ -26,5 +26,3 @@ dist-ssr
 # Backend directories
 backend-pocketbase-files/*
 !backend-pocketbase-files/Place pocketbase folders here!
-
-Backend/public
