@@ -40,6 +40,22 @@
     checkboxes = {};
   }
 
+  function getAttributeFromSelectedRows(columName: string) {
+    const attribute = Object.entries(columnNames).find(
+      ([key, value]) => value === columName
+    )?.[0] as keyof ParsedUserData;
+
+    const result = Object.entries(checkboxes)
+      .filter(([, checked]) => checked)
+      .map(([id]) => {
+        const user = data.find((user) => user.id === id);
+        return user ? user[attribute] : "";
+      })
+      .filter(Boolean);
+
+    return result as string[];
+  }
+
   const columnOrder: (keyof ParsedUserData)[] = [
     "id",
     "name",
@@ -72,6 +88,7 @@
         {toggleSelectAllCheckbox}
         {selectAllCheckboxState}
         columns={columnOrder.map((key) => columnNames[key])}
+        {getAttributeFromSelectedRows}
       />
     {/if}
     {#if data.length > 0}

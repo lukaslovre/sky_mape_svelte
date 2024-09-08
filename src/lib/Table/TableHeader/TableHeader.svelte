@@ -1,9 +1,11 @@
 <script lang="ts">
   import CheckmarkIcon from "../../../assets/icons/CheckmarkIcon.svelte";
+  import CopyableCell from "./CopyableCell.svelte";
 
   export let toggleSelectAllCheckbox: () => void;
   export let selectAllCheckboxState: boolean;
   export let columns: string[];
+  export let getAttributeFromSelectedRows: (columnName: string) => string[];
 </script>
 
 <thead>
@@ -21,7 +23,11 @@
       </label>
     </th>
     {#each columns as columnTitle (columnTitle)}
-      <th>{columnTitle}</th>
+      {#if columnTitle === "Email" || columnTitle === "Telefon"}
+        <CopyableCell label={columnTitle} {getAttributeFromSelectedRows} />
+      {:else}
+        <th>{columnTitle}</th>
+      {/if}
     {/each}
   </tr>
 </thead>

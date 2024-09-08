@@ -2,13 +2,17 @@
   import CheckmarkIcon from "../../../assets/icons/CheckmarkIcon.svelte";
   import CopyIcon from "../../../assets/icons/CopyIcon.svelte";
 
-  export let value: string;
+  export let label: string;
+  export let getAttributeFromSelectedRows: (columnName: string) => string[];
 
   let copySuccess = false;
 
   async function copyToClipboard() {
     try {
-      await navigator.clipboard.writeText(value);
+      const values = getAttributeFromSelectedRows(label);
+      console.log(values);
+
+      await navigator.clipboard.writeText(values.join(", "));
       copySuccess = true;
 
       setTimeout(() => {
@@ -21,8 +25,8 @@
   }
 </script>
 
-<td class="copyable" on:click|stopPropagation={copyToClipboard}>
-  {value}
+<th class="copyable" on:click|stopPropagation={copyToClipboard}>
+  {label}
 
   <div class="copyIcon">
     {#if copySuccess}
@@ -31,13 +35,11 @@
       <CopyIcon color="#000" size={24} />
     {/if}
   </div>
-</td>
+</th>
 
 <style>
   .copyable {
     position: relative;
-
-    color: #0b5eda;
     cursor: pointer;
   }
 
@@ -55,8 +57,9 @@
 
     transition: background-color 100ms ease-out;
   }
-  td {
-    background-color: hsla(0, 0%, 100%, 0.5);
+
+  th {
+    background-color: #fff;
   }
 
   .copyIcon {

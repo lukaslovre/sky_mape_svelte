@@ -60,11 +60,7 @@
 
 <tbody>
   {#each parsePocketbaseUserData(userData) as user}
-    <tr
-      on:click={() => {
-        checkboxes[user.id] = !checkboxes[user.id];
-      }}
-    >
+    <tr>
       <td>
         <input
           type="checkbox"
@@ -72,7 +68,12 @@
           id={`selected-${user.id}`}
           checked={checkboxes[user.id]}
         />
-        <label for={`selected-${user.id}`} on:click|stopPropagation>
+        <label
+          for={`selected-${user.id}`}
+          on:click|stopPropagation|preventDefault={() => {
+            checkboxes[user.id] = !checkboxes[user.id];
+          }}
+        >
           {#if checkboxes[user.id]}
             <CheckmarkIcon />
           {/if}
