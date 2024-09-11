@@ -4,6 +4,7 @@
   import type { PocketbaseAttributes, UserData } from "../../types";
   import Input from "../FormItems/Input.svelte";
   import Textarea from "../FormItems/Textarea.svelte";
+  import Label from "../General components/Label.svelte";
 
   // // example create data
   // const data = {
@@ -52,15 +53,15 @@
 
   <Textarea label="Napomena" id="note" bind:value={note} />
 
-  <div>
-    <label for="filters">Filteri</label>
+  <div class="flex-col-gap-05rem">
+    <Label forId="filters" text="Filteri" />
     <div class="code-block">
       <pre>{JSON.stringify($filters, null, 2)}</pre>
     </div>
   </div>
 
-  <div>
-    <label for="favoriteProperties">Favorite properties</label>
+  <div class="flex-col-gap-05rem">
+    <Label forId="favoriteProperties" text="Favorite properties" />
     <div class="code-block">
       <pre>{JSON.stringify($favoriteProperties, null, 2)}</pre>
     </div>
@@ -76,15 +77,11 @@
     gap: 1.25rem;
   }
 
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-
-    color: #262626;
-    font-size: 0.875rem;
-    font-weight: 600;
+  .flex-col-gap-05rem {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
   }
-
   pre {
     font-family: monospace;
   }

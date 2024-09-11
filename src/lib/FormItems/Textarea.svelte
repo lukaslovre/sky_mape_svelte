@@ -1,44 +1,49 @@
 <script lang="ts">
+  import Label from "../General components/Label.svelte";
+
   export let label: string;
   export let id: string;
   export let value: string;
 </script>
 
 <div class="textarea">
-  <label for={id}>{label}</label>
+  <Label forId={id} text={label} />
   <textarea {id} name={id} bind:value></textarea>
 </div>
 
 <style>
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-
-    color: #262626;
-    font-size: 0.875rem;
-    font-weight: 600;
+  .textarea {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
   }
 
   textarea {
     position: relative;
     width: 100%;
-
-    padding: 1rem;
     min-height: 7rem;
+    padding: 0.75rem 1rem;
+
+    outline: 1px solid transparent;
+    border: 1px solid #cccccc;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 1px rgba(0, 0, 0, 0.05);
+    background-color: #ffffff;
+
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: #1a1a1a;
+    line-height: 1.5;
 
     resize: vertical;
 
-    outline: 1px solid transparent;
-    border: 1px solid #e6e6e6;
-    border-radius: 0.25rem;
-    box-shadow: 0 2px 1px rgba(0, 0, 0, 0.05);
-    background-color: #ffffff;
-    font-size: 0.875rem;
-    color: #1a1a1a;
-    font-weight: 400;
-    line-height: 1.5;
+    transition:
+      outline 75ms ease-out,
+      border 75ms ease-out;
+  }
 
-    transition: outline 75ms ease-out;
+  textarea:hover {
+    border: 1px solid hsl(0, 0%, 50%);
   }
 
   textarea:focus {

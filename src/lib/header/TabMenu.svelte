@@ -1,9 +1,8 @@
 <script lang="ts">
-  import type { SvelteComponent } from "svelte";
   import { activeTab, filteredProperties, filteredUsers } from "../../store";
   import type { Tabs } from "../../types";
   import MapIcon from "../../assets/icons/MapIcon.svelte";
-  import { icon } from "leaflet";
+
   import HouseIcon from "../../assets/icons/HouseIcon.svelte";
   import PeopleIcon from "../../assets/icons/PeopleIcon.svelte";
 

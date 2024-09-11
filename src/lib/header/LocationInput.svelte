@@ -1,6 +1,7 @@
 <script lang="ts">
   import DrawIcon from "../../assets/icons/DrawIcon.svelte";
   import { createEventDispatcher } from "svelte";
+  import Label from "../General components/Label.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -14,7 +15,7 @@
 </script>
 
 <div class="location-input">
-  <label for="location">Lokacija</label>
+  <Label forId="location" text="Lokacija" />
   <button
     type="button"
     class="button"
@@ -33,13 +34,6 @@
     gap: 0.5rem;
   }
 
-  label {
-    color: #262626;
-    font-size: 0.75rem;
-    font-weight: 600;
-    padding-right: 0.5rem;
-  }
-
   .button {
     display: flex;
     align-items: center;
@@ -47,22 +41,27 @@
     gap: 0.5rem;
 
     height: 2.5rem;
-    padding: 0 1rem;
+    padding: 0 1.25rem;
     background-color: #fff;
-    border: 1px solid transparent;
+    outline: 1px solid transparent;
+    border: 1px solid #cccccc;
     box-shadow: 0 2px 1px rgba(0, 0, 0, 0.05);
-    border-radius: 0.25rem;
+    border-radius: 1.25rem;
     font-size: 0.875rem;
-    color: #1a1a1a;
     font-weight: 700;
+    color: #1a1a1a;
 
     cursor: pointer;
     transition:
       background-color 75ms ease-out,
-      outline 75ms ease-out;
+      outline 75ms ease-out,
+      border 75ms ease-out;
   }
 
-  .button:hover,
+  .button:hover {
+    border-color: hsl(0, 0%, 50%);
+  }
+
   .button:focus {
     outline: 2px solid #0d65d9;
     z-index: 1;
@@ -70,7 +69,7 @@
 
   .button.isDrawing {
     animation: pulsate 1s infinite;
-    outline: 2px solid transparent;
+    /* outline: 2px solid transparent; */
   }
 
   @keyframes pulsate {

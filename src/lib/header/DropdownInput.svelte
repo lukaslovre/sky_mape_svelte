@@ -2,6 +2,7 @@
   import CheckmarkIcon from "../../assets/icons/CheckmarkIcon.svelte";
   import { onMount } from "svelte";
   import DropdownTriangleIcon from "../../assets/icons/DropdownTriangleIcon.svelte";
+  import Label from "../General components/Label.svelte";
 
   export let label: string;
   export let id: string;
@@ -49,7 +50,7 @@
 </script>
 
 <div class="dropdown-input">
-  <label for={id}>{label}</label>
+  <Label forId={id} text={label} />
 
   <!-- Add html attributes so it acts like a <select> element (selectable, etc) -->
   <button
@@ -110,34 +111,34 @@
     max-width: 20rem;
   }
 
-  label {
-    color: #262626;
-    font-size: 0.75rem;
-    font-weight: 600;
-    padding-right: 0.5rem;
-  }
-
   .dropdown-input-current {
     /* width: 100%; */
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 0.5rem;
+    height: 2.5rem;
     padding: 0 1rem;
 
-    height: 2.5rem;
-    border-radius: 0.25rem;
+    border-radius: 0.5rem;
     outline: 1px solid transparent;
-    border: 1px solid #e6e6e6;
+    border: 1px solid #cccccc;
     box-shadow: 0 2px 1px rgba(0, 0, 0, 0.05);
     background-color: #ffffff;
     font-size: 0.875rem;
-    color: #1a1a1a;
     font-weight: 400;
+    color: #1a1a1a;
 
     cursor: pointer;
-    transition: outline 75ms ease-out;
+    transition:
+      outline 75ms ease-out,
+      border 75ms ease-out;
   }
+
+  .dropdown-input-current:hover {
+    border: 1px solid hsl(0, 0%, 50%);
+  }
+
   .dropdown-input-current:focus {
     outline: 2px solid #0d65d9;
     z-index: 1;
