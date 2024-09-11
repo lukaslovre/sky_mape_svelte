@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Header1 from "./Header1.svelte";
+
   export let title: string = "Dialog Title";
   export let beforeClose = () => {};
 
@@ -18,7 +20,7 @@
   <div class="backdrop" on:click={close} typeof="button">
     <section class="dialog" on:click|stopPropagation>
       <div class="dialog-header">
-        <h2>{title}</h2>
+        <Header1>{title}</Header1>
         <button on:click={close}>Close</button>
       </div>
 

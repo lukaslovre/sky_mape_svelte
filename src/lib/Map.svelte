@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Property } from "../types";
+  import type { Property, UserData } from "../types";
   import PropertyCard from "./Property/PropertyCard.svelte";
   import { createEventDispatcher, onDestroy } from "svelte";
   import L, { LatLng, map, type MapOptions } from "leaflet";
@@ -14,6 +14,7 @@
     propertiesBoundingBox,
     selectedPropertyIds,
     toggleSelectedProperty,
+    users,
   } from "../store";
   import { getIconForProperty } from "../utils/propertyIcons";
 
@@ -207,6 +208,18 @@
   onDestroy(() => {
     isUnmounting = true;
   });
+
+  const getColorForUser = (user: UserData) => {
+    // generate hash from user id
+    const hash = user.id.split("").reduce((acc, char) => {
+      return char.charCodeAt(0) + ((acc << 5) - acc);
+    }, 0);
+
+    // generate color from hash
+    const color = `hsl(${hash % 360}, 100%, 40%)`;
+
+    return color;
+  };
 </script>
 
 <section>
@@ -253,6 +266,19 @@
 
     <!-- Draw the polygon that is currently being drawn -->
     <Polygon latLngs={drawingPoligonCoords} />
+
+    <!-- Draw all user polygons -->
+    {#each $users as user}
+      {#each user.filters?.polygons || [] as poligon}
+        <!-- Draw a polygon -->
+        <Polygon
+          latLngs={poligon}
+          options={{
+            color: getColorForUser(user),
+          }}
+        />
+      {/each}
+    {/each}
   </Map>
 </section>
 selectedProperty

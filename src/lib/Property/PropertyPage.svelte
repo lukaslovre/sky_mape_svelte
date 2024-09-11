@@ -4,6 +4,7 @@
   import PropertyPageButtons from "./PropertyPageButtons.svelte";
   import { filteredProperties } from "../../store";
   import { sortProperties } from "../../utils/propertes";
+  import Header1 from "../General components/Header1.svelte";
 
   // Property sorting
 
@@ -15,7 +16,7 @@
 </script>
 
 <div class="properties-container">
-  <h2>Popis nekretnina</h2>
+  <Header1>Popis nekretnina</Header1>
 
   <PropertyPageButtons {setSortOption} />
 

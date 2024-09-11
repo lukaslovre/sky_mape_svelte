@@ -6,12 +6,13 @@
   import SaveIcon from "../../assets/icons/SaveIcon.svelte";
   import ColoredButton from "../General components/ColoredButton.svelte";
   import SpreadsheetIcon from "../../assets/icons/SpreadsheetIcon.svelte";
+  import Header1 from "../General components/Header1.svelte";
 
   export let setDialog: (dialog: DialogType | null) => void;
 </script>
 
 <div class="buyers-container">
-  <h2>Popis kupaca</h2>
+  <Header1>Popis kupaca</Header1>
 
   <div class="buttons-container">
     <SecondaryButton text="Spremi novog kupca" onClick={() => setDialog("saveBuyer")}>

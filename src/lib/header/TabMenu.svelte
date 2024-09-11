@@ -1,27 +1,46 @@
 <script lang="ts">
+  import type { SvelteComponent } from "svelte";
   import { activeTab, filteredProperties, filteredUsers } from "../../store";
   import type { Tabs } from "../../types";
+  import MapIcon from "../../assets/icons/MapIcon.svelte";
+  import { icon } from "leaflet";
+  import HouseIcon from "../../assets/icons/HouseIcon.svelte";
+  import PeopleIcon from "../../assets/icons/PeopleIcon.svelte";
 
   let tabs: Tabs[] = ["Map", "Properties", "Buyers"];
+  let showAllDrawings = false; // temp
 
   function handleTabClick(tab: Tabs) {
     $activeTab = tab;
   }
 
   type TabLabels = {
-    [key in Tabs]: string;
+    [key in Tabs]: {
+      icon: typeof MapIcon;
+      label: string;
+    };
   };
 
-  let tabLabels = {} as TabLabels;
+  let tabLabels: TabLabels;
 
-  $: tabLabels = tabs.reduce((acc: TabLabels, tab: Tabs) => {
+  $: tabLabels = tabs.reduce((acc, tab) => {
     if (tab === "Properties") {
-      acc[tab] = `${$filteredProperties.length} ${tab}`;
+      acc[tab] = {
+        label: `Popis nekretnina - ${$filteredProperties.length}`,
+        icon: HouseIcon,
+      };
     } else if (tab === "Buyers") {
-      acc[tab] = `${$filteredUsers.length} ${tab}`;
-    } else {
-      acc[tab] = tab;
+      acc[tab] = {
+        label: `Popis kupaca - ${$filteredUsers.length}`,
+        icon: PeopleIcon,
+      };
+    } else if (tab === "Map") {
+      acc[tab] = {
+        label: "Karta",
+        icon: MapIcon,
+      };
     }
+
     return acc;
   }, {} as TabLabels);
 </script>
@@ -31,14 +50,36 @@
     {#each tabs as tab}
       <li>
         <button class:active={tab === $activeTab} on:click={() => handleTabClick(tab)}>
-          {tabLabels[tab]}
+          <svelte:component
+            this={tabLabels[tab].icon}
+            size={24}
+            color={tab === $activeTab ? "#1A1A1A" : "#4D4D4D"}
+          />
+          {tabLabels[tab].label}
         </button>
       </li>
     {/each}
   </ul>
+
+  <div class="show-all-drawings-toggle">
+    <input
+      type="checkbox"
+      bind:checked={showAllDrawings}
+      id="show-all-drawings"
+      name="show-all-drawings"
+    />
+    <label for="show-all-drawings">Show all drawings</label>
+  </div>
 </nav>
 
 <style>
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+
   nav ul {
     list-style: none;
 
@@ -48,6 +89,10 @@
   nav ul li button {
     height: 3rem;
     padding: 0 1.5rem;
+
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 
     background-color: #fff;
     border: 0.125rem solid #bfbfbf;
