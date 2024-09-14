@@ -28,3 +28,7 @@
 
 - [ ] Klik na adresu u kartici prebacuje na `Map` tab i prikazuje adresu na mapi
 - [ ] Klik na `Nacrtaj` filter prebaci na `Map` tab ako nije već tamo
+
+- [ ] Json koji automatski napravi filtere u headeru
+- [ ] Notepad pored mape
+- [ ] Napravit da se ručno mora pozvat fitPropertiesInView() funkcija neka

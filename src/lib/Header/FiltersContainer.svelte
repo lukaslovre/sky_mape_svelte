@@ -4,12 +4,29 @@
   import ResetIcon from "../../assets/icons/ResetIcon.svelte";
   import LocationInput from "./LocationInput.svelte";
   import { filters, resetFilters } from "../../store";
+  import type { Filters } from "../../types";
 
   function resetValues() {
     resetFilters();
   }
 
-  const inputs = [
+  type InputType =
+    | {
+        type: "dropdown";
+        label: string;
+        id: string;
+        filtersBind: keyof Filters;
+        options: { label: string; value: string }[];
+      }
+    | {
+        type: "min-max";
+        label: string;
+        id: string;
+        filtersBindMin: keyof Filters;
+        filtersBindMax: keyof Filters;
+      };
+
+  const inputs: InputType[] = [
     {
       type: "dropdown",
       label: "Tip nekretnine",
@@ -45,6 +62,16 @@
       id: "area",
       filtersBindMin: "minArea",
       filtersBindMax: "maxArea",
+    },
+    {
+      type: "dropdown",
+      label: "Vidljivost",
+      id: "visibility",
+      options: [
+        { label: "Vidljivo", value: "Visible" },
+        { label: "Sakriveno", value: "Hidden" },
+      ],
+      filtersBind: "visibility",
     },
   ];
 </script>

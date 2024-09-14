@@ -1,6 +1,6 @@
 <script lang="ts">
-  import FiltersContainer from "./header/FiltersContainer.svelte";
-  import TabMenu from "./header/TabMenu.svelte";
+  import FiltersContainer from "./Header/FiltersContainer.svelte";
+  import TabMenu from "./Header/TabMenu.svelte";
 </script>
 
 <header>

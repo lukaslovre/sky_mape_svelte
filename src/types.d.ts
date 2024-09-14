@@ -5,6 +5,7 @@ type DialogType = "saveBuyer";
 
 type PropertyType = "Apartment" | "House" | "Land" | "Commercial";
 type PropertyAction = "Rent" | "Sale";
+type PropertyVisibilityOptions = "Visible" | "Hidden";
 
 type Filters = {
   maxArea: number;
@@ -13,6 +14,7 @@ type Filters = {
   minPrice: number;
   type: PropertyType[];
   action: PropertyAction[];
+  visibility: PropertyVisibilityOptions[];
   polygons: LatLng[][];
 };
 

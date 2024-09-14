@@ -10,6 +10,7 @@ export function emptyFiltersObject(): Filters {
     maxPrice: 0,
     minArea: 0,
     maxArea: 0,
+    visibility: [],
     polygons: [],
   };
 }
@@ -26,6 +27,7 @@ export function parseFilterValues({
   maxArea,
   minPrice,
   maxPrice,
+  visibility,
   polygons,
 }: Filters): Filters {
   return {
@@ -35,12 +37,13 @@ export function parseFilterValues({
     maxPrice: parseNumber(maxPrice, Infinity),
     minArea: parseNumber(minArea, 0),
     maxArea: parseNumber(maxArea, Infinity),
+    visibility: visibility || [],
     polygons: polygons || [],
   };
 }
 
 export function filtersIsEmpty(filters: Filters): boolean {
-  const { action, type, minArea, maxArea, minPrice, maxPrice, polygons } =
+  const { action, type, minArea, maxArea, minPrice, maxPrice, visibility, polygons } =
     parseFilterValues(filters);
 
   return (
@@ -50,12 +53,13 @@ export function filtersIsEmpty(filters: Filters): boolean {
     maxArea === Infinity &&
     minPrice === 0 &&
     maxPrice === Infinity &&
+    visibility.length === 0 &&
     polygons.length === 0
   );
 }
 
 export function propertyMatchesFilter(property: Property, filters: Filters): boolean {
-  const { action, type, minArea, maxArea, minPrice, maxPrice, polygons } =
+  const { action, type, minArea, maxArea, minPrice, maxPrice, visibility, polygons } =
     parseFilterValues(filters);
 
   if (property.price < minPrice || property.price > maxPrice) return false;
@@ -65,6 +69,12 @@ export function propertyMatchesFilter(property: Property, filters: Filters): boo
   if (type.length > 0 && !type.includes(property.type)) return false;
 
   if (action.length > 0 && !action.includes(property.action)) return false;
+
+  if (
+    visibility.length > 0 &&
+    !visibility.includes(property.hiddenOnWebsite ? "Hidden" : "Visible")
+  )
+    return false;
 
   if (polygons.length > 0) {
     const propertyLatLng = new LatLng(property.lat, property.lng);
