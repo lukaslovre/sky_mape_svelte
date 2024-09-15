@@ -22,13 +22,13 @@
 - [ ] Nova kategorija (slobodno, in progress, sold)
 - [ ] poboljšati dizajna kartice za ova nova polja (type i hidden)
 - [x] dodati i hidden ikone na mapi
-- [ ] visibility filter
+- [x] visibility filter
 
 ## Kasnije od kasnije
 
 - [ ] Klik na adresu u kartici prebacuje na `Map` tab i prikazuje adresu na mapi
 - [ ] Klik na `Nacrtaj` filter prebaci na `Map` tab ako nije već tamo
 
-- [ ] Json koji automatski napravi filtere u headeru
-- [ ] Notepad pored mape
+- [x] Json koji automatski napravi filtere u headeru
+- [x] Notepad pored mape
 - [ ] Napravit da se ručno mora pozvat fitPropertiesInView() funkcija neka

@@ -120,6 +120,7 @@
     flex: 1;
 
     display: flex;
+    align-items: flex-end;
     gap: 1rem;
   }
 

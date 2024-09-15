@@ -281,7 +281,6 @@
     {/each}
   </Map>
 </section>
-selectedProperty
 
 <style>
   section {
