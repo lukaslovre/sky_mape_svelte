@@ -6,7 +6,7 @@
   export let title: string;
   export let value: string;
 
-  let isOpen: boolean = true;
+  let isOpen: boolean = false;
 </script>
 
 {#if isOpen}

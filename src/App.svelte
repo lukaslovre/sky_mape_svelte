@@ -10,6 +10,7 @@
   import BuyersPage from "./lib/Buyer/BuyersPage.svelte";
   import PropertyPage from "./lib/Property/PropertyPage.svelte";
   import SideNote from "./lib/General components/SideNote.svelte";
+  import PropertyForm from "./lib/Property/PropertyForm.svelte";
 
   let isDrawing: boolean = false;
 
@@ -37,13 +38,17 @@
 </script>
 
 <Dialog
-  title="Spremi novog kupca"
-  isOpen={openDialog === "saveBuyer"}
+  title={openDialog === "saveProperty" ? "Spremi novu nekretninu" : "Spremi novog kupca"}
+  isOpen={openDialog !== null}
   beforeClose={() => {
     openDialog = null;
   }}
 >
-  <BuyerForm />
+  {#if openDialog === "saveProperty"}
+    <PropertyForm />
+  {:else if openDialog === "saveBuyer"}
+    <BuyerForm />
+  {/if}
 </Dialog>
 
 <main>
@@ -70,7 +75,7 @@ Level of urgency (high, medium, low)`}
     {#if $activeTab === "Map"}
       <Map {isDrawing} />
     {:else if $activeTab === "Properties"}
-      <PropertyPage />
+      <PropertyPage {setDialog} />
     {:else if $activeTab === "Buyers"}
       <BuyersPage {setDialog} />
     {/if}

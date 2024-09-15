@@ -1,7 +1,7 @@
 import type { LatLng } from "leaflet";
 
 type Tabs = "Map" | "Properties" | "Buyers";
-type DialogType = "saveBuyer";
+type DialogType = "saveBuyer" | "saveProperty";
 
 type PropertyType = "Apartment" | "House" | "Land" | "Commercial";
 type PropertyAction = "Rent" | "Sale";
@@ -30,6 +30,11 @@ type Property = {
   price: number;
   websiteUrl: string;
   hiddenOnWebsite: boolean;
+  bedrooms: number;
+  bathrooms: number;
+  ownerId: UserData["id"];
+  propertyNotes: string;
+  sellerNotes: string;
 } & PocketbaseAttributes;
 
 type UserData = {
@@ -39,6 +44,7 @@ type UserData = {
   note: string;
   filters: Filters | null;
   favoriteProperties: Property["id"][];
+  userType: "seller" | "buyer" | "agent";
 } & PocketbaseAttributes;
 
 type PocketbaseAttributes = {

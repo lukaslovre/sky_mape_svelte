@@ -5,10 +5,11 @@
   import SaveIcon from "../../assets/icons/SaveIcon.svelte";
   import SortIcon from "../../assets/icons/SortIcon.svelte";
   import axios from "axios";
-  import type { Property } from "../../types";
+  import type { DialogType, Property } from "../../types";
   import { filteredProperties } from "../../store";
 
   export let setSortOption: (option: keyof Property) => void;
+  export let setDialog: (dialog: DialogType | null) => void;
 
   const sortOptions: (keyof Property)[] = ["surfaceArea", "price", "created"];
 
@@ -44,7 +45,10 @@
 
 <div class="buttons-container">
   <div>
-    <SecondaryButton text="Spremi novu nekretninu">
+    <SecondaryButton
+      text="Spremi novu nekretninu"
+      onClick={() => setDialog("saveProperty")}
+    >
       <SaveIcon size={24} color={"#1a1a1a"} />
     </SecondaryButton>
 
