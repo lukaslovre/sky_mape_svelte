@@ -18,17 +18,6 @@
     isDrawing = e.detail;
   }
 
-  // function applyUserDataToApp(e: CustomEvent<UserData>) {
-  //   const userData = e.detail;
-  //   console.log(userData);
-
-  //   if (userData.filters) {
-  //     filters.set(userData.filters); // ovdje treba vidjet da uvijek vraća objekt
-  //   }
-
-  //   favorites = userData.favoriteProperties;
-  // }
-
   let openDialog: DialogType | null = null;
 
   function setDialog(dialog: DialogType | null) {
