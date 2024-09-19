@@ -24,7 +24,7 @@
 
   <div class="properties-grid-container">
     {#each sortProperties($filteredProperties, sortOption) as property (property.id)}
-      <PropertyCard {property} />
+      <PropertyCard {property} on:openSideNote />
     {/each}
   </div>
 </div>

@@ -3,11 +3,15 @@
   import MinMaxInput from "./MinMaxInput.svelte";
   import ResetIcon from "../../assets/icons/ResetIcon.svelte";
   import LocationInput from "./LocationInput.svelte";
-  import { filters, resetFilters } from "../../store";
+  import { emptyFavorites, filters, resetFilters } from "../../store";
   import type { Filters } from "../../types";
 
   function resetValues() {
     resetFilters();
+  }
+
+  function emptyFavoriteProperties() {
+    emptyFavorites();
   }
 
   type InputType =
@@ -77,7 +81,7 @@
 </script>
 
 <div class="filters-container">
-  <div>
+  <div class="inputs-container">
     {#each inputs as input}
       {#if input.type === "dropdown"}
         <DropdownInput
@@ -99,9 +103,15 @@
     <LocationInput on:isDrawingChange />
   </div>
 
-  <button type="reset" class="button" style="margin-left: auto" on:click={resetValues}>
-    <ResetIcon /> Resetiraj
-  </button>
+  <div class="buttons-container">
+    <button type="reset" class="button" on:click={resetValues}>
+      <ResetIcon /> Filtri i lokacija
+    </button>
+    <button type="reset" class="button" on:click={emptyFavoriteProperties}>
+      <!-- add star emoji -->
+      <ResetIcon /> Favoriti 🌟
+    </button>
+  </div>
 </div>
 
 <style>
@@ -116,11 +126,15 @@
     justify-content: space-between;
     gap: 3rem;
   }
-  .filters-container > div {
+  .inputs-container {
     flex: 1;
 
     display: flex;
     align-items: flex-end;
+    gap: 1rem;
+  }
+  .buttons-container {
+    display: flex;
     gap: 1rem;
   }
 

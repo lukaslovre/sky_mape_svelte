@@ -5,18 +5,14 @@
 
   export let title: string;
   export let value: string;
-
-  let isOpen: boolean = false;
+  export let isOpen: boolean;
+  export let close: () => void;
 </script>
 
 {#if isOpen}
   <div id="side-note-container">
     <div id="side-note">
-      <Close
-        on:close={() => {
-          isOpen = false;
-        }}
-      />
+      <Close on:close={close} />
       <div class="title-and-value-container">
         <Header1>{title}</Header1>
         <div class="value">

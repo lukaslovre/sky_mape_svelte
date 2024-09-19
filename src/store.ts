@@ -146,3 +146,7 @@ export function applyUserFilters(
   filters.set(userFilters || emptyFiltersObject());
   favoriteProperties.set(userFavoriteProperties);
 }
+
+export function emptyFavorites() {
+  favoriteProperties.set([]);
+}

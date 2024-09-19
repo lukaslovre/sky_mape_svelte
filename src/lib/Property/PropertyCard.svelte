@@ -5,6 +5,12 @@
   import SurfaceIcon from "../../assets/icons/SurfaceIcon.svelte";
   import { formatWithCommas } from "../../utils/numbers";
   import PropertyCardLeftSide from "./PropertyCard/PropertyCardLeftSide.svelte";
+  import PeopleIcon from "../../assets/icons/PeopleIcon.svelte";
+  import HouseIcon from "../../assets/icons/HouseIcon.svelte";
+
+  import { createEventDispatcher } from "svelte";
+
+  const dispatch = createEventDispatcher();
 
   export let property: Property;
 </script>
@@ -28,6 +34,32 @@
       <SurfaceIcon />
       <p>{`${formatWithCommas(property.surfaceArea)} m²`}</p>
     </div>
+
+    <button
+      class="content-row"
+      on:click={() => {
+        dispatch("openSideNote", {
+          title: "Bilješke nekretnine",
+          value: property.propertyNotes,
+        });
+      }}
+    >
+      <HouseIcon size={16} color="#1A1A1A" />
+      <p>Bilješke nekretnine</p>
+    </button>
+
+    <button
+      class="content-row"
+      on:click={() => {
+        dispatch("openSideNote", {
+          title: "Bilješke vlasnika",
+          value: property.sellerNotes,
+        });
+      }}
+    >
+      <PeopleIcon size={16} color="#1A1A1A" />
+      <p>Bilješke vlasnika</p>
+    </button>
 
     <div class="content-row">
       <LocationIcon />

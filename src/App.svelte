@@ -24,6 +24,16 @@
     openDialog = dialog;
     console.log(openDialog);
   }
+
+  type SideNoteParams = {
+    title: string;
+    value: string;
+  };
+  let openSideNote: SideNoteParams | null = null;
+
+  function setSideNote(params: SideNoteParams) {
+    openSideNote = params;
+  }
 </script>
 
 <Dialog
@@ -45,26 +55,28 @@
 
   <div class="content">
     <SideNote
-      title="Side note title"
-      value={`# Seller Details:
-Name
-Contact information (phone number, email)
-Preferred contact method and times
-
-# Seller's Selling Conditions:
-Minimum acceptable price
-Preferred selling timeline
-Any specific conditions or contingencies (e.g., seller needs to find a new home first)
-
-# Seller's Motivation:
-Reason for potential sale (downsizing, relocating, investment, etc.)
-Level of urgency (high, medium, low)`}
+      isOpen={openSideNote !== null}
+      close={() => {
+        openSideNote = null;
+      }}
+      title={openSideNote?.title || ""}
+      value={openSideNote?.value || ""}
     />
 
     {#if $activeTab === "Map"}
-      <Map {isDrawing} />
+      <Map
+        {isDrawing}
+        on:openSideNote={(e) => {
+          setSideNote(e.detail);
+        }}
+      />
     {:else if $activeTab === "Properties"}
-      <PropertyPage {setDialog} />
+      <PropertyPage
+        {setDialog}
+        on:openSideNote={(e) => {
+          setSideNote(e.detail);
+        }}
+      />
     {:else if $activeTab === "Buyers"}
       <BuyersPage {setDialog} />
     {/if}

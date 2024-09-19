@@ -17,6 +17,7 @@
     users,
   } from "../store";
   import { getIconForProperty } from "../utils/propertyIcons";
+  import DrawnPolygonsList from "./DrawnPolygonsList.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -223,6 +224,8 @@
 </script>
 
 <section>
+  <DrawnPolygonsList polygons={$filters.polygons} />
+
   <Map options={mapOptions} bind:instance={mapInstance}>
     <TileLayer url={"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"} />
 
@@ -242,10 +245,10 @@
         <Popup
           options={{
             closeButton: false,
-            maxWidth: 1000,
+            maxWidth: 500,
           }}
         >
-          <PropertyCard {property} />
+          <PropertyCard {property} on:openSideNote />
         </Popup>
       </Marker>
     {/each}
