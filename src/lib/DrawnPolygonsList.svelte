@@ -1,5 +1,6 @@
 <script lang="ts">
   import TrashIcon from "../assets/icons/TrashIcon.svelte";
+  import { removePolygon } from "../store";
   import type { Filters } from "../types";
   import PolygonThumbnail from "./PolygonThumbnail.svelte";
 
@@ -8,7 +9,10 @@
   //   Event handlers
   function deletePolygon(polygon: Filters["polygons"][0]) {
     console.log("Deleting polygon", polygon);
+    removePolygon(polygon);
   }
+
+  let isHovering = false;
 </script>
 
 {#if polygons.length !== 0}
@@ -23,8 +27,16 @@
           <!-- <button on:click={() => editPolygon(polygon)}>Uredi</button> -->
 
           <!-- Delete Button -->
-          <button on:click={() => deletePolygon(polygon)}>
-            <TrashIcon size={24} color="#808080" />
+          <button
+            on:click={() => deletePolygon(polygon)}
+            on:mouseenter={() => {
+              isHovering = true;
+            }}
+            on:mouseleave={() => {
+              isHovering = false;
+            }}
+          >
+            <TrashIcon size={24} color={isHovering ? "#FF0000" : "#808080"} />
           </button>
         </li>
       {/each}
@@ -39,7 +51,7 @@
     z-index: 401;
     top: 1rem;
     right: 1rem;
-    background-color: rgba(255, 255, 255, 0.66);
+    background-color: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(16px);
     border-radius: 0.5rem;
     padding: 0.5rem 1.5rem;

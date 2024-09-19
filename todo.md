@@ -3,7 +3,9 @@
 ## High
 
 - [x] Remove favorites gumb
-- [ ] Svi nacrtani polygoni su kao u nekom notification baru ali u točnim oblicima. Može se stisnuti na njih da se zumira na njih, ili trash da se obrište.
+- [x] Svi nacrtani polygoni su kao u nekom notification baru ali u točnim oblicima.
+- [ ] Može se stisnuti na njih da se zumira na njih, ili trash da se obrište.
+- [ ] Kada se crta polygon, kad se stisne na početni rub se završni crtanje
 
 - [ ] Napravit da se ručno mora pozvat fitPropertiesInView() funkcija neka -> ima gumb na mapi za to, biti konzervativan s automatskim zumiranjem
 - [ ] Interaction history for clients
@@ -11,8 +13,8 @@
 
 ## Low
 
-- [ ] Shift click -> multiple select -> promjeni se kursor
 - [ ] Nova kategorija (slobodno, in progress, sold)
+- [ ] Shift click -> multiple select -> promjeni se kursor
 - [ ] poboljšati dizajna kartice za ova nova polja (type i hidden)
 
 ## Kasnije od kasnije

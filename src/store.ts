@@ -106,6 +106,15 @@ export function savePolygon(polygon: LatLng[]) {
   });
 }
 
+export function removePolygon(polygon: LatLng[]) {
+  filters.update((currentFilters) => {
+    currentFilters.polygons = currentFilters.polygons.filter(
+      (currentPolygon) => currentPolygon !== polygon
+    );
+    return currentFilters;
+  });
+}
+
 export function resetFilters() {
   filters.set(emptyFiltersObject());
 }

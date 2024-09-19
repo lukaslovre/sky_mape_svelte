@@ -15,3 +15,9 @@
     fill={color}
   />
 </svg>
+
+<style>
+  path {
+    transition: fill 200ms ease;
+  }
+</style>

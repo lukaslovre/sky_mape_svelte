@@ -46,23 +46,39 @@
   }
 </script>
 
-<svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">
-  {#if path}
-    <path
-      d={path}
-      fill="rgba(0, 120, 255, 0.25)"
-      stroke="rgba(0, 120, 255, 1)"
-      stroke-width="1"
-    />
-  {:else}
-    <!-- Optionally, display a placeholder or leave empty -->
-  {/if}
-</svg>
+<button
+  class="polygon-thumbnail"
+  on:click={() => {
+    console.log("Clicked on polygon thumbnail");
+  }}
+>
+  <svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+    {#if path}
+      <path
+        d={path}
+        fill="rgba(0, 120, 255, 0.25)"
+        stroke="rgba(0, 120, 255, 1)"
+        stroke-width="1"
+      />
+    {:else}
+      <!-- Optionally, display a placeholder or leave empty -->
+    {/if}
+  </svg>
+</button>
 
 <style>
-  svg {
-    /* border: 1px solid #ccc; */
-    /* border-radius: 4px; */
-    /* background-color: #f9f9f9; Optional: Add a background color */
+  .polygon-thumbnail {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: #fff;
+
+    transition: background-color 150ms ease-out;
+  }
+
+  .polygon-thumbnail:hover {
+    background-color: hsl(0, 0%, 95%);
+    border-radius: 0.25rem;
   }
 </style>
