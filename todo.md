@@ -7,16 +7,16 @@
 - [x] Može se stisnuti na njih da se zumira na njih, ili trash da se obrište.
 
 **Subota**
-**Nedelja**
 
+- [ ] Kada se crta polygon, kad se stisne na početni rub se završni crtanje
 - [ ] Napravit da se ručno mora pozvat fitPropertiesInView() funkcija neka -> ima gumb na mapi za to, biti konzervativan s automatskim zumiranjem inače
-
 - [ ] Kreirati Agents tablica i dodati agent_id foregin key u tablicu Nekretnina. Dodati funkcionalnost odabira agenta za nekretnine.
 - [ ] Dodati atribut za Kupac: način plačanja (credit | cash)
 
+**Nedelja**
+
 - [ ] Interaction history for clients. UI, tablica, funckionalnost.
 
-- [ ] Kada se crta polygon, kad se stisne na početni rub se završni crtanje
 - [ ] Editanje polygona (micanje rubova, tog tipa)
 
 - [ ] Mogućnost priložiti/spremiti dokumente koji su onda povezani sa nekom nekretninom te se mogu brzo pristupiti

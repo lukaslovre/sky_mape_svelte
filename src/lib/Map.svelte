@@ -6,6 +6,7 @@
     panToPropertyById,
     resetSelectedProperty,
     saveLatLngToClipboard,
+    isClickNearStart,
   } from "./Map/utils/mapUtils";
   import {
     filters,
@@ -22,6 +23,7 @@
   import UserPolygons from "./Map/UserPolygons.svelte";
 
   export let isDrawing: boolean;
+  export let setIsDrawing: (value: boolean) => void;
 
   let mapInstance: L.Map | undefined;
   let eventListenersSet = false;
@@ -31,6 +33,15 @@
 
   // Event Handlers
   function handleMapClick(e: L.LeafletMouseEvent) {
+    if (!mapInstance) return;
+
+    // Check if the click is near the start point
+    if (isClickNearStart(mapInstance, e.latlng, drawingPolygonCoords)) {
+      handleFinishDrawing();
+      setIsDrawing(false);
+      return;
+    }
+
     // Update drawing polygon coordinates
     drawingPolygonCoords = addClickToPolygons(e, isDrawing, drawingPolygonCoords);
 

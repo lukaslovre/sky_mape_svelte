@@ -13,6 +13,9 @@
   import PropertyForm from "./lib/Property/PropertyForm.svelte";
 
   let isDrawing: boolean = false;
+  function setIsDrawing(value: boolean) {
+    isDrawing = value;
+  }
 
   function handleIsDrawingChange(e: CustomEvent<boolean>) {
     isDrawing = e.detail;
@@ -69,6 +72,7 @@
         on:openSideNote={(e) => {
           setSideNote(e.detail);
         }}
+        {setIsDrawing}
       />
     {:else if $activeTab === "Properties"}
       <PropertyPage

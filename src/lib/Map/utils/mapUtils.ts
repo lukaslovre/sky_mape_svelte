@@ -105,3 +105,23 @@ export function panToPropertyById(
     mapInstance.panTo(new LatLng(property.lat, property.lng));
   }
 }
+
+export function isClickNearStart(
+  mapInstance: L.Map,
+  clickLatLng: LatLng,
+  polygonCoords: LatLng[],
+  pixelPadding: number = 30
+): boolean {
+  if (polygonCoords.length === 0) return false;
+
+  const startPoint = polygonCoords[0];
+
+  // Convert geographic coordinates to pixel coordinates
+  const startPointInPixels = mapInstance.latLngToLayerPoint(startPoint);
+  const clickedPointInPixels = mapInstance.latLngToLayerPoint(clickLatLng);
+
+  // Calculate pixel distance
+  const pixelDistance = startPointInPixels.distanceTo(clickedPointInPixels);
+
+  return pixelDistance <= pixelPadding;
+}
