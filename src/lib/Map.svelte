@@ -68,9 +68,10 @@
     // Reset drawing coordinates
     drawingPolygonCoords = [];
 
-    if ($propertiesBoundingBox) {
-      mapInstance?.fitBounds($propertiesBoundingBox);
-    }
+    // Change view to fit all properties
+    // if ($propertiesBoundingBox) {
+    //   mapInstance?.fitBounds($propertiesBoundingBox);
+    // }
   }
 
   $: if (mapInstance && !eventListenersSet) {

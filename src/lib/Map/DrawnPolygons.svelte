@@ -17,9 +17,5 @@
 
 <!-- Draw all polygons -->
 {#each $filters.polygons as poligon}
-  <Polygon latLngs={poligon}>
-    <Popup>
-      <button type="button" on:click={() => handleDelete(poligon)}>Obriši</button>
-    </Popup>
-  </Polygon>
+  <Polygon latLngs={poligon} />
 {/each}
