@@ -21,6 +21,7 @@
   import PropertyMarkers from "./Map/PropertyMarkers.svelte";
   import DrawnPolygons from "./Map/DrawnPolygons.svelte";
   import UserPolygons from "./Map/UserPolygons.svelte";
+  import FitBoundsButton from "./Map/overlay components/FitBoundsButton.svelte";
 
   export let isDrawing: boolean;
   export let setIsDrawing: (value: boolean) => void;
@@ -111,6 +112,8 @@
 <section>
   <!-- List of drawn polygons -->
   <DrawnPolygonsList polygons={$filters.polygons} />
+
+  <FitBoundsButton {mapInstance} />
 
   <!-- Leaflet Map Component -->
   <Map options={mapOptions} bind:instance={mapInstance}>

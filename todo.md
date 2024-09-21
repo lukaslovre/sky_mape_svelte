@@ -8,7 +8,7 @@
 
 **Subota**
 
-- [ ] Kada se crta polygon, kad se stisne na početni rub se završni crtanje
+- [x] Kada se crta polygon, kad se stisne na početni rub se završni crtanje
 - [ ] Napravit da se ručno mora pozvat fitPropertiesInView() funkcija neka -> ima gumb na mapi za to, biti konzervativan s automatskim zumiranjem inače
 - [ ] Kreirati Agents tablica i dodati agent_id foregin key u tablicu Nekretnina. Dodati funkcionalnost odabira agenta za nekretnine.
 - [ ] Dodati atribut za Kupac: način plačanja (credit | cash)

@@ -45,7 +45,6 @@
 {/if}
 
 <style>
-  /* absolute, top-right with 1rem margin, #FFF 0.66 opacity, background blur, border-radius 16px */
   .drawn-polygons-list {
     position: absolute;
     z-index: 401;
