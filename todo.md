@@ -4,18 +4,37 @@
 
 - [x] Remove favorites gumb
 - [x] Svi nacrtani polygoni su kao u nekom notification baru ali u točnim oblicima.
-- [ ] Može se stisnuti na njih da se zumira na njih, ili trash da se obrište.
-- [ ] Kada se crta polygon, kad se stisne na početni rub se završni crtanje
+- [x] Može se stisnuti na njih da se zumira na njih, ili trash da se obrište.
 
-- [ ] Napravit da se ručno mora pozvat fitPropertiesInView() funkcija neka -> ima gumb na mapi za to, biti konzervativan s automatskim zumiranjem
-- [ ] Interaction history for clients
+**Subota**
+**Nedelja**
+
+- [ ] Napravit da se ručno mora pozvat fitPropertiesInView() funkcija neka -> ima gumb na mapi za to, biti konzervativan s automatskim zumiranjem inače
+
+- [ ] Kreirati Agents tablica i dodati agent_id foregin key u tablicu Nekretnina. Dodati funkcionalnost odabira agenta za nekretnine.
+- [ ] Dodati atribut za Kupac: način plačanja (credit | cash)
+
+- [ ] Interaction history for clients. UI, tablica, funckionalnost.
+
+- [ ] Kada se crta polygon, kad se stisne na početni rub se završni crtanje
+- [ ] Editanje polygona (micanje rubova, tog tipa)
+
+- [ ] Mogućnost priložiti/spremiti dokumente koji su onda povezani sa nekom nekretninom te se mogu brzo pristupiti
+- [ ] Dodati tab vlasnici koji funkcionira isto ko kupci samo je unija vlasnika odabranih nekretnina (za razliku od unije potencijalnih kupaca odabranih nekretnina)
+
 - [ ] Na property gridu imati kao grid divider i onda su ispod "favoriti koji ne matchaju filtere"
+- [ ] Može se save-at temporary nekretnina nakon šta se edita da postane "prava"
+- [ ] Imat gumb sa više opcija za polygone korisnika:
+  - [ ] gumb da se vide samo viable kupci
+  - [ ] gumb da se vide svi kupci
+  - [ ] gumb da se vide
 
 ## Low
 
+- [ ] Na hover polygona u listi polygona se promjeni boja odgovarajućeg polygona na mapi tako da se zna koji se hovera
+- [ ] Maknuti datume, vidjet će se u interaction history
 - [ ] Nova kategorija (slobodno, in progress, sold)
 - [ ] Shift click -> multiple select -> promjeni se kursor
-- [ ] poboljšati dizajna kartice za ova nova polja (type i hidden)
 
 ## Kasnije od kasnije
 
