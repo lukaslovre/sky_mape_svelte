@@ -3,13 +3,13 @@
   import CopyIcon from "../../../assets/icons/CopyIcon.svelte";
 
   export let label: string;
-  export let getAttributeFromSelectedRows: (columnName: string) => string[];
+  export let getSelectedAttributes: (columnName: string) => string[];
 
   let copySuccess = false;
 
   async function copyToClipboard() {
     try {
-      const values = getAttributeFromSelectedRows(label);
+      const values = getSelectedAttributes(label);
       console.log(values);
 
       await navigator.clipboard.writeText(values.join(", "));
@@ -30,7 +30,7 @@
 
   <div class="copyIcon">
     {#if copySuccess}
-      <CheckmarkIcon color="#000" size={24} />
+      <CheckmarkIcon color="#00AA00" size={24} />
     {:else}
       <CopyIcon color="#000" size={24} />
     {/if}

@@ -2,10 +2,10 @@
   import CheckmarkIcon from "../../../assets/icons/CheckmarkIcon.svelte";
   import CopyableCell from "./CopyableCell.svelte";
 
-  export let toggleSelectAllCheckbox: () => void;
-  export let selectAllCheckboxState: boolean;
+  export let toggleSelectAll: () => void;
+  export let isSelectAll: boolean;
   export let columns: string[];
-  export let getAttributeFromSelectedRows: (columnName: string) => string[];
+  export let getSelectedAttributes: (columnName: string) => string[];
 </script>
 
 <thead>
@@ -15,8 +15,8 @@
         type="checkbox"
         name="selectAll"
         id="selectAll"
-        checked={selectAllCheckboxState}
-        on:change={toggleSelectAllCheckbox}
+        checked={isSelectAll}
+        on:change={toggleSelectAll}
       />
       <label for="selectAll">
         <CheckmarkIcon />
@@ -24,7 +24,7 @@
     </th>
     {#each columns as columnTitle (columnTitle)}
       {#if columnTitle === "Email" || columnTitle === "Telefon"}
-        <CopyableCell label={columnTitle} {getAttributeFromSelectedRows} />
+        <CopyableCell label={columnTitle} {getSelectedAttributes} />
       {:else}
         <th>{columnTitle}</th>
       {/if}

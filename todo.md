@@ -9,30 +9,33 @@
 **Subota**
 
 - [x] Kada se crta polygon, kad se stisne na početni rub se završni crtanje
-- [ ] Napravit da se ručno mora pozvat fitPropertiesInView() funkcija neka -> ima gumb na mapi za to, biti konzervativan s automatskim zumiranjem inače
-- [ ] Kreirati Agents tablica i dodati agent_id foregin key u tablicu Nekretnina. Dodati funkcionalnost odabira agenta za nekretnine.
-- [ ] Dodati atribut za Kupac: način plačanja (credit | cash)
+- [x] Napravit da se ručno mora pozvat fitPropertiesInView() funkcija neka -> ima gumb na mapi za to, biti konzervativan s automatskim zumiranjem inače
+- [x] Kreirati Agents tablica i dodati agent_id foregin key u tablicu Nekretnina. Dodati funkcionalnost odabira agenta za nekretnine.
+- [x] Dodati atribut za Kupac: način plačanja (credit | cash)
 
 **Nedelja**
 
 - [ ] Interaction history for clients. UI, tablica, funckionalnost.
 
-- [ ] Editanje polygona (micanje rubova, tog tipa)
-
-- [ ] Mogućnost priložiti/spremiti dokumente koji su onda povezani sa nekom nekretninom te se mogu brzo pristupiti
 - [ ] Dodati tab vlasnici koji funkcionira isto ko kupci samo je unija vlasnika odabranih nekretnina (za razliku od unije potencijalnih kupaca odabranih nekretnina)
 
-- [ ] Na property gridu imati kao grid divider i onda su ispod "favoriti koji ne matchaju filtere"
-- [ ] Može se save-at temporary nekretnina nakon šta se edita da postane "prava"
 - [ ] Imat gumb sa više opcija za polygone korisnika:
+
   - [ ] gumb da se vide samo viable kupci
   - [ ] gumb da se vide svi kupci
   - [ ] gumb da se vide
 
+- [ ] Editanje polygona (micanje rubova, tog tipa)
+
+- [ ] Mogućnost priložiti/spremiti dokumente koji su onda povezani sa nekom nekretninom te se mogu brzo pristupiti
+
+- [ ] Na property gridu imati kao grid divider i onda su ispod "favoriti koji ne matchaju filtere"
+- [ ] Može se save-at temporary nekretnina nakon šta se edita da postane "prava"
+
 ## Low
 
 - [ ] Na hover polygona u listi polygona se promjeni boja odgovarajućeg polygona na mapi tako da se zna koji se hovera
-- [ ] Maknuti datume, vidjet će se u interaction history
+- [x] Maknuti datume, vidjet će se u interaction history
 - [ ] Nova kategorija (slobodno, in progress, sold)
 - [ ] Shift click -> multiple select -> promjeni se kursor
 

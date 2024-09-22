@@ -35,6 +35,7 @@ type Property = {
   ownerId: UserData["id"];
   propertyNotes: string;
   sellerNotes: string;
+  agent_id: Agent["id"];
 } & PocketbaseAttributes;
 
 type UserData = {
@@ -45,6 +46,14 @@ type UserData = {
   filters: Filters | null;
   favoriteProperties: Property["id"][];
   userType: "seller" | "buyer" | "agent";
+  payment_method: "credit" | "cash";
+} & PocketbaseAttributes;
+
+type Agent = {
+  name: string;
+  email: string;
+  phone: string;
+  pfp: string;
 } & PocketbaseAttributes;
 
 type PocketbaseAttributes = {

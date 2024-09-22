@@ -8,109 +8,120 @@
 
   type ParsedUserData = ReturnType<typeof parsePocketbaseUserData>[0];
 
+  // Props
   export let checkboxes: Record<string, boolean>;
   export let userData: UserData[];
   export let columns: (keyof ParsedUserData)[];
 
+  // Popup state
   let popupLocation: [number, number] = [0, 0];
   let popupContent: string = "";
-  function showFiltersPopup(userId: UserData["id"], event: MouseEvent) {
-    if (!event.target) return;
 
-    console.log(event);
+  // Reactive parsed user data
+  $: parsedUserData = parsePocketbaseUserData(userData);
 
-    const targetButton = event.target as HTMLButtonElement;
+  // Helper Functions
+  const isObject = (value: any): boolean => typeof value === "object" && value !== null;
 
-    const buttonLocation = targetButton.getBoundingClientRect();
+  const hasLength = (value: any): boolean => typeof value.length === "number";
 
-    // set the popupLocation to the top-center of the button
-    popupLocation = [
-      // buttonLocation.left + buttonLocation.width / 2,
-      buttonLocation.right,
-      buttonLocation.top - 10,
-    ];
+  const isCopyable = (column: keyof ParsedUserData): boolean =>
+    ["email", "phone"].includes(column as string);
 
-    const userFilters: Filters | null =
-      userData.find((user) => user.id === userId)?.filters || null;
+  // Event Handlers
+  const toggleCheckbox = (userId: string) => {
+    checkboxes[userId] = !checkboxes[userId];
+  };
+
+  const showFiltersPopup = (userId: UserData["id"], event: MouseEvent) => {
+    const target = event.currentTarget as HTMLElement;
+    if (!target) return;
+
+    const rect = target.getBoundingClientRect();
+
+    // Position the popup near the button
+    popupLocation = [rect.right, rect.top - 10];
+
+    const userFilters = userData.find((user) => user.id === userId)?.filters || null;
 
     if (userFilters) {
-      const removedPolygonValues = userFilters.polygons.length;
-
+      const polygonsCount = userFilters.polygons.length;
       popupContent = JSON.stringify(
         {
           ...userFilters,
-          polygons: removedPolygonValues,
+          polygons: polygonsCount,
         },
         null,
-        1
+        2
       );
     } else {
       popupContent = "Nema filtera";
     }
-  }
-  function hideFiltersPopup() {
+  };
+
+  const hideFiltersPopup = () => {
     popupLocation = [0, 0];
     popupContent = "";
-  }
+  };
+
+  const handleApplyFilters = (user: ParsedUserData) => {
+    applyUserFilters(user.filters, user.favoriteProperties);
+  };
 </script>
 
+<!-- Popup Component -->
 <Popup screenLocation={popupLocation}>
   {popupContent}
 </Popup>
 
+<!-- Table Body -->
 <tbody>
-  {#each parsePocketbaseUserData(userData) as user}
+  {#each parsedUserData as user}
     <tr>
+      <!-- Checkbox Cell -->
       <td>
         <input
           type="checkbox"
           name={`selected-${user.id}`}
           id={`selected-${user.id}`}
           checked={checkboxes[user.id]}
+          on:change|stopPropagation={() => toggleCheckbox(user.id)}
         />
-        <label
-          for={`selected-${user.id}`}
-          on:click|stopPropagation|preventDefault={() => {
-            checkboxes[user.id] = !checkboxes[user.id];
-          }}
-        >
+        <label for={`selected-${user.id}`}>
           {#if checkboxes[user.id]}
             <CheckmarkIcon />
           {/if}
         </label>
       </td>
+
+      <!-- Dynamic Columns -->
       {#each columns as column}
-        {#if typeof user[column] === "object"}
-          {#if user[column].length !== undefined}
-            {#if user[column].length > 0}
-              <td>{user[column].join(", ")}</td>
+        <td>
+          {#if isObject(user[column])}
+            {#if hasLength(user[column])}
+              {#if user[column].length > 0}
+                {user[column].join(", ")}
+              {:else}
+                <span class="empty">N/A</span>
+              {/if}
             {:else}
-              <td class="empty">N/Aa</td>
-            {/if}
-          {:else}
-            <!-- <td>{JSON.stringify(user[key], null, 1)}</td> -->
-            <td>
               <button
                 class="applyFiltersButton"
-                on:mouseenter={(e) => {
-                  showFiltersPopup(user.id, e);
-                }}
+                on:mouseenter={(e) => showFiltersPopup(user.id, e)}
                 on:mouseleave={hideFiltersPopup}
-                on:click={() => {
-                  applyUserFilters(user.filters, user.favoriteProperties);
-                }}
+                on:click={() => handleApplyFilters(user)}
               >
                 Primjeni
               </button>
-            </td>
+            {/if}
+          {:else if user[column] === ""}
+            <span class="empty">N/A</span>
+          {:else if isCopyable(column)}
+            <CopyableCell value={user[column]} />
+          {:else}
+            {user[column]}
           {/if}
-        {:else if user[column] === ""}
-          <td class="empty">N/A</td>
-        {:else if ["email", "phone"].includes(column)}
-          <CopyableCell value={user[column]} />
-        {:else}
-          <td>{user[column]}</td>
-        {/if}
+        </td>
       {/each}
     </tr>
   {/each}
