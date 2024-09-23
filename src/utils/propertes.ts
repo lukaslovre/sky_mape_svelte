@@ -1,5 +1,5 @@
 import { get } from "svelte/store";
-import { properties } from "../store";
+import { properties } from "../stores/store";
 import type { Property } from "../types";
 
 export function getPropertyFromId(ids: Property["id"][]) {

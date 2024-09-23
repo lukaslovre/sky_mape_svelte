@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createUser } from "../../db/Clients";
-  import { filters, favoriteProperties } from "../../store";
+  import { filters, favoriteProperties } from "../../stores/store";
   import type { PocketbaseAttributes, UserData } from "../../types";
   import Input from "../FormItems/Input.svelte";
   import Textarea from "../FormItems/Textarea.svelte";
@@ -31,6 +31,8 @@
       note,
       filters: $filters,
       favoriteProperties: $favoriteProperties,
+      // userType,
+      // payment_method,
     };
 
     console.log(user);

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { activeTab, filteredProperties, filteredUsers } from "../../store";
+  import { activeTab, filteredProperties, filteredUsers } from "../../stores/store";
   import type { Tabs } from "../../types";
   import MapIcon from "../../assets/icons/MapIcon.svelte";
 

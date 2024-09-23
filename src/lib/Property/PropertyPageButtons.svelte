@@ -6,7 +6,7 @@
   import SortIcon from "../../assets/icons/SortIcon.svelte";
   import axios from "axios";
   import type { DialogType, Property } from "../../types";
-  import { filteredProperties } from "../../store";
+  import { filteredProperties } from "../../stores/store";
 
   export let setSortOption: (option: keyof Property) => void;
   export let setDialog: (dialog: DialogType | null) => void;

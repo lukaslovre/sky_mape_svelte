@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Polygon } from "sveaflet";
-  import { users } from "../../store";
+  import { users } from "../../stores/store";
   import { getColorForUser } from "./utils/userUtils";
 </script>
 

@@ -3,7 +3,7 @@
   import Header from "./lib/Header.svelte";
   import Map from "./lib/Map.svelte";
   import Dialog from "./lib/General components/Dialog.svelte";
-  import { activeTab } from "./store";
+  import { activeTab } from "./stores/store";
   import BuyerForm from "./lib/Buyer/BuyerForm.svelte";
   import BuyersPage from "./lib/Buyer/BuyersPage.svelte";
   import PropertyPage from "./lib/Property/PropertyPage.svelte";

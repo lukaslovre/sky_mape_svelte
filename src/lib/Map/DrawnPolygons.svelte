@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { LatLng } from "leaflet";
-  import { filters } from "../../store";
+  import { filters } from "../../stores/store";
   import { Polygon } from "sveaflet";
 
   export let drawingPolygonCoords: LatLng[];

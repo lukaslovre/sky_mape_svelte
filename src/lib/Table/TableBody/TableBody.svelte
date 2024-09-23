@@ -1,6 +1,6 @@
 <script lang="ts">
   import CheckmarkIcon from "../../../assets/icons/CheckmarkIcon.svelte";
-  import { applyUserFilters } from "../../../store";
+  import { applyUserFilters } from "../../../stores/actions";
   import type { Filters, UserData } from "../../../types";
   import { parsePocketbaseUserData } from "../../../utils/buyers";
   import Popup from "../../General components/Popup.svelte";

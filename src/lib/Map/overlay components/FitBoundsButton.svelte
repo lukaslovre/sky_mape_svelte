@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { propertiesBoundingBox } from "../../../store";
+  import { propertiesBoundingBox } from "../../../stores/store";
 
   export let mapInstance: L.Map | undefined;
 

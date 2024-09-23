@@ -1,5 +1,5 @@
 import { LatLng, latLng, type LeafletMouseEvent } from "leaflet";
-import { properties, selectedPropertyIds } from "../../../store";
+import { properties, selectedPropertyIds } from "../../../stores/store";
 import { get } from "svelte/store";
 
 /**
@@ -76,6 +76,7 @@ export function addTemporaryProperty(e: LeafletMouseEvent): void {
         ownerId: "",
         propertyNotes: "",
         sellerNotes: "",
+        agent_id: "",
       },
     ]);
   }

@@ -1,6 +1,6 @@
 <script lang="ts">
   import TrashIcon from "../assets/icons/TrashIcon.svelte";
-  import { removePolygon } from "../store";
+  import { removePolygon } from "../stores/actions";
   import type { Filters } from "../types";
   import PolygonThumbnail from "./PolygonThumbnail.svelte";
 

@@ -3,8 +3,9 @@
   import MinMaxInput from "./MinMaxInput.svelte";
   import ResetIcon from "../../assets/icons/ResetIcon.svelte";
   import LocationInput from "./LocationInput.svelte";
-  import { emptyFavorites, filters, resetFilters } from "../../store";
+  import { filters } from "../../stores/store";
   import type { Filters } from "../../types";
+  import { emptyFavorites, resetFilters } from "../../stores/actions";
 
   function resetValues() {
     resetFilters();

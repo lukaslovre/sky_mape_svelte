@@ -1,17 +1,18 @@
 <script lang="ts">
   import { Marker, Icon, Popup } from "sveaflet";
+  import L from "leaflet";
   import {
     favoriteProperties,
     filteredProperties,
     properties,
     selectedPropertyIds,
-    toggleSelectedProperty,
-  } from "../../store";
+  } from "../../stores/store";
   import { markerOptions } from "../../assets/mapConfigValues";
   import { getIconForProperty } from "../../utils/propertyIcons";
   import type { Property } from "../../types";
   import PropertyCard from "../Property/PropertyCard.svelte";
   import { LatLng } from "leaflet";
+  import { toggleSelectedProperty } from "../../stores/actions";
 
   // Marker instances for binding and event handling
   let markerInstances: { [key: Property["id"]]: L.Marker } = {};

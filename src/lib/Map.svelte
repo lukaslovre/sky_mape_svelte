@@ -8,13 +8,7 @@
     saveLatLngToClipboard,
     isClickNearStart,
   } from "./Map/utils/mapUtils";
-  import {
-    filters,
-    propertiesBoundingBox,
-    savePolygon,
-    selectedPropertyIds,
-    toggleSelectedProperty,
-  } from "../store";
+  import { filters, propertiesBoundingBox, selectedPropertyIds } from "../stores/store";
   import DrawnPolygonsList from "./DrawnPolygonsList.svelte";
   import { Map, TileLayer } from "sveaflet";
   import { mapOptions } from "../assets/mapConfigValues";
@@ -22,6 +16,7 @@
   import DrawnPolygons from "./Map/DrawnPolygons.svelte";
   import UserPolygons from "./Map/UserPolygons.svelte";
   import FitBoundsButton from "./Map/overlay components/FitBoundsButton.svelte";
+  import { savePolygon } from "../stores/actions";
 
   export let isDrawing: boolean;
   export let setIsDrawing: (value: boolean) => void;

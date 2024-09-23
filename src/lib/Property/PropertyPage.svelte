@@ -2,7 +2,7 @@
   import type { DialogType, Property } from "../../types";
   import PropertyCard from "./PropertyCard.svelte";
   import PropertyPageButtons from "./PropertyPageButtons.svelte";
-  import { filteredProperties } from "../../store";
+  import { filteredProperties } from "../../stores/store";
   import { sortProperties } from "../../utils/propertes";
   import Header1 from "../General components/Header1.svelte";
 

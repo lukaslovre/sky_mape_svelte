@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { DialogType } from "../../types";
   import Table from "../Table/Table.svelte";
-  import { filteredUsers } from "../../store";
+  import { filteredUsers } from "../../stores/store";
 
   import Header1 from "../General components/Header1.svelte";
 
