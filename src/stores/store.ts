@@ -3,6 +3,7 @@ import { derived, writable, type Readable, type Writable } from "svelte/store";
 import {
   emptyFiltersObject,
   filtersIsEmpty,
+  ownersMatchingProperties,
   propertyMatchesFilter,
   usersMatchingProperties,
 } from "../utils/filter";
@@ -56,6 +57,26 @@ export const filteredUsers: Readable<UserData[]> = derived(
       if ($filteredProperties.length === $properties.length) return $users;
 
       return usersMatchingProperties($users, $filteredProperties);
+    }
+  }
+);
+
+// TODO: u budučnosti, možda, napraviti da uvijek gleda samo filteredProperties, dakle nebi postojala potreba da properties i selectedPropertyIds budu uključeni u ovaj derived store
+// Derived store for filtered owners
+export const filteredOwners: Readable<UserData[]> = derived(
+  [users, filteredProperties, properties, selectedPropertyIds],
+  ([$users, $filteredProperties, $properties, $selectedPropertyIds]) => {
+    if ($selectedPropertyIds.length === 1) {
+      const selectedPropertyId = $selectedPropertyIds[0];
+      const selectedProperty = $properties.find(
+        (property) => property.id === selectedPropertyId
+      );
+
+      if (!selectedProperty) return [];
+
+      return ownersMatchingProperties($users, [selectedProperty]);
+    } else {
+      return ownersMatchingProperties($users, $filteredProperties);
     }
   }
 );

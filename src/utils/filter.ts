@@ -104,3 +104,14 @@ export function usersMatchingProperties(
 
   return usersMatchingProperties;
 }
+
+export function ownersMatchingProperties(
+  users: UserData[],
+  properties: Property[]
+): UserData[] {
+  const ownersMatchingProperties = users.filter((user) => {
+    return properties.some((property) => property.ownerId === user.id);
+  });
+
+  return ownersMatchingProperties;
+}

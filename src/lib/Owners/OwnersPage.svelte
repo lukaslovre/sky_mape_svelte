@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { DialogType } from "../../types";
   import Table from "../Table/Table.svelte";
-  import { filteredUsers } from "../../stores/store";
+  import { filteredOwners } from "../../stores/store";
 
   import Header1 from "../General components/Header1.svelte";
 
@@ -11,7 +11,7 @@
 <div class="owners-container">
   <Header1>Popis vlasnika</Header1>
 
-  <Table showHeader={true} data={$filteredUsers} />
+  <Table showHeader={true} data={$filteredOwners} />
 </div>
 
 <style>

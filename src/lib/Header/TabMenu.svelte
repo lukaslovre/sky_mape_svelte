@@ -1,5 +1,10 @@
 <script lang="ts">
-  import { activeTab, filteredProperties, filteredUsers } from "../../stores/store";
+  import {
+    activeTab,
+    filteredProperties,
+    filteredUsers,
+    filteredOwners,
+  } from "../../stores/store";
   import type { Tabs } from "../../types";
   import MapIcon from "../../assets/icons/MapIcon.svelte";
 
@@ -40,7 +45,7 @@
       };
     } else if (tab === "Owners") {
       acc[tab] = {
-        label: "Popis vlasnika",
+        label: `Popis vlasnika - ${$filteredOwners.length}`,
         icon: PeopleIcon,
       };
     }
