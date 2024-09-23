@@ -77,6 +77,7 @@ export function addTemporaryProperty(e: LeafletMouseEvent): void {
         propertyNotes: "",
         sellerNotes: "",
         agent_id: "",
+        status: "available",
       },
     ]);
   }

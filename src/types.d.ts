@@ -15,6 +15,7 @@ type Filters = {
   type: PropertyType[];
   action: PropertyAction[];
   visibility: PropertyVisibilityOptions[];
+  status: Property["status"][];
   polygons: LatLng[][];
 };
 
@@ -36,6 +37,7 @@ type Property = {
   propertyNotes: string;
   sellerNotes: string;
   agent_id: Agent["id"];
+  status: "available" | "processing" | "sold";
 } & PocketbaseAttributes;
 
 type UserData = {

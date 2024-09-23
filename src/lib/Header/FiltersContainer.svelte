@@ -78,6 +78,20 @@
       ],
       filtersBind: "visibility",
     },
+    {
+      type: "dropdown",
+      label: "Status",
+      id: "status",
+      options: [
+        { label: "Dostupno", value: "available" },
+        {
+          label: "U obradi",
+          value: "processing",
+        },
+        { label: "Prodano", value: "sold" },
+      ],
+      filtersBind: "status",
+    },
   ];
 </script>
 

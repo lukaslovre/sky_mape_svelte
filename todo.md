@@ -15,9 +15,9 @@
 
 **Nedelja**
 
-- [ ] Dodati tab vlasnici koji funkcionira isto ko kupci samo je unija vlasnika odabranih nekretnina (za razliku od unije potencijalnih kupaca odabranih nekretnina)
+- [x] Dodati tab vlasnici koji funkcionira isto ko kupci samo je unija vlasnika odabranih nekretnina (za razliku od unije potencijalnih kupaca odabranih nekretnina)
 
-- [ ] Nova kategorija (slobodno, in progress, sold)
+- [x] Nova kategorija (slobodno, in progress, sold)
 
 - [ ] Interaction history for clients. UI, tablica, funckionalnost. (isto novi tab, znači 5 tabova, to bi možda trebalo lijevo prebacit ko sidebar... -> i onda bi imo dva side bara (tj kategorije unutar-> filter i page)) gdje je samo timeline
 

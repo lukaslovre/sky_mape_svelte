@@ -2,6 +2,8 @@ import { LatLng } from "leaflet";
 import type { Filters, Property, UserData } from "../types";
 import { latLngIsInPolygon } from "./geo";
 
+// TODO: napravit lijepo typescript da kad se promjeni u filters nešto da mi svugdje kaže gdje treba promjeniti
+
 export function emptyFiltersObject(): Filters {
   return {
     action: [],
@@ -12,6 +14,7 @@ export function emptyFiltersObject(): Filters {
     maxArea: 0,
     visibility: [],
     polygons: [],
+    status: [],
   };
 }
 
@@ -28,6 +31,7 @@ export function parseFilterValues({
   minPrice,
   maxPrice,
   visibility,
+  status,
   polygons,
 }: Filters): Filters {
   return {
@@ -39,12 +43,22 @@ export function parseFilterValues({
     maxArea: parseNumber(maxArea, Infinity),
     visibility: visibility || [],
     polygons: polygons || [],
+    status: status || [],
   };
 }
 
 export function filtersIsEmpty(filters: Filters): boolean {
-  const { action, type, minArea, maxArea, minPrice, maxPrice, visibility, polygons } =
-    parseFilterValues(filters);
+  const {
+    action,
+    type,
+    minArea,
+    maxArea,
+    minPrice,
+    maxPrice,
+    visibility,
+    polygons,
+    status,
+  } = parseFilterValues(filters);
 
   return (
     action.length === 0 &&
@@ -54,13 +68,23 @@ export function filtersIsEmpty(filters: Filters): boolean {
     minPrice === 0 &&
     maxPrice === Infinity &&
     visibility.length === 0 &&
+    status.length === 0 &&
     polygons.length === 0
   );
 }
 
 export function propertyMatchesFilter(property: Property, filters: Filters): boolean {
-  const { action, type, minArea, maxArea, minPrice, maxPrice, visibility, polygons } =
-    parseFilterValues(filters);
+  const {
+    action,
+    type,
+    minArea,
+    maxArea,
+    minPrice,
+    maxPrice,
+    visibility,
+    polygons,
+    status,
+  } = parseFilterValues(filters);
 
   if (property.price < minPrice || property.price > maxPrice) return false;
 
@@ -75,6 +99,8 @@ export function propertyMatchesFilter(property: Property, filters: Filters): boo
     !visibility.includes(property.hiddenOnWebsite ? "Hidden" : "Visible")
   )
     return false;
+
+  if (status.length > 0 && !status.includes(property.status)) return false;
 
   if (polygons.length > 0) {
     const propertyLatLng = new LatLng(property.lat, property.lng);
