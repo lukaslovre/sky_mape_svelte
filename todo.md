@@ -15,32 +15,32 @@
 
 **Nedelja**
 
-- [ ] Interaction history for clients. UI, tablica, funckionalnost.
-
 - [ ] Dodati tab vlasnici koji funkcionira isto ko kupci samo je unija vlasnika odabranih nekretnina (za razliku od unije potencijalnih kupaca odabranih nekretnina)
 
-- [ ] Imat gumb sa više opcija za polygone korisnika:
+- [ ] Nova kategorija (slobodno, in progress, sold)
 
-  - [ ] gumb da se vide samo viable kupci
-  - [ ] gumb da se vide svi kupci
-  - [ ] gumb da se vide
+- [ ] Interaction history for clients. UI, tablica, funckionalnost. (isto novi tab, znači 5 tabova, to bi možda trebalo lijevo prebacit ko sidebar... -> i onda bi imo dva side bara (tj kategorije unutar-> filter i page)) gdje je samo timeline
 
-- [ ] Editanje polygona (micanje rubova, tog tipa)
+- [ ] Mogućnost priložiti/spremiti dokumente koji su onda povezani sa nekom nekretninom te se mogu brzo pristupiti. Na buyers mora bit isto tablica jer je ovo vec previse polja i gumba. Kad se stisne na mapi na nekretninu onda je samo 1 nekretnina odabrana i prikazana na listi. Ima polje dokumenti koji isto izbaci side-note sa svim file-ovima, google drive style.
 
-- [ ] Mogućnost priložiti/spremiti dokumente koji su onda povezani sa nekom nekretninom te se mogu brzo pristupiti
+- [ ] Srediti lijepo side-note funkcionalnost (UI)
 
 - [ ] Na property gridu imati kao grid divider i onda su ispod "favoriti koji ne matchaju filtere"
-- [ ] Može se save-at temporary nekretnina nakon šta se edita da postane "prava"
 
 ## Low
 
+- [ ] Editanje polygona (micanje rubova, tog tipa) -> za ovo već nešto postoji, vidjet možda ako je dovoljno "lean".
 - [ ] Na hover polygona u listi polygona se promjeni boja odgovarajućeg polygona na mapi tako da se zna koji se hovera
-- [x] Maknuti datume, vidjet će se u interaction history
-- [ ] Nova kategorija (slobodno, in progress, sold)
-- [ ] Shift click -> multiple select -> promjeni se kursor
+
+- [ ] Imat gumb sa više opcija za polygone korisnika:
+  - [ ] gumb da se vide samo viable kupci
+  - [ ] gumb da se vide svi kupci
+  - [ ] gumb da se vide
+- [ ] Može se save-at temporary nekretnina nakon šta se edita da postane "prava"
 
 ## Kasnije od kasnije
 
+- [ ] Shift click -> multiple select -> promjeni se kursor
 - [ ] Klik na adresu u kartici prebacuje na `Map` tab i prikazuje adresu na mapi
 - [ ] Klik na `Nacrtaj` filter prebaci na `Map` tab ako nije već tamo
 

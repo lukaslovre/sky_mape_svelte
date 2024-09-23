@@ -6,7 +6,7 @@
   import HouseIcon from "../../assets/icons/HouseIcon.svelte";
   import PeopleIcon from "../../assets/icons/PeopleIcon.svelte";
 
-  let tabs: Tabs[] = ["Map", "Properties", "Buyers"];
+  let tabs: Tabs[] = ["Map", "Properties", "Buyers", "Owners"];
   let showAllDrawings = false; // temp
 
   function handleTabClick(tab: Tabs) {
@@ -37,6 +37,11 @@
       acc[tab] = {
         label: "Karta",
         icon: MapIcon,
+      };
+    } else if (tab === "Owners") {
+      acc[tab] = {
+        label: "Popis vlasnika",
+        icon: PeopleIcon,
       };
     }
 

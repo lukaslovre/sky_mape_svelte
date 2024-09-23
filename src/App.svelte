@@ -2,38 +2,37 @@
   import type { DialogType } from "./types";
   import Header from "./lib/Header.svelte";
   import Map from "./lib/Map.svelte";
-
   import Dialog from "./lib/General components/Dialog.svelte";
-
   import { activeTab } from "./store";
   import BuyerForm from "./lib/Buyer/BuyerForm.svelte";
   import BuyersPage from "./lib/Buyer/BuyersPage.svelte";
   import PropertyPage from "./lib/Property/PropertyPage.svelte";
   import SideNote from "./lib/General components/SideNote.svelte";
   import PropertyForm from "./lib/Property/PropertyForm.svelte";
+  import OwnersPage from "./lib/Owners/OwnersPage.svelte";
 
+  // isDrawing
   let isDrawing: boolean = false;
   function setIsDrawing(value: boolean) {
     isDrawing = value;
   }
-
   function handleIsDrawingChange(e: CustomEvent<boolean>) {
     isDrawing = e.detail;
   }
 
+  // Dialog
   let openDialog: DialogType | null = null;
-
   function setDialog(dialog: DialogType | null) {
     openDialog = dialog;
     console.log(openDialog);
   }
 
+  // SideNote
   type SideNoteParams = {
     title: string;
     value: string;
   };
   let openSideNote: SideNoteParams | null = null;
-
   function setSideNote(params: SideNoteParams) {
     openSideNote = params;
   }
@@ -83,6 +82,8 @@
       />
     {:else if $activeTab === "Buyers"}
       <BuyersPage {setDialog} />
+    {:else if $activeTab === "Owners"}
+      <OwnersPage {setDialog} />
     {/if}
   </div>
 </main>
