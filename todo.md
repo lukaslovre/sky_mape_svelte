@@ -16,18 +16,25 @@
 **Nedelja**
 
 - [x] Dodati tab vlasnici koji funkcionira isto ko kupci samo je unija vlasnika odabranih nekretnina (za razliku od unije potencijalnih kupaca odabranih nekretnina)
-
 - [x] Nova kategorija (slobodno, in progress, sold)
 
-- [ ] Interaction history for clients. UI, tablica, funckionalnost. (isto novi tab, znači 5 tabova, to bi možda trebalo lijevo prebacit ko sidebar... -> i onda bi imo dva side bara (tj kategorije unutar-> filter i page)) gdje je samo timeline
+- [x] Interaction history for clients. UI, tablica, funckionalnost. gdje je samo timeline
+
+- [ ] Agent filter
+
+- [ ] Na property gridu imati kao grid divider i onda su ispod "favoriti koji ne matchaju filtere"
+
+- [ ] Show all drawings je gumb na mapi
+
+## Low
+
+- [ ] Interactions filtriranje i više informacija, kad dobijem povratno
+
+- [ ] (isto novi tab, znači 5 tabova, to bi možda trebalo lijevo prebacit ko sidebar... -> i onda bi imo dva side bara (tj kategorije unutar-> filter i page))
 
 - [ ] Mogućnost priložiti/spremiti dokumente koji su onda povezani sa nekom nekretninom te se mogu brzo pristupiti. Na buyers mora bit isto tablica jer je ovo vec previse polja i gumba. Kad se stisne na mapi na nekretninu onda je samo 1 nekretnina odabrana i prikazana na listi. Ima polje dokumenti koji isto izbaci side-note sa svim file-ovima, google drive style.
 
 - [ ] Srediti lijepo side-note funkcionalnost (UI)
-
-- [ ] Na property gridu imati kao grid divider i onda su ispod "favoriti koji ne matchaju filtere"
-
-## Low
 
 - [ ] Editanje polygona (micanje rubova, tog tipa) -> za ovo već nešto postoji, vidjet možda ako je dovoljno "lean".
 - [ ] Na hover polygona u listi polygona se promjeni boja odgovarajućeg polygona na mapi tako da se zna koji se hovera

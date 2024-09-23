@@ -1,6 +1,6 @@
 import type { LatLng } from "leaflet";
 
-type Tabs = "Map" | "Properties" | "Buyers" | "Owners";
+type Tabs = "Map" | "Properties" | "Buyers" | "Owners" | "Interactions";
 type DialogType = "saveBuyer" | "saveProperty";
 
 type PropertyType = "Apartment" | "House" | "Land" | "Commercial";
@@ -56,6 +56,40 @@ type Agent = {
   email: string;
   phone: string;
   pfp: string;
+} & PocketbaseAttributes;
+
+type InteractionType =
+  | "Contacted"
+  | "PropertyViewingScheduled"
+  | "PropertyViewingCompleted"
+  | "OfferMade"
+  | "OfferReceived"
+  | "Negotiation"
+  | "ContractSigned"
+  | "SaleClosed"
+  | "FollowUp"
+  | "InquiryReceived"
+  | "EmailSent"
+  | "PhoneCall"
+  | "MeetingScheduled"
+  | "DocumentSent"
+  | "PaymentReceived"
+  | "InspectionScheduled"
+  | "AppraisalScheduled"
+  | "Other";
+
+type Interaction = {
+  agent_id: Agent["id"];
+  user_id?: UserData["id"];
+  property_id?: Property["id"];
+  type: InteractionType;
+  note: string;
+  date?: string;
+  expand?: {
+    agent_id: Agent;
+    user_id?: UserData;
+    property_id?: Property;
+  };
 } & PocketbaseAttributes;
 
 type PocketbaseAttributes = {

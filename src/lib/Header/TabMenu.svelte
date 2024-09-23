@@ -10,8 +10,10 @@
 
   import HouseIcon from "../../assets/icons/HouseIcon.svelte";
   import PeopleIcon from "../../assets/icons/PeopleIcon.svelte";
+  import MessageIcon from "../../assets/icons/MessageIcon.svelte";
+  import KeyIcon from "../../assets/icons/KeyIcon.svelte";
 
-  let tabs: Tabs[] = ["Map", "Properties", "Buyers", "Owners"];
+  let tabs: Tabs[] = ["Map", "Properties", "Buyers", "Owners", "Interactions"];
   let showAllDrawings = false; // temp
 
   function handleTabClick(tab: Tabs) {
@@ -46,7 +48,12 @@
     } else if (tab === "Owners") {
       acc[tab] = {
         label: `Popis vlasnika - ${$filteredOwners.length}`,
-        icon: PeopleIcon,
+        icon: KeyIcon,
+      };
+    } else if (tab === "Interactions") {
+      acc[tab] = {
+        label: `Interakcije`,
+        icon: MessageIcon,
       };
     }
 

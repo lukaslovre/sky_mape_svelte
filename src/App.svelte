@@ -10,6 +10,7 @@
   import SideNote from "./lib/General components/SideNote.svelte";
   import PropertyForm from "./lib/Property/PropertyForm.svelte";
   import OwnersPage from "./lib/Owners/OwnersPage.svelte";
+  import InteractionsPage from "./lib/Interactions/InteractionsPage.svelte";
 
   // isDrawing
   let isDrawing: boolean = false;
@@ -84,6 +85,8 @@
       <BuyersPage {setDialog} />
     {:else if $activeTab === "Owners"}
       <OwnersPage {setDialog} />
+    {:else if $activeTab === "Interactions"}
+      <InteractionsPage {setDialog} />
     {/if}
   </div>
 </main>
