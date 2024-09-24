@@ -20,11 +20,13 @@
 
 - [x] Interaction history for clients. UI, tablica, funckionalnost. gdje je samo timeline
 
-- [ ] Agent filter
+- [x] Agent filter
 
 - [ ] Na property gridu imati kao grid divider i onda su ispod "favoriti koji ne matchaju filtere"
 
 - [ ] Show all drawings je gumb na mapi
+
+- [ ] isDrawing je u store-u
 
 ## Low
 

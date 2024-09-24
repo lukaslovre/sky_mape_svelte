@@ -32,6 +32,13 @@
     (a, b) => new Date(b).getTime() - new Date(a).getTime()
   );
 
+  function daysAgo(date: Date): number {
+    const today = new Date();
+    const diffTime = Math.abs(today.getTime() - date.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  }
+
   export let setDialog: (dialog: DialogType | null) => void;
 </script>
 
@@ -41,7 +48,7 @@
   <div class="interactions-timeline">
     {#each sortedDates as date}
       <div class="date-group">
-        <h2 class="date-label">{date}</h2>
+        <h2 class="date-label">{`${date} (${daysAgo(new Date(date))} days ago)`}</h2>
         <ul class="interaction-list">
           {#each groupedInteractions[date].sort((a, b) => new Date(b.date || b.created).getTime() - new Date(a.date || a.created).getTime()) as interaction}
             <li class="interaction-item">

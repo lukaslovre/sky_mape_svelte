@@ -3,7 +3,7 @@
   import MinMaxInput from "./MinMaxInput.svelte";
   import ResetIcon from "../../assets/icons/ResetIcon.svelte";
   import LocationInput from "./LocationInput.svelte";
-  import { filters } from "../../stores/store";
+  import { filters, agents } from "../../stores/store";
   import type { Filters } from "../../types";
   import { emptyFavorites, resetFilters } from "../../stores/actions";
 
@@ -13,6 +13,30 @@
 
   function emptyFavoriteProperties() {
     emptyFavorites();
+  }
+
+  let agentsOptions = $agents.map((agent) => {
+    return { label: agent.name, value: agent.id };
+  });
+
+  $: if ($agents.length > 0) {
+    agentsOptions = $agents.map((agent) => {
+      return { label: agent.name, value: agent.id };
+    });
+
+    // Delete the current array element with id "agentIds"
+    inputs = inputs.filter((input) => input.id !== "agentIds");
+
+    inputs = [
+      ...inputs,
+      {
+        type: "dropdown",
+        label: "Agent",
+        id: "agentIds",
+        options: agentsOptions,
+        filtersBind: "agentIds",
+      },
+    ];
   }
 
   type InputType =
@@ -31,7 +55,7 @@
         filtersBindMax: keyof Filters;
       };
 
-  const inputs: InputType[] = [
+  let inputs: InputType[] = [
     {
       type: "dropdown",
       label: "Tip nekretnine",
@@ -91,6 +115,13 @@
         { label: "Prodano", value: "sold" },
       ],
       filtersBind: "status",
+    },
+    {
+      type: "dropdown",
+      label: "Agent",
+      id: "agentIds",
+      options: agentsOptions,
+      filtersBind: "agentIds",
     },
   ];
 </script>

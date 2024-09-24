@@ -7,11 +7,12 @@ import {
   propertyMatchesFilter,
   usersMatchingProperties,
 } from "../utils/filter";
-import type { Filters, Property, Tabs, UserData } from "../types";
+import type { Agent, Filters, Property, Tabs, UserData } from "../types";
 import { LatLngBounds } from "leaflet";
 import { getProperties } from "../db/Properties";
 import { getUsers } from "../db/Clients";
 import { emptyBoundsObject, getBoundsReducer } from "./utils/bounds";
+import { getAgentsFromDb } from "../db/Agents";
 
 // Initial store states
 const initialFilters: Filters = emptyFiltersObject();
@@ -24,6 +25,7 @@ export const selectedPropertyIds: Writable<Property["id"][]> = writable([]);
 export const properties: Writable<Property[]> = writable([]);
 export const favoriteProperties: Writable<Property["id"][]> = writable([]);
 export const users: Writable<UserData[]> = writable([]);
+export const agents: Writable<Agent[]> = writable([]);
 
 // Derived store for filtered properties
 export const filteredProperties: Readable<Property[]> = derived(
@@ -108,4 +110,8 @@ getProperties()
 
 getUsers()
   .then((data) => users.set(data))
+  .catch(console.error);
+
+getAgentsFromDb()
+  .then((data) => agents.set(data))
   .catch(console.error);

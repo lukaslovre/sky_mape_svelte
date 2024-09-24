@@ -16,6 +16,7 @@ type Filters = {
   action: PropertyAction[];
   visibility: PropertyVisibilityOptions[];
   status: Property["status"][];
+  agentIds: Agent["id"][];
   polygons: LatLng[][];
 };
 

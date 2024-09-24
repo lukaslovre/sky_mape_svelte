@@ -13,8 +13,9 @@ export function emptyFiltersObject(): Filters {
     minArea: 0,
     maxArea: 0,
     visibility: [],
-    polygons: [],
     status: [],
+    agentIds: [],
+    polygons: [],
   };
 }
 
@@ -32,6 +33,7 @@ export function parseFilterValues({
   maxPrice,
   visibility,
   status,
+  agentIds,
   polygons,
 }: Filters): Filters {
   return {
@@ -42,8 +44,9 @@ export function parseFilterValues({
     minArea: parseNumber(minArea, 0),
     maxArea: parseNumber(maxArea, Infinity),
     visibility: visibility || [],
-    polygons: polygons || [],
     status: status || [],
+    agentIds: agentIds || [],
+    polygons: polygons || [],
   };
 }
 
@@ -56,8 +59,9 @@ export function filtersIsEmpty(filters: Filters): boolean {
     minPrice,
     maxPrice,
     visibility,
-    polygons,
     status,
+    agentIds,
+    polygons,
   } = parseFilterValues(filters);
 
   return (
@@ -69,6 +73,7 @@ export function filtersIsEmpty(filters: Filters): boolean {
     maxPrice === Infinity &&
     visibility.length === 0 &&
     status.length === 0 &&
+    agentIds.length === 0 &&
     polygons.length === 0
   );
 }
@@ -82,8 +87,9 @@ export function propertyMatchesFilter(property: Property, filters: Filters): boo
     minPrice,
     maxPrice,
     visibility,
-    polygons,
     status,
+    agentIds,
+    polygons,
   } = parseFilterValues(filters);
 
   if (property.price < minPrice || property.price > maxPrice) return false;
@@ -101,6 +107,8 @@ export function propertyMatchesFilter(property: Property, filters: Filters): boo
     return false;
 
   if (status.length > 0 && !status.includes(property.status)) return false;
+
+  if (agentIds.length > 0 && !agentIds.includes(property.agent_id)) return false;
 
   if (polygons.length > 0) {
     const propertyLatLng = new LatLng(property.lat, property.lng);
