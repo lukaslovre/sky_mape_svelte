@@ -5,7 +5,7 @@
 
 <header>
   <div class="max-width-div">
-    <FiltersContainer on:isDrawingChange />
+    <FiltersContainer />
 
     <TabMenu />
   </div>

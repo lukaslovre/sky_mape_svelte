@@ -1,20 +1,20 @@
 import { LatLng, latLng, type LeafletMouseEvent } from "leaflet";
-import { properties, selectedPropertyIds } from "../../../stores/store";
+import { isDrawing, properties, selectedPropertyIds } from "../../../stores/store";
 import { get } from "svelte/store";
 
 /**
  * Handles adding clicks to polygons based on the drawing state.
  * @param e Leaflet mouse event.
- * @param isDrawing Indicates if drawing mode is active.
  * @param drawingPolygonCoords Current coordinates of the drawing polygon.
  * @returns Updated array of LatLng coordinates.
  */
 export function addClickToPolygons(
   e: LeafletMouseEvent,
-  isDrawing: boolean,
   drawingPolygonCoords: LatLng[]
 ): LatLng[] {
-  if (!isDrawing) return drawingPolygonCoords;
+  const isDrawingValue = get(isDrawing);
+
+  if (!isDrawingValue) return drawingPolygonCoords;
 
   const newCoords = [...drawingPolygonCoords];
   if (newCoords.length === 0) {

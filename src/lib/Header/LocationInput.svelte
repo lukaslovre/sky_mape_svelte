@@ -1,16 +1,10 @@
 <script lang="ts">
   import DrawIcon from "../../assets/icons/DrawIcon.svelte";
-  import { createEventDispatcher } from "svelte";
   import Label from "../General components/Label.svelte";
-
-  const dispatch = createEventDispatcher();
-
-  let isDrawing: boolean = false;
-
-  $: dispatch("isDrawingChange", isDrawing);
+  import { isDrawing } from "../../stores/store";
 
   function handleDrawButtonClick() {
-    isDrawing = !isDrawing;
+    isDrawing.update((value) => !value);
   }
 </script>
 
@@ -19,11 +13,11 @@
   <button
     type="button"
     class="button"
-    class:isDrawing
+    class:isDrawing={$isDrawing}
     id="location"
     on:click={handleDrawButtonClick}
     ><DrawIcon />
-    {isDrawing ? "Završi" : "Nacrtaj"}</button
+    {$isDrawing ? "Završi" : "Nacrtaj"}</button
   >
 </div>
 

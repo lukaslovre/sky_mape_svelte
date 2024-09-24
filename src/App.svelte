@@ -12,15 +12,6 @@
   import OwnersPage from "./lib/Owners/OwnersPage.svelte";
   import InteractionsPage from "./lib/Interactions/InteractionsPage.svelte";
 
-  // isDrawing
-  let isDrawing: boolean = false;
-  function setIsDrawing(value: boolean) {
-    isDrawing = value;
-  }
-  function handleIsDrawingChange(e: CustomEvent<boolean>) {
-    isDrawing = e.detail;
-  }
-
   // Dialog
   let openDialog: DialogType | null = null;
   function setDialog(dialog: DialogType | null) {
@@ -54,7 +45,7 @@
 </Dialog>
 
 <main>
-  <Header on:isDrawingChange={handleIsDrawingChange} />
+  <Header />
 
   <div class="content">
     <SideNote
@@ -68,11 +59,9 @@
 
     {#if $activeTab === "Map"}
       <Map
-        {isDrawing}
         on:openSideNote={(e) => {
           setSideNote(e.detail);
         }}
-        {setIsDrawing}
       />
     {:else if $activeTab === "Properties"}
       <PropertyPage

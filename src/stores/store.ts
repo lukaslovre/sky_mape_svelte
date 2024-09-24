@@ -27,6 +27,9 @@ export const favoriteProperties: Writable<Property["id"][]> = writable([]);
 export const users: Writable<UserData[]> = writable([]);
 export const agents: Writable<Agent[]> = writable([]);
 
+// Secondary writable stores
+export const isDrawing: Writable<boolean> = writable(false);
+
 // Derived store for filtered properties
 export const filteredProperties: Readable<Property[]> = derived(
   [properties, filters, selectedPropertyIds],

@@ -146,7 +146,7 @@
       {/if}
     {/each}
 
-    <LocationInput on:isDrawingChange />
+    <LocationInput />
   </div>
 
   <div class="buttons-container">

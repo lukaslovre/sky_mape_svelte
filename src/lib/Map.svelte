@@ -8,7 +8,12 @@
     saveLatLngToClipboard,
     isClickNearStart,
   } from "./Map/utils/mapUtils";
-  import { filters, propertiesBoundingBox, selectedPropertyIds } from "../stores/store";
+  import {
+    filters,
+    isDrawing,
+    propertiesBoundingBox,
+    selectedPropertyIds,
+  } from "../stores/store";
   import DrawnPolygonsList from "./DrawnPolygonsList.svelte";
   import { Map, TileLayer } from "sveaflet";
   import { mapOptions } from "../assets/mapConfigValues";
@@ -18,9 +23,6 @@
   import FitBoundsButton from "./Map/overlay components/FitBoundsButton.svelte";
   import { savePolygon } from "../stores/actions";
   import ShowUserPolygonsButton from "./Map/overlay components/ShowUserPolygonsButton.svelte";
-
-  export let isDrawing: boolean;
-  export let setIsDrawing: (value: boolean) => void;
 
   let mapInstance: L.Map | undefined;
   let eventListenersSet = false;
@@ -40,12 +42,12 @@
     // Check if the click is near the start point
     if (isClickNearStart(mapInstance, e.latlng, drawingPolygonCoords)) {
       handleFinishDrawing();
-      setIsDrawing(false);
+      isDrawing.set(false);
       return;
     }
 
     // Update drawing polygon coordinates
-    drawingPolygonCoords = addClickToPolygons(e, isDrawing, drawingPolygonCoords);
+    drawingPolygonCoords = addClickToPolygons(e, drawingPolygonCoords);
 
     // Save coordinates to clipboard if Shift is pressed
     saveLatLngToClipboard(e);
@@ -63,7 +65,7 @@
     mapInstance.on("popupclose", handlePopupClose);
 
     mapInstance.on("mousemove", (e: L.LeafletMouseEvent) => {
-      if (!isDrawing || drawingPolygonCoords.length === 0) return;
+      if (!$isDrawing || drawingPolygonCoords.length === 0) return;
       // Update the last coordinate with the current mouse position for dynamic drawing
       drawingPolygonCoords = [...drawingPolygonCoords.slice(0, -1), e.latlng];
     });
@@ -99,7 +101,7 @@
   // }
 
   // Reactive statement to handle drawing state changes
-  $: if (!isDrawing) {
+  $: if (!$isDrawing) {
     handleFinishDrawing();
   }
 
