@@ -14,10 +14,6 @@
 
 <style>
   .fit-bounds-button {
-    position: absolute;
-    z-index: 401;
-    top: 1rem;
-    left: 4rem;
     background-color: #fff;
     border-radius: 0.5rem;
     padding: 0.5rem 1.5rem;

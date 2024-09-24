@@ -17,6 +17,7 @@
   import UserPolygons from "./Map/UserPolygons.svelte";
   import FitBoundsButton from "./Map/overlay components/FitBoundsButton.svelte";
   import { savePolygon } from "../stores/actions";
+  import ShowUserPolygonsButton from "./Map/overlay components/ShowUserPolygonsButton.svelte";
 
   export let isDrawing: boolean;
   export let setIsDrawing: (value: boolean) => void;
@@ -26,6 +27,11 @@
 
   // Reactive variable to store drawing polygon coordinates
   let drawingPolygonCoords: LatLng[] = [];
+
+  let userPolygonsVisibility: boolean = false;
+  function toggleUserPolygonsVisibility() {
+    userPolygonsVisibility = !userPolygonsVisibility;
+  }
 
   // Event Handlers
   function handleMapClick(e: L.LeafletMouseEvent) {
@@ -105,10 +111,12 @@
 </script>
 
 <section>
+  <div class="map-controls-container">
+    <FitBoundsButton {mapInstance} />
+    <ShowUserPolygonsButton {userPolygonsVisibility} {toggleUserPolygonsVisibility} />
+  </div>
   <!-- List of drawn polygons -->
   <DrawnPolygonsList polygons={$filters.polygons} />
-
-  <FitBoundsButton {mapInstance} />
 
   <!-- Leaflet Map Component -->
   <Map options={mapOptions} bind:instance={mapInstance}>
@@ -122,7 +130,9 @@
     <DrawnPolygons {drawingPolygonCoords} />
 
     <!-- User Polygons Component -->
-    <!-- <UserPolygons /> -->
+    {#if userPolygonsVisibility}
+      <UserPolygons />
+    {/if}
   </Map>
 </section>
 
@@ -148,5 +158,15 @@
 
   :global(.leaflet-popup-content p) {
     margin: 0;
+  }
+
+  .map-controls-container {
+    position: absolute;
+    z-index: 401;
+    top: 1rem;
+    left: 4rem;
+
+    display: flex;
+    gap: 1rem;
   }
 </style>

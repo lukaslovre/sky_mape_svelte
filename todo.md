@@ -22,11 +22,11 @@
 
 - [x] Agent filter
 
-- [ ] Na property gridu imati kao grid divider i onda su ispod "favoriti koji ne matchaju filtere"
-
-- [ ] Show all drawings je gumb na mapi
+- [x] Show all drawings je gumb na mapi
 
 - [ ] isDrawing je u store-u
+
+- [ ] Na property gridu imati kao grid divider i onda su ispod "favoriti koji ne matchaju filtere"
 
 ## Low
 

@@ -14,7 +14,6 @@
   import KeyIcon from "../../assets/icons/KeyIcon.svelte";
 
   let tabs: Tabs[] = ["Map", "Properties", "Buyers", "Owners", "Interactions"];
-  let showAllDrawings = false; // temp
 
   function handleTabClick(tab: Tabs) {
     $activeTab = tab;
@@ -76,16 +75,6 @@
       </li>
     {/each}
   </ul>
-
-  <div class="show-all-drawings-toggle">
-    <input
-      type="checkbox"
-      bind:checked={showAllDrawings}
-      id="show-all-drawings"
-      name="show-all-drawings"
-    />
-    <label for="show-all-drawings">Show all drawings</label>
-  </div>
 </nav>
 
 <style>
