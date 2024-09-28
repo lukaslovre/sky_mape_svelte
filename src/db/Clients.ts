@@ -1,7 +1,7 @@
 import type { PocketbaseAttributes, UserData } from "../types";
 // import { LatLng } from "leaflet";
 
-import { pb, transformPocketbaseUrlToAbsolute } from "./generalAndSetup";
+import { pb } from "../PocketBaseInit";
 
 // EXAMPLE DATA
 // {

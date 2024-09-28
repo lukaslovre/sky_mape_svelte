@@ -1,6 +1,6 @@
 import type { Interaction } from "../types";
 
-import { pb } from "./generalAndSetup";
+import { pb } from "../PocketBaseInit";
 
 export async function getInteractionsFromDb(): Promise<Interaction[]> {
   // you can also fetch all records at once via getFullList

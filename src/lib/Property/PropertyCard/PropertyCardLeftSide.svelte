@@ -3,7 +3,7 @@
   import EyeOffIcon from "../../../assets/icons/EyeOffIcon.svelte";
   import InternetIcon from "../../../assets/icons/InternetIcon.svelte";
   import StarIcon from "../../../assets/icons/StarIcon.svelte";
-  import { pocketbaseUrl } from "../../../db/generalAndSetup";
+  import { pocketbaseUrl } from "../../../PocketBaseInit";
   import { favoriteProperties } from "../../../stores/store";
   import type { Property } from "../../../types";
 

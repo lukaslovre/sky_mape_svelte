@@ -26,15 +26,17 @@
 
 - [x] isDrawing je u store-u
 
+- [ ] auth
+
 - [ ] Na property gridu imati kao grid divider i onda su ispod "favoriti koji ne matchaju filtere"
-
-## Low
-
-- [ ] Interactions filtriranje i više informacija, kad dobijem povratno
 
 - [ ] (isto novi tab, znači 5 tabova, to bi možda trebalo lijevo prebacit ko sidebar... -> i onda bi imo dva side bara (tj kategorije unutar-> filter i page))
 
 - [ ] Mogućnost priložiti/spremiti dokumente koji su onda povezani sa nekom nekretninom te se mogu brzo pristupiti. Na buyers mora bit isto tablica jer je ovo vec previse polja i gumba. Kad se stisne na mapi na nekretninu onda je samo 1 nekretnina odabrana i prikazana na listi. Ima polje dokumenti koji isto izbaci side-note sa svim file-ovima, google drive style.
+
+## Low
+
+- [ ] Interactions filtriranje i više informacija, kad dobijem povratno
 
 - [ ] Srediti lijepo side-note funkcionalnost (UI)
 
