@@ -48,7 +48,7 @@ type UserData = {
   note: string;
   filters: Filters | null;
   favoriteProperties: Property["id"][];
-  userType: "seller" | "buyer" | "agent";
+  userType: "seller" | "buyer";
   payment_method: "credit" | "cash";
 } & PocketbaseAttributes;
 
