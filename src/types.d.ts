@@ -59,6 +59,19 @@ type Agent = {
   pfp: string;
 } & PocketbaseAttributes;
 
+type users = {
+  username: string;
+  verified: boolean;
+  emailVisibility: boolean;
+  email: string;
+  phone: string;
+  name: string;
+  avatar: string;
+  phone: string;
+  role: "admin" | "agent";
+  agency_id: string;
+} & PocketbaseAttributes;
+
 type InteractionType =
   | "Contacted"
   | "PropertyViewingScheduled"

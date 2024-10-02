@@ -11,6 +11,7 @@
   import PropertyForm from "./lib/Property/PropertyForm.svelte";
   import OwnersPage from "./lib/Owners/OwnersPage.svelte";
   import InteractionsPage from "./lib/Interactions/InteractionsPage.svelte";
+  import AuthRow from "./lib/AuthRow/AuthRow.svelte";
 
   // Dialog
   let openDialog: DialogType | null = null;
@@ -45,6 +46,8 @@
 </Dialog>
 
 <main>
+  <AuthRow />
+
   <Header />
 
   <div class="content">
