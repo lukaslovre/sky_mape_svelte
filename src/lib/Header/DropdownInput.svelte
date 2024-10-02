@@ -108,7 +108,6 @@
     flex-direction: column;
     gap: 0.5rem;
     /* width: fit-content; */
-    max-width: 20rem;
   }
 
   .dropdown-input-current {

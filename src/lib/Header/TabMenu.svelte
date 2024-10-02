@@ -78,31 +78,35 @@
 </nav>
 
 <style>
-  nav {
+  /* nav {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
-  }
+  } */
 
   nav ul {
     list-style: none;
 
     display: flex;
+    flex-direction: column;
     gap: 1rem;
   }
+
   nav ul li button {
+    width: 100%;
     height: 3rem;
     padding: 0 1.5rem;
 
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 1rem;
 
-    background-color: #fff;
-    border: 0.125rem solid #bfbfbf;
+    background-color: #f5f5f5;
+    border: 1px solid #f5f5f5;
     outline: none;
-    border-radius: 0.5rem 0.5rem 0.25rem 0.25rem;
+    border-radius: 0.5rem;
     box-shadow: none;
 
     font-size: 1rem;
@@ -110,19 +114,20 @@
     color: #4d4d4d;
 
     transition:
-      border-color 75ms ease-out,
+      border 75ms ease-out,
       color 75ms ease-out,
-      border-radius 75ms ease-out;
+      background-color 75ms ease-out;
   }
   button:hover,
   button:focus {
+    background-color: #fafafa;
     color: #1a1a1a;
-    border-radius: 0.5rem;
-    border-color: #1a1a1a;
+    border: 1px solid #bfbfbf;
   }
   button.active {
-    border-color: #0b5eda;
+    background-color: #ffffff;
+    border: 2px solid #0b5eda;
     color: #1a1a1a;
-    border-radius: 0.5rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   }
 </style>

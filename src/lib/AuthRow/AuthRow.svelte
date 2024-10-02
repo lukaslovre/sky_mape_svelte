@@ -38,7 +38,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 1rem;
   }
 
   button {

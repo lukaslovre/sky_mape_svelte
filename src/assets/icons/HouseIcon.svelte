@@ -1,7 +1,7 @@
 <script lang="ts">
   export let size: number = 24;
   export let color: string = "#000";
-  export const backgroundColor = "#fff";
+  export let backgroundColor: string = "#fff";
 </script>
 
 <svg

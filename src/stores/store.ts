@@ -7,7 +7,7 @@ import {
   propertyMatchesFilter,
   usersMatchingProperties,
 } from "../utils/filter";
-import type { Agent, Filters, Property, Tabs, UserData } from "../types";
+import type { Agent, Filters, Pages, Property, Tabs, UserData } from "../types";
 import { LatLngBounds } from "leaflet";
 import { getProperties } from "../db/Properties";
 import { getUsers } from "../db/Clients";

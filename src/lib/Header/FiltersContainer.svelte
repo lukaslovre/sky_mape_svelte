@@ -162,21 +162,15 @@
 
 <style>
   .filters-container {
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid #e6e6e6;
-
     width: 100%;
 
     display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 3rem;
+    flex-direction: column;
+    gap: 2rem;
   }
   .inputs-container {
-    flex: 1;
-
     display: flex;
-    align-items: flex-end;
+    flex-direction: column;
     gap: 1rem;
   }
   .buttons-container {

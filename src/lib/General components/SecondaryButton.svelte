@@ -2,11 +2,12 @@
 
 <script lang="ts">
   export let text: string;
+  export let inlineCss: string = "";
 
   export let onClick: (e: MouseEvent) => void = () => {};
 </script>
 
-<button class="secondary-button" on:click={onClick}>
+<button class="secondary-button" on:click={onClick} style={inlineCss}>
   <slot />
   {text}
 </button>
