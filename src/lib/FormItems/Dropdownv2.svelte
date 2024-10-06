@@ -8,6 +8,7 @@
   export let id: string;
   export let options: { label: string; value: string }[];
   export let values: string[];
+  export let disabled: boolean = false;
 
   let isOpen: boolean = false;
 
@@ -22,10 +23,12 @@
   }
 
   function toggleDropdownOptionsVisibility() {
+    if (disabled) return;
     isOpen = !isOpen;
   }
 
   function getLabelsFromValues(separator: string = ", ") {
+    if (!Array.isArray(values)) return "";
     return values
       .map((value) => {
         const option = options.find((option) => option.value === value);
@@ -35,17 +38,19 @@
   }
 
   onMount(() => {
-    window.addEventListener("click", (e) => {
-      if (isOpen) {
-        const target = e.target as HTMLElement;
-        const isCurrentButton = target.id === id;
-        const isOptionButton = target.classList.contains("dropdown-input-option");
+    if (!disabled) {
+      window.addEventListener("click", (e) => {
+        if (isOpen) {
+          const target = e.target as HTMLElement;
+          const isCurrentButton = target.id === id;
+          const isOptionButton = target.classList.contains("dropdown-input-option");
 
-        if (!isCurrentButton && !isOptionButton) {
-          isOpen = false;
+          if (!isCurrentButton && !isOptionButton) {
+            isOpen = false;
+          }
         }
-      }
-    });
+      });
+    }
   });
 </script>
 
@@ -59,7 +64,7 @@
     {id}
     on:click={toggleDropdownOptionsVisibility}
   >
-    {values.length === 0 ? "Sve" : getLabelsFromValues()}
+    {values.length === 0 ? "Nije odabrano" : getLabelsFromValues()}
     <DropdownTriangleIcon />
   </button>
 

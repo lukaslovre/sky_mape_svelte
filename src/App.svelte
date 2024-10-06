@@ -8,7 +8,7 @@
   import BuyersPage from "./lib/Buyer/BuyersPage.svelte";
   import PropertyPage from "./lib/Property/PropertyPage.svelte";
   import SideNote from "./lib/General components/SideNote.svelte";
-  import PropertyForm from "./lib/Property/PropertyForm.svelte";
+  import PropertyForm from "./lib/Property/PropertyForm/PropertyForm.svelte";
   import OwnersPage from "./lib/Owners/OwnersPage.svelte";
   import InteractionsPage from "./lib/Interactions/InteractionsPage.svelte";
 
