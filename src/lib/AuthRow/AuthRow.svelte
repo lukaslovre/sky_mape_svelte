@@ -10,10 +10,6 @@
 </script>
 
 <div id="auth-row">
-  {#if showLoginPopup}
-    <LoginPopup />
-  {/if}
-
   {#if isAuth}
     <UserDisplay {user} />
 
@@ -21,9 +17,13 @@
       on:click={() => {
         logOut();
         window.location.reload();
-      }}>Odjavi se</button
+      }}>Exit</button
     >
   {:else}
+    {#if showLoginPopup}
+      <LoginPopup />
+    {/if}
+
     <button
       on:click={async () => {
         showLoginPopup = !showLoginPopup;
@@ -36,13 +36,14 @@
   #auth-row {
     position: relative;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
   }
 
   button {
     padding: 0.5rem 1rem;
-    background-color: #f0f0f0;
+    background-color: #fff;
+    border: 1px solid #d9d9d9;
     border-radius: 0.25rem;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 

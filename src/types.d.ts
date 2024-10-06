@@ -1,6 +1,6 @@
 import type { LatLng } from "leaflet";
 
-type Tabs = "Map" | "Properties" | "Buyers" | "Owners" | "Interactions";
+type Tabs = "Map" | "Properties" | "Buyers" | "Owners" | "Interactions" | "Admin";
 type DialogType = "saveBuyer" | "saveProperty";
 
 type PropertyType = "Apartment" | "House" | "Land" | "Commercial";

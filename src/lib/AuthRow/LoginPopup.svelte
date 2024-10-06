@@ -31,14 +31,14 @@
 <style>
   #login-form {
     position: absolute;
-    top: 100%;
-    left: 1rem;
+    top: calc(100% + 1rem);
+    right: 0;
     z-index: 1001;
 
     background-color: hsl(0, 0%, 95%);
     border: 1px solid #ccc;
     border-radius: 1rem;
-    box-shadow: 0 0.125rem 2rem rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0.25rem 1.5rem rgba(0, 0, 0, 0.25);
     padding: 1rem;
 
     display: flex;

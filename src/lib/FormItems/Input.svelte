@@ -25,7 +25,8 @@
     height: 2.5rem;
     padding: 0 1rem;
 
-    outline: 1px solid transparent;
+    /* outline: 2px solid transparent; */
+    outline: none;
     border: 1px solid #cccccc;
     border-radius: 0.5rem;
     box-shadow: 0 2px 1px rgba(0, 0, 0, 0.05);
@@ -45,7 +46,9 @@
   }
 
   input:focus {
-    outline: 2px solid #0d65d9;
+    /* outline: 2px solid #0d65d9; */
+    box-shadow:
+      /* 0 2px 1px rgba(0, 0, 0, 0.1), */ 0 0 0 2px #0d65d9;
     z-index: 1;
   }
 </style>
