@@ -7,12 +7,12 @@ import {
   propertyMatchesFilter,
   usersMatchingProperties,
 } from "../utils/filter";
-import type { Agent, Filters, Pages, Property, Tabs, UserData } from "../types";
+import type { Agent, Filters, Property, Tabs, UserData } from "../types";
 import { LatLngBounds } from "leaflet";
-import { getProperties } from "../db/Properties";
-import { getUsers } from "../db/Clients";
+import { getProperties } from "../models/Properties";
+import { getUsers } from "../models/Clients";
 import { emptyBoundsObject, getBoundsReducer } from "./utils/bounds";
-import { getAgentsFromDb } from "../db/Agents";
+import { getAgentsFromDb } from "../models/Agents";
 
 // Initial store states
 const initialFilters: Filters = emptyFiltersObject();
