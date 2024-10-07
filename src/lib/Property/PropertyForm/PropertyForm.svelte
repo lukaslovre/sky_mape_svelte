@@ -1,24 +1,38 @@
 <script lang="ts">
+  import type { FormFieldType } from "../../../types";
   import Checkbox from "../../FormItems/Checkbox.svelte";
   import Dropdownv2 from "../../FormItems/Dropdownv2.svelte";
   import Input from "../../FormItems/Input.svelte";
   import Textarea from "../../FormItems/Textarea.svelte";
-  import { propertyFormFields } from "./PropertyFormUtils";
 
   // ovo pretvorit u generalnu komponentu koja prima objekt sa podacima
 
-  let fields = propertyFormFields.map((field) => ({ ...field }));
+  export let fields: FormFieldType[];
 
-  async function tempSubmit() {
-    const transformedFields = fields
-      .map((field) => {
+  // parse as number if inputType is "number",
+  // if its imageUrl, split by comma and return array
+  function parseFormData() {
+    return fields.map((field) => {
+      if (field.inputType === "number") {
+        return {
+          [field.databaseFieldName]: Number(field.value),
+        };
+      } else if (field.inputType === "imageUrl") {
+        return {
+          [field.databaseFieldName]: field.value.split(","),
+        };
+      } else {
         return {
           [field.databaseFieldName]: field.value,
         };
-      })
-      .reduce((acc, curr) => {
-        return { ...acc, ...curr };
-      });
+      }
+    });
+  }
+
+  async function tempSubmit() {
+    const transformedFields = parseFormData().reduce((acc, curr) => {
+      return { ...acc, ...curr };
+    });
 
     console.log(transformedFields);
   }

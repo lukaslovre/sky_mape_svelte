@@ -1,17 +1,4 @@
-import type { Property } from "../../../types";
-
-type inputElement = "input" | "textarea" | "select" | "checkbox";
-
-type FormFieldType = {
-  label: string;
-  inputElement: inputElement;
-  databaseFieldName: keyof Property;
-  value: string | boolean | number | string[] | number[];
-  inputType?: string;
-  required: boolean;
-  options?: { value: string; label: string }[];
-  disabled?: boolean;
-};
+import type { FormFieldType } from "../../../types";
 
 export const propertyFormFields: FormFieldType[] = [
   {
@@ -64,14 +51,14 @@ export const propertyFormFields: FormFieldType[] = [
     required: false,
     // Consider using a specialized component for multiple URLs
   },
-  {
-    label: "Title",
-    inputElement: "input",
-    databaseFieldName: "title",
-    value: "",
-    inputType: "text",
-    required: true,
-  },
+  // {
+  //   label: "Title",
+  //   inputElement: "input",
+  //   databaseFieldName: "title",
+  //   value: "",
+  //   inputType: "text",
+  //   required: true,
+  // },
   {
     label: "Price",
     inputElement: "input",
@@ -80,13 +67,13 @@ export const propertyFormFields: FormFieldType[] = [
     inputType: "number",
     required: true,
   },
-  {
-    label: "Description",
-    inputElement: "textarea",
-    databaseFieldName: "description",
-    value: "",
-    required: true,
-  },
+  // {
+  //   label: "Description",
+  //   inputElement: "textarea",
+  //   databaseFieldName: "description",
+  //   value: "",
+  //   required: true,
+  // },
   {
     label: "Surface Area (sq ft)",
     inputElement: "input",

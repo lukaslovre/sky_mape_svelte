@@ -113,3 +113,16 @@ type PocketbaseAttributes = {
   collectionId: string;
   collectionName: string;
 };
+
+type inputElement = "input" | "textarea" | "select" | "checkbox";
+
+type FormFieldType = {
+  label: string;
+  inputElement: inputElement;
+  databaseFieldName: keyof Property;
+  value: string | boolean | number | string[] | number[];
+  inputType?: string;
+  required: boolean;
+  options?: { value: string; label: string }[];
+  disabled?: boolean;
+};
