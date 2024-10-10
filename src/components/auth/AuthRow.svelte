@@ -1,11 +1,10 @@
 <script lang="ts">
-  import { currentUser, logOut, userIsAuthenticated } from "../../auth";
+  import { getCurrentUser, logOut, userIsAuthenticated } from "../../auth";
   import LoginPopup from "./LoginPopup.svelte";
   import UserDisplay from "./UserDisplay.svelte";
 
   let isAuth = userIsAuthenticated();
-  let user = currentUser();
-
+  let user = getCurrentUser();
   let showLoginPopup: boolean = false;
 </script>
 

@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { DialogType } from "./types";
   import { activeTab } from "./stores/store";
   import Header from "./components/header/Header.svelte";
   import SideNote from "./components/common/SideNote.svelte";

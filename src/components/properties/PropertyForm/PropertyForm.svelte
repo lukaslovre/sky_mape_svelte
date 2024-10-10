@@ -1,7 +1,9 @@
 <script lang="ts">
+  import { addProperty } from "../../../models/Properties";
   import type { FormFieldType } from "../../../types";
   import Checkbox from "../../common/Checkbox.svelte";
   import Dropdown from "../../common/Dropdown.svelte";
+  import ImageInput from "../../common/ImageInput.svelte";
   import Input from "../../common/Input.svelte";
   import Textarea from "../../common/Textarea.svelte";
 
@@ -9,43 +11,50 @@
 
   export let fields: FormFieldType[];
 
-  // parse as number if inputType is "number",
-  // if its imageUrl, split by comma and return array
-  function parseFormData() {
-    return fields.map((field) => {
-      if (field.inputType === "number") {
+  let errorMessages: string[] = [];
+  async function tempSubmit() {
+    const transformedFields = fields.reduce((acc, field) => {
+      const parsedValue = field.parsingFunction
+        ? field.parsingFunction(field.value)
+        : field.value;
+      if (parsedValue != undefined) {
         return {
-          [field.databaseFieldName]: Number(field.value),
-        };
-      } else if (field.inputType === "imageUrl") {
-        return {
-          [field.databaseFieldName]: field.value.split(","),
-        };
-      } else {
-        return {
-          [field.databaseFieldName]: field.value,
+          ...acc,
+          [field.databaseFieldName]: parsedValue,
         };
       }
-    });
-  }
-
-  async function tempSubmit() {
-    const transformedFields = parseFormData().reduce((acc, curr) => {
-      return { ...acc, ...curr };
-    });
+      return acc;
+    }, {});
 
     console.log(transformedFields);
+
+    addProperty(transformedFields);
   }
 </script>
+
+{#if errorMessages.length > 0}
+  <ul>
+    {#each errorMessages as message}
+      <li>{message}</li>
+    {/each}
+  </ul>
+{/if}
 
 <form on:submit|preventDefault={tempSubmit}>
   {#each fields as field}
     {#if field.inputElement === "input"}
-      <Input label={field.label} id={field.databaseFieldName} bind:value={field.value} />
+      <Input
+        label={field.label}
+        id={field.databaseFieldName}
+        required={field.required}
+        disabled={field.disabled}
+        bind:value={field.value}
+      />
     {:else if field.inputElement === "textarea"}
       <Textarea
         label={field.label}
         id={field.databaseFieldName}
+        required={field.required}
         bind:value={field.value}
       />
     {:else if field.inputElement === "select" && field.options}
@@ -53,13 +62,23 @@
         label={field.label}
         id={field.databaseFieldName}
         options={field.options}
+        disabled={field.disabled}
+        required={field.required}
         bind:values={field.value}
       />
     {:else if field.inputElement === "checkbox"}
       <Checkbox
         label={field.label}
         id={field.databaseFieldName}
+        required={field.required}
         bind:checked={field.value}
+      />
+    {:else if field.inputElement === "imageInput"}
+      <ImageInput
+        label={field.label}
+        id={field.databaseFieldName}
+        required={field.required}
+        bind:value={field.value}
       />
     {/if}
   {/each}

@@ -4,10 +4,11 @@
   export let label: string;
   export let id: string;
   export let value: string;
+  export let required: boolean = false;
 </script>
 
 <div class="textarea">
-  <Label forId={id} text={label} />
+  <Label forId={id} text={`${required ? "*" : ""} ${label}`} />
   <textarea {id} name={id} bind:value></textarea>
 </div>
 

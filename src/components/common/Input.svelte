@@ -4,12 +4,14 @@
   export let label: string;
   export let id: string;
   export let value: any;
+  export let required: boolean = false;
+  export let disabled: boolean = false;
 </script>
 
 <div class="input">
-  <Label forId={id} text={label} />
+  <Label forId={id} text={`${required ? "*" : ""} ${label}`} />
 
-  <input type="text" name={id} {id} bind:value />
+  <input type="text" name={id} {id} bind:value {disabled} class:disabled />
 </div>
 
 <style>
@@ -17,6 +19,11 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+  }
+
+  .disabled {
+    opacity: 0.5;
+    pointer-events: none;
   }
 
   input {

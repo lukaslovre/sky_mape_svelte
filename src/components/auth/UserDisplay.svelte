@@ -1,11 +1,11 @@
 <script lang="ts">
-  import type { users } from "../../types";
+  import type { Agent } from "../../types";
 
-  export let user: users;
+  export let user: Agent;
 </script>
 
 <div id="user-display">
-  <img src="#" alt="pfp" />
+  <img src={user.avatar} alt="pfp" />
   <span id="label">Prijavljeni ste kao: {user.username} ({user.role})</span>
 </div>
 

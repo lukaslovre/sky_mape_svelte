@@ -9,6 +9,7 @@
   export let options: { label: string; value: string }[];
   export let values: string[];
   export let disabled: boolean = false;
+  export let required: boolean = false;
 
   let isOpen: boolean = false;
 
@@ -54,13 +55,14 @@
   });
 </script>
 
-<div class="dropdown-input">
-  <Label forId={id} text={label} />
+<div class="dropdown-input" class:disabled>
+  <Label forId={id} text={`${required ? "*" : ""} ${label}`} />
 
   <!-- Add html attributes so it acts like a <select> element (selectable, etc) -->
   <button
     type="button"
     class="dropdown-input-current"
+    {disabled}
     {id}
     on:click={toggleDropdownOptionsVisibility}
   >
@@ -98,6 +100,10 @@
     flex-direction: column;
     gap: 0.5rem;
     /* width: fit-content; */
+  }
+  .dropdown-input.disabled {
+    opacity: 0.5;
+    pointer-events: none;
   }
 
   .dropdown-input-current {

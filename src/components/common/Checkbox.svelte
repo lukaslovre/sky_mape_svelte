@@ -2,11 +2,12 @@
   export let label: string;
   export let id: string;
   export let checked: boolean;
+  export let required: boolean = false;
 </script>
 
 <div class="checkbox">
   <input type="checkbox" {id} bind:checked />
-  <label for={id}>{label}</label>
+  <label for={id}>{`${required ? "*" : ""} ${label}`}</label>
 </div>
 
 <style>

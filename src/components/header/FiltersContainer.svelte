@@ -15,9 +15,7 @@
     emptyFavorites();
   }
 
-  let agentsOptions = $agents.map((agent) => {
-    return { label: agent.name, value: agent.id };
-  });
+  let agentsOptions: { label: string; value: string }[] = [];
 
   $: if ($agents.length > 0) {
     agentsOptions = $agents.map((agent) => {

@@ -53,13 +53,6 @@ type UserData = {
 } & PocketbaseAttributes;
 
 type Agent = {
-  name: string;
-  email: string;
-  phone: string;
-  pfp: string;
-} & PocketbaseAttributes;
-
-type users = {
   username: string;
   verified: boolean;
   emailVisibility: boolean;
@@ -114,15 +107,17 @@ type PocketbaseAttributes = {
   collectionName: string;
 };
 
-type inputElement = "input" | "textarea" | "select" | "checkbox";
+type inputElement = "input" | "textarea" | "select" | "checkbox" | "imageInput";
 
 type FormFieldType = {
   label: string;
   inputElement: inputElement;
   databaseFieldName: keyof Property;
-  value: string | boolean | number | string[] | number[];
-  inputType?: string;
+  value: any;
   required: boolean;
   options?: { value: string; label: string }[];
   disabled?: boolean;
+  parsingFunction: (value: any) => any;
+  hidden?: boolean;
+  default?: any;
 };

@@ -1,24 +1,50 @@
 <script lang="ts">
-  import type { DialogType, Property } from "../../types";
+  import type { Agent, DialogType, Property, UserData } from "../../types";
   import PropertyCard from "./PropertyCard.svelte";
   import PropertyPageButtons from "./PropertyPageButtons.svelte";
-  import { filteredProperties } from "../../stores/store";
+  import { agents, filteredProperties, users } from "../../stores/store";
   import { sortProperties } from "../../utils/properties";
   import PropertyForm from "./PropertyForm/PropertyForm.svelte";
   import { propertyFormFields } from "./PropertyForm/PropertyFormUtils";
   import Header1 from "../common/Header1.svelte";
+  import { getCurrentUser } from "../../auth";
+
+  const currentUser = getCurrentUser();
 
   // Property sorting
-
   let sortOption: keyof Property | null = null;
-
-  let showForm = false;
-
-  const fields = propertyFormFields.map((field) => ({ ...field }));
 
   function setSortOption(option: keyof Property) {
     sortOption = option;
   }
+
+  // Property filtering
+  let showForm = true;
+
+  // const fields = propertyFormFields.map((field) => ({ ...field })); // Make a copy
+
+  function updatePropertyFormFields(agents: Agent[], users: UserData[]) {
+    propertyFormFields.forEach((field) => {
+      if (field.databaseFieldName === "agent_id" && agents.length > 0) {
+        field.options = agents.map((agent) => ({
+          value: agent.id,
+          label: agent.name,
+        }));
+
+        field.value = [currentUser.id];
+        field.disabled = currentUser.role === "agent";
+      }
+
+      if (field.databaseFieldName === "ownerId" && users.length > 0) {
+        field.options = users.map((user) => ({
+          value: user.id,
+          label: user.name,
+        }));
+      }
+    });
+  }
+
+  $: updatePropertyFormFields($agents, $users);
 </script>
 
 <div class="properties-container">
@@ -32,7 +58,7 @@
   />
 
   {#if showForm}
-    <PropertyForm {fields} />
+    <PropertyForm fields={propertyFormFields} />
   {:else}
     <div class="properties-grid-container">
       {#each sortProperties($filteredProperties, sortOption) as property (property.id)}

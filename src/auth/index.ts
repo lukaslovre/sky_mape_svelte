@@ -1,5 +1,5 @@
 import { pb } from "../PocketBaseInit";
-import type { users } from "../types";
+import type { Agent } from "../types";
 
 export function userIsAuthenticated(): boolean {
   return pb.authStore.isValid;
@@ -14,6 +14,6 @@ export function logOut() {
   pb.authStore.clear();
 }
 
-export function currentUser() {
-  return pb.authStore.model as users;
+export function getCurrentUser() {
+  return pb.authStore.model as Agent;
 }

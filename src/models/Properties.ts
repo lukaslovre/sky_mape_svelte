@@ -1,7 +1,5 @@
 import type { Property } from "../types";
-import { LatLng } from "leaflet";
 
-import { transformPocketbaseUrlToAbsolute } from "./generalAndSetup";
 import { pb } from "../PocketBaseInit";
 
 // EXAMPLE DATA
@@ -31,11 +29,27 @@ export async function getProperties(): Promise<Property[]> {
   return data.map(parsePropertyData);
 }
 
+// Adds absolute URLs to the image URLs
 function parsePropertyData(property: Property): Property {
   return {
     ...property,
-    imgUrl: property.imgUrl.map((url) =>
-      transformPocketbaseUrlToAbsolute(url, property.collectionName, property.id)
-    ),
+    imgUrl: property.imgUrl.map((url) => pb.files.getUrl(property, url)),
   };
+}
+
+export async function addProperty(
+  property: // all fields optional typescript syntax
+  Partial<Property>
+): Promise<void> {
+  try {
+    if (property.id) {
+      const res = await pb.collection("Properties").update(property.id, property);
+      console.log(res);
+    } else {
+      const res = await pb.collection("Properties").create(property);
+      console.log(res);
+    }
+  } catch (err) {
+    console.error(err.data);
+  }
 }

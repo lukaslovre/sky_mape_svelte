@@ -1,21 +1,32 @@
-import type { FormFieldType } from "../../../types";
+import { get } from "svelte/store";
+import { agents } from "../../../stores/store";
+import type { FormFieldType, Property } from "../../../types";
 
 export const propertyFormFields: FormFieldType[] = [
+  {
+    label: "ID",
+    inputElement: "input",
+    databaseFieldName: "id",
+    value: "",
+    required: false,
+    disabled: true,
+    parsingFunction: (value: string) => value,
+  },
   {
     label: "Latitude",
     inputElement: "input",
     databaseFieldName: "lat",
     value: "",
-    inputType: "number",
-    required: true,
+    required: false,
+    parsingFunction: (value: string) => parseFloat(value),
   },
   {
     label: "Longitude",
     inputElement: "input",
     databaseFieldName: "lng",
     value: "",
-    inputType: "number",
-    required: true,
+    required: false,
+    parsingFunction: (value: string) => parseFloat(value),
   },
   {
     label: "Property Type",
@@ -24,71 +35,56 @@ export const propertyFormFields: FormFieldType[] = [
     value: [],
     required: true,
     options: [
-      { value: "house", label: "House" },
-      { value: "apartment", label: "Apartment" },
-      { value: "condo", label: "Condominium" },
-      { value: "townhouse", label: "Townhouse" },
-      // Add other PropertyType options as needed
+      { value: "House", label: "House" },
+      { value: "Apartment", label: "Apartment" },
+      { value: "Land", label: "Land" },
+      { value: "Commercial", label: "Commercial" },
     ],
+    parsingFunction: (value: string[]) => value[0],
   },
   {
     label: "Action",
     inputElement: "select",
     databaseFieldName: "action",
     value: [],
-    required: true,
+    required: false,
     options: [
-      { value: "sale", label: "Sale" },
-      { value: "rent", label: "Rent" },
-      // Add other PropertyAction options as needed
+      { value: "Sale", label: "Sale" },
+      { value: "Rent", label: "Rent" },
     ],
+    parsingFunction: (value: string[]) => value[0],
   },
   {
     label: "Image URLs",
-    inputElement: "input",
+    inputElement: "imageInput",
     databaseFieldName: "imgUrl",
     value: "",
     required: false,
-    // Consider using a specialized component for multiple URLs
+    parsingFunction: (value: File) => value,
   },
-  // {
-  //   label: "Title",
-  //   inputElement: "input",
-  //   databaseFieldName: "title",
-  //   value: "",
-  //   inputType: "text",
-  //   required: true,
-  // },
   {
-    label: "Price",
+    label: "Price (€)",
     inputElement: "input",
     databaseFieldName: "price",
     value: "",
-    inputType: "number",
-    required: true,
+    required: false,
+    parsingFunction: (value: string) => parseFloat(value),
   },
-  // {
-  //   label: "Description",
-  //   inputElement: "textarea",
-  //   databaseFieldName: "description",
-  //   value: "",
-  //   required: true,
-  // },
   {
-    label: "Surface Area (sq ft)",
+    label: "Surface Area (m²)",
     inputElement: "input",
     databaseFieldName: "surfaceArea",
     value: "",
-    inputType: "number",
-    required: true,
+    required: false,
+    parsingFunction: (value: string) => parseFloat(value),
   },
   {
     label: "Website URL",
     inputElement: "input",
     databaseFieldName: "websiteUrl",
     value: "",
-    inputType: "url",
     required: false,
+    parsingFunction: (value: string) => value,
   },
   {
     label: "Hidden on Website",
@@ -96,36 +92,33 @@ export const propertyFormFields: FormFieldType[] = [
     databaseFieldName: "hiddenOnWebsite",
     value: false,
     required: false,
+    parsingFunction: (value: boolean) => !!value,
   },
   {
     label: "Bedrooms",
     inputElement: "input",
     databaseFieldName: "bedrooms",
     value: "",
-    inputType: "number",
-    required: true,
+    required: false,
+    parsingFunction: (value: string) => parseInt(value),
   },
   {
     label: "Bathrooms",
     inputElement: "input",
     databaseFieldName: "bathrooms",
     value: "",
-    inputType: "number",
-    required: true,
+    required: false,
+    parsingFunction: (value: string) => parseInt(value),
   },
   {
     label: "Owner",
     inputElement: "select",
     databaseFieldName: "ownerId",
     value: [],
-    required: true,
-    options: [
-      // Populate with UserData IDs and Names
-      // Example:
-      // { value: "user1", label: "John Doe" },
-      // { value: "user2", label: "Jane Smith" },
-    ],
+    required: false,
+    options: [{ value: "John Doe", label: "John Doe" }], // TODO: It should be fetched from the database
     disabled: false,
+    parsingFunction: (value: string[]) => value[0],
   },
   {
     label: "Property Notes",
@@ -133,6 +126,7 @@ export const propertyFormFields: FormFieldType[] = [
     databaseFieldName: "propertyNotes",
     value: "",
     required: false,
+    parsingFunction: (value: string) => value.trim(),
   },
   {
     label: "Seller Notes",
@@ -140,20 +134,20 @@ export const propertyFormFields: FormFieldType[] = [
     databaseFieldName: "sellerNotes",
     value: "",
     required: false,
+    parsingFunction: (value: string) => value.trim(),
   },
   {
     label: "Agent",
     inputElement: "select",
     databaseFieldName: "agent_id",
     value: [],
-    required: true,
-    options: [
-      // Populate with Agent IDs and Names
-      // Example:
-      // { value: "agent1", label: "Agent A" },
-      // { value: "agent2", label: "Agent B" },
-    ],
+    required: false,
+    options: get(agents).map((agent) => ({
+      value: agent.id,
+      label: agent.name,
+    })),
     disabled: false,
+    parsingFunction: (value: string[]) => value[0],
   },
   {
     label: "Status",
@@ -166,5 +160,6 @@ export const propertyFormFields: FormFieldType[] = [
       { value: "processing", label: "Processing" },
       { value: "sold", label: "Sold" },
     ],
+    parsingFunction: (value: string[]) => value[0],
   },
 ];
