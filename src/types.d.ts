@@ -120,4 +120,5 @@ type FormFieldType = {
   parsingFunction: (value: any) => any;
   hidden?: boolean;
   default?: any;
+  error: string | null;
 };

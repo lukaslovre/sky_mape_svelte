@@ -5,6 +5,7 @@
   export let id: string;
   export let value: File | null = null;
   export let required: boolean = false;
+  export let error: string | null = null;
 
   function handleFileChange(event: Event) {
     const target = event.target as HTMLInputElement;
@@ -18,6 +19,10 @@
 
 <div class="image-input">
   <Label forId={id} text={`${required ? "*" : ""} ${label}`} />
+
+  {#if error}
+    <p class="error">{error}</p>
+  {/if}
 
   <input
     type="file"
@@ -63,5 +68,11 @@
     box-shadow: 0 0 0 2px #0d65d9;
     outline: none;
     z-index: 1;
+  }
+
+  .error {
+    color: #ff0000;
+    font-size: 0.875rem;
+    font-weight: 400;
   }
 </style>

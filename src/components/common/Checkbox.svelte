@@ -3,11 +3,15 @@
   export let id: string;
   export let checked: boolean;
   export let required: boolean = false;
+  export let error: string | null = null;
 </script>
 
 <div class="checkbox">
   <input type="checkbox" {id} bind:checked />
   <label for={id}>{`${required ? "*" : ""} ${label}`}</label>
+  {#if error}
+    <p class="error">{error}</p>
+  {/if}
 </div>
 
 <style>
@@ -59,5 +63,11 @@
     font-size: 0.875rem;
     font-weight: 500;
     color: #1a1a1a;
+  }
+
+  .error {
+    color: #ff0000;
+    font-size: 0.875rem;
+    font-weight: 400;
   }
 </style>

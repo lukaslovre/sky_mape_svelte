@@ -11,22 +11,25 @@ export const propertyFormFields: FormFieldType[] = [
     required: false,
     disabled: true,
     parsingFunction: (value: string) => value,
+    error: null,
   },
   {
     label: "Latitude",
     inputElement: "input",
     databaseFieldName: "lat",
     value: "",
-    required: false,
+    required: true,
     parsingFunction: (value: string) => parseFloat(value),
+    error: null,
   },
   {
     label: "Longitude",
     inputElement: "input",
     databaseFieldName: "lng",
     value: "",
-    required: false,
+    required: true,
     parsingFunction: (value: string) => parseFloat(value),
+    error: null,
   },
   {
     label: "Property Type",
@@ -41,18 +44,20 @@ export const propertyFormFields: FormFieldType[] = [
       { value: "Commercial", label: "Commercial" },
     ],
     parsingFunction: (value: string[]) => value[0],
+    error: null,
   },
   {
     label: "Action",
     inputElement: "select",
     databaseFieldName: "action",
     value: [],
-    required: false,
+    required: true,
     options: [
       { value: "Sale", label: "Sale" },
       { value: "Rent", label: "Rent" },
     ],
     parsingFunction: (value: string[]) => value[0],
+    error: null,
   },
   {
     label: "Image URLs",
@@ -61,6 +66,7 @@ export const propertyFormFields: FormFieldType[] = [
     value: "",
     required: false,
     parsingFunction: (value: File) => value,
+    error: null,
   },
   {
     label: "Price (€)",
@@ -69,6 +75,7 @@ export const propertyFormFields: FormFieldType[] = [
     value: "",
     required: false,
     parsingFunction: (value: string) => parseFloat(value),
+    error: null,
   },
   {
     label: "Surface Area (m²)",
@@ -77,6 +84,7 @@ export const propertyFormFields: FormFieldType[] = [
     value: "",
     required: false,
     parsingFunction: (value: string) => parseFloat(value),
+    error: null,
   },
   {
     label: "Website URL",
@@ -85,6 +93,7 @@ export const propertyFormFields: FormFieldType[] = [
     value: "",
     required: false,
     parsingFunction: (value: string) => value,
+    error: null,
   },
   {
     label: "Hidden on Website",
@@ -93,6 +102,7 @@ export const propertyFormFields: FormFieldType[] = [
     value: false,
     required: false,
     parsingFunction: (value: boolean) => !!value,
+    error: null,
   },
   {
     label: "Bedrooms",
@@ -101,6 +111,7 @@ export const propertyFormFields: FormFieldType[] = [
     value: "",
     required: false,
     parsingFunction: (value: string) => parseInt(value),
+    error: null,
   },
   {
     label: "Bathrooms",
@@ -109,6 +120,7 @@ export const propertyFormFields: FormFieldType[] = [
     value: "",
     required: false,
     parsingFunction: (value: string) => parseInt(value),
+    error: null,
   },
   {
     label: "Owner",
@@ -119,6 +131,7 @@ export const propertyFormFields: FormFieldType[] = [
     options: [{ value: "John Doe", label: "John Doe" }], // TODO: It should be fetched from the database
     disabled: false,
     parsingFunction: (value: string[]) => value[0],
+    error: null,
   },
   {
     label: "Property Notes",
@@ -127,6 +140,7 @@ export const propertyFormFields: FormFieldType[] = [
     value: "",
     required: false,
     parsingFunction: (value: string) => value.trim(),
+    error: null,
   },
   {
     label: "Seller Notes",
@@ -135,6 +149,7 @@ export const propertyFormFields: FormFieldType[] = [
     value: "",
     required: false,
     parsingFunction: (value: string) => value.trim(),
+    error: null,
   },
   {
     label: "Agent",
@@ -148,6 +163,7 @@ export const propertyFormFields: FormFieldType[] = [
     })),
     disabled: false,
     parsingFunction: (value: string[]) => value[0],
+    error: null,
   },
   {
     label: "Status",
@@ -161,5 +177,12 @@ export const propertyFormFields: FormFieldType[] = [
       { value: "sold", label: "Sold" },
     ],
     parsingFunction: (value: string[]) => value[0],
+    error: null,
   },
 ];
+
+export function cleanErrors(fields: FormFieldType[]) {
+  fields.forEach((field) => {
+    field.error = null;
+  });
+}

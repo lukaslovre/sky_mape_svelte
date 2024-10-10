@@ -1,6 +1,7 @@
 import type { Property } from "../types";
 
 import { pb } from "../PocketBaseInit";
+import { ClientResponseError } from "pocketbase";
 
 // EXAMPLE DATA
 // {
@@ -37,19 +38,40 @@ function parsePropertyData(property: Property): Property {
   };
 }
 
-export async function addProperty(
-  property: // all fields optional typescript syntax
-  Partial<Property>
-): Promise<void> {
+export async function addProperty(property: Partial<Property>): Promise<void> {
   try {
-    if (property.id) {
-      const res = await pb.collection("Properties").update(property.id, property);
-      console.log(res);
-    } else {
-      const res = await pb.collection("Properties").create(property);
-      console.log(res);
-    }
+    const collection = pb.collection("Properties");
+    const res = property.id
+      ? await collection.update(property.id, property)
+      : await collection.create(property);
+    console.log(res);
   } catch (err) {
-    console.error(err.data);
+    console.error("Error adding/updating property:", err);
+
+    if (err instanceof ClientResponseError) {
+      console.log("ClientResponseError details:");
+
+      if (err.response && typeof err.response.data === "object") {
+        const errorObject: { [key: string]: string } = {};
+        Object.entries(err.response.data).forEach(([key, value]) => {
+          if (
+            typeof value === "object" &&
+            value !== null &&
+            "code" in value &&
+            "message" in value
+          ) {
+            const code = value.code ?? "Unknown code";
+            const message = value.message ?? "Unknown message";
+            errorObject[key] = `${code} - ${message}`;
+          } else {
+            errorObject[key] = String(value);
+          }
+        });
+        throw errorObject;
+      } else if (err.message) {
+        throw { error: err.message };
+      }
+    }
+    throw err; // Re-throw the error for the caller to handle
   }
 }

@@ -6,10 +6,14 @@
   export let value: any;
   export let required: boolean = false;
   export let disabled: boolean = false;
+  export let error: string | null = null;
 </script>
 
 <div class="input">
   <Label forId={id} text={`${required ? "*" : ""} ${label}`} />
+  {#if error}
+    <p class="error">{error}</p>
+  {/if}
 
   <input type="text" name={id} {id} bind:value {disabled} class:disabled />
 </div>
@@ -57,5 +61,11 @@
     box-shadow:
       /* 0 2px 1px rgba(0, 0, 0, 0.1), */ 0 0 0 2px #0d65d9;
     z-index: 1;
+  }
+
+  .error {
+    color: #ff0000;
+    font-size: 0.875rem;
+    font-weight: 400;
   }
 </style>

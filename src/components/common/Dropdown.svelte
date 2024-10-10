@@ -10,6 +10,7 @@
   export let values: string[];
   export let disabled: boolean = false;
   export let required: boolean = false;
+  export let error: string | null = null;
 
   let isOpen: boolean = false;
 
@@ -57,6 +58,9 @@
 
 <div class="dropdown-input" class:disabled>
   <Label forId={id} text={`${required ? "*" : ""} ${label}`} />
+  {#if error}
+    <p class="error">{error}</p>
+  {/if}
 
   <!-- Add html attributes so it acts like a <select> element (selectable, etc) -->
   <button
@@ -101,9 +105,16 @@
     gap: 0.5rem;
     /* width: fit-content; */
   }
+
   .dropdown-input.disabled {
     opacity: 0.5;
     pointer-events: none;
+  }
+
+  .error {
+    color: #ff0000;
+    font-size: 0.875rem;
+    font-weight: 400;
   }
 
   .dropdown-input-current {

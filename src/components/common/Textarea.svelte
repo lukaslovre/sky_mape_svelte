@@ -5,10 +5,14 @@
   export let id: string;
   export let value: string;
   export let required: boolean = false;
+  export let error: string | null = null;
 </script>
 
 <div class="textarea">
   <Label forId={id} text={`${required ? "*" : ""} ${label}`} />
+  {#if error}
+    <p class="error">{error}</p>
+  {/if}
   <textarea {id} name={id} bind:value></textarea>
 </div>
 
@@ -50,5 +54,11 @@
   textarea:focus {
     outline: 2px solid #0d65d9;
     z-index: 1;
+  }
+
+  .error {
+    color: #ff0000;
+    font-size: 0.875rem;
+    font-weight: 400;
   }
 </style>

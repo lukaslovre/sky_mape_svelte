@@ -40,7 +40,7 @@
 
 <style>
   header {
-    width: 24rem;
+    width: 22rem;
     z-index: 402;
     flex-shrink: 0;
 
