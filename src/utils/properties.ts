@@ -29,19 +29,3 @@ export function sortProperties(
     });
   }
 }
-
-export function fillPropertyFormFields(property: Property) {
-  propertyFormFields.forEach((field) => {
-    if (field.inputElement === "select") {
-      if (!property[field.databaseFieldName]) {
-        field.value = [];
-      } else {
-        field.value = [property[field.databaseFieldName]];
-      }
-    } else if (field.inputElement === "imageInput") {
-      field.value = undefined;
-    } else {
-      field.value = property[field.databaseFieldName];
-    }
-  });
-}

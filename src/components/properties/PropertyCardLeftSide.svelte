@@ -6,7 +6,7 @@
   import { pocketbaseUrl } from "../../PocketBaseInit";
   import { favoriteProperties } from "../../stores/store";
   import type { Property } from "../../types";
-  import { fillPropertyFormFields } from "../../utils/properties";
+  import { fillPropertyFormFields } from "./PropertyForm/PropertyFormUtils";
   import { propertyFormFields } from "./PropertyForm/PropertyFormUtils";
 
   export let property: Property;
@@ -30,7 +30,7 @@
     console.log(property);
     console.log(propertyFormFields);
 
-    window.open(url, "_blank");
+    // window.open(url, "_blank");
   }
 
   function getPocketbaseRecordUrl() {

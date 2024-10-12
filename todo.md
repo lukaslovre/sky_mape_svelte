@@ -90,3 +90,13 @@
 - Data Encryption: Protect sensitive client and property information.
 - Audit Logs: Track changes and access for compliance purposes.
 - GDPR Compliance Tools: Features to manage data consent and deletion requests.
+
+## MVP
+
+- spremanje klijenata
+- spremanje nekretnina
+- filtriranje (matchanje)
+
+## Glavni plan
+
+1. riješiti dupliciranje nekretnina (data import from CVS i/ili API integracija)

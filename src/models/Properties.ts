@@ -75,3 +75,15 @@ export async function addProperty(property: Partial<Property>): Promise<void> {
     throw err; // Re-throw the error for the caller to handle
   }
 }
+
+export async function deleteProperty(id: string): Promise<void> {
+  if (!id) {
+    throw new Error("Id is required");
+  }
+  try {
+    await pb.collection("Properties").delete(id);
+  } catch (err) {
+    console.log(err);
+    alert("Error deleting property");
+  }
+}

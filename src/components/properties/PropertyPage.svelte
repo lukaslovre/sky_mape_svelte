@@ -21,8 +21,6 @@
   // Property filtering
   let showForm = true;
 
-  // const fields = propertyFormFields.map((field) => ({ ...field })); // Make a copy
-
   function updatePropertyFormFields(agents: Agent[], users: UserData[]) {
     propertyFormFields.forEach((field) => {
       if (field.databaseFieldName === "agent_id" && agents.length > 0) {
@@ -31,7 +29,9 @@
           label: agent.name,
         }));
 
-        field.value = [currentUser.id];
+        const isEmpty = !field.value || field.value.length === 0;
+
+        field.value = isEmpty ? [currentUser.id] : field.value;
         field.disabled = currentUser.role === "agent";
       }
 
@@ -42,6 +42,9 @@
         }));
       }
     });
+
+    console.log("Triggered updatePropertyFormFields");
+    console.log(propertyFormFields);
   }
 
   $: updatePropertyFormFields($agents, $users);
@@ -50,15 +53,17 @@
 <div class="properties-container">
   <Header1>Popis nekretnina</Header1>
 
-  <PropertyPageButtons
-    {setSortOption}
-    setDialog={() => {
-      showForm = !showForm;
-    }}
-  />
+  {#if !showForm}
+    <PropertyPageButtons
+      {setSortOption}
+      setDialog={() => {
+        showForm = !showForm;
+      }}
+    />
+  {/if}
 
   {#if showForm}
-    <PropertyForm fields={propertyFormFields} />
+    <PropertyForm fields={propertyFormFields} close={() => (showForm = false)} />
   {:else}
     <div class="properties-grid-container">
       {#each sortProperties($filteredProperties, sortOption) as property (property.id)}

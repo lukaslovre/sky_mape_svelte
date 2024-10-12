@@ -14,7 +14,22 @@ export const propertyFormFields: FormFieldType[] = [
     error: null,
   },
   {
-    label: "Latitude",
+    label: "Agent",
+    inputElement: "select",
+    databaseFieldName: "agent_id",
+    value: [],
+    required: true,
+    options: get(agents).map((agent) => ({
+      value: agent.id,
+      label: agent.name,
+    })),
+    disabled: false,
+    parsingFunction: (value: string[]) => value[0],
+    error: null,
+  },
+  {
+    label:
+      "Latitude (Shift+Click na `Karta` kopira koordinate u međuspremnik, Ctrl+V za paste)",
     inputElement: "input",
     databaseFieldName: "lat",
     value: "",
@@ -152,20 +167,6 @@ export const propertyFormFields: FormFieldType[] = [
     error: null,
   },
   {
-    label: "Agent",
-    inputElement: "select",
-    databaseFieldName: "agent_id",
-    value: [],
-    required: false,
-    options: get(agents).map((agent) => ({
-      value: agent.id,
-      label: agent.name,
-    })),
-    disabled: false,
-    parsingFunction: (value: string[]) => value[0],
-    error: null,
-  },
-  {
     label: "Status",
     inputElement: "select",
     databaseFieldName: "status",
@@ -184,5 +185,33 @@ export const propertyFormFields: FormFieldType[] = [
 export function cleanErrors(fields: FormFieldType[]) {
   fields.forEach((field) => {
     field.error = null;
+  });
+}
+
+export function clearFields(fields: FormFieldType[]) {
+  fields.forEach((field) => {
+    if (field.inputElement === "select") {
+      field.value = [];
+    } else if (field.inputElement === "checkbox") {
+      field.value = false;
+    } else {
+      field.value = "";
+    }
+  });
+}
+
+export function fillPropertyFormFields(property: Property) {
+  propertyFormFields.forEach((field) => {
+    if (field.inputElement === "select") {
+      if (!property[field.databaseFieldName]) {
+        field.value = [];
+      } else {
+        field.value = [property[field.databaseFieldName]];
+      }
+    } else if (field.inputElement === "imageInput") {
+      field.value = undefined;
+    } else {
+      field.value = property[field.databaseFieldName];
+    }
   });
 }

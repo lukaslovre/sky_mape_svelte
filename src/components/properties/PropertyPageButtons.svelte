@@ -45,10 +45,7 @@
 
 <div class="buttons-container">
   <div>
-    <SecondaryButton
-      text="Spremi novu nekretninu"
-      onClick={() => setDialog("saveProperty")}
-    >
+    <SecondaryButton text="Nova nekretnina" onClick={() => setDialog("saveProperty")}>
       <SaveIcon size={24} color={"#1a1a1a"} />
     </SecondaryButton>
 
