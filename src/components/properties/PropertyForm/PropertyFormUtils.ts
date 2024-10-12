@@ -107,7 +107,7 @@ export const propertyFormFields: FormFieldType[] = [
     databaseFieldName: "websiteUrl",
     value: "",
     required: false,
-    parsingFunction: (value: string) => value,
+    parsingFunction: (value: string) => (value ? value : undefined),
     error: null,
   },
   {
@@ -182,36 +182,16 @@ export const propertyFormFields: FormFieldType[] = [
   },
 ];
 
-export function cleanErrors(fields: FormFieldType[]) {
-  fields.forEach((field) => {
-    field.error = null;
-  });
-}
+export function transformFields(fields: FormFieldType[]): Record<string, any> {
+  return fields.reduce((acc, field) => {
+    const parsedValue = field.parsingFunction
+      ? field.parsingFunction(field.value)
+      : field.value;
 
-export function clearFields(fields: FormFieldType[]) {
-  fields.forEach((field) => {
-    if (field.inputElement === "select") {
-      field.value = [];
-    } else if (field.inputElement === "checkbox") {
-      field.value = false;
-    } else {
-      field.value = "";
+    if (parsedValue != undefined) {
+      acc[field.databaseFieldName] = parsedValue;
     }
-  });
-}
 
-export function fillPropertyFormFields(property: Property) {
-  propertyFormFields.forEach((field) => {
-    if (field.inputElement === "select") {
-      if (!property[field.databaseFieldName]) {
-        field.value = [];
-      } else {
-        field.value = [property[field.databaseFieldName]];
-      }
-    } else if (field.inputElement === "imageInput") {
-      field.value = undefined;
-    } else {
-      field.value = property[field.databaseFieldName];
-    }
-  });
+    return acc;
+  }, {} as Record<string, any>);
 }

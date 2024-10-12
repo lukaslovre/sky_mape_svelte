@@ -6,71 +6,29 @@
   import ImageInput from "./ImageInput.svelte";
   import Input from "./Input.svelte";
   import Textarea from "./Textarea.svelte";
+  import { propertyFormStore } from "../../stores/propertyFormStore";
 
-  export let fields: FormFieldType[];
   export let onSubmit: (transformedFields: Record<string, any>) => Promise<void>;
   export let onDelete: ((id: string) => Promise<void>) | null = null;
-  export let onClear: (() => void) | null = null;
   export let close: () => void;
   export let submitButtonText = "Submit";
   export let deleteButtonText = "Delete";
 
-  async function handleSubmit() {
-    // Transforms the fields into a single object in this format:
-    // {
-    //   field1: value1,
-    //   field2: value2,
-    //   ...
-    // }
-    const transformedFields = fields.reduce((acc, field) => {
-      const parsedValue = field.parsingFunction
-        ? field.parsingFunction(field.value)
-        : field.value;
-      if (parsedValue != undefined) {
-        return {
-          ...acc,
-          [field.databaseFieldName]: parsedValue,
-        };
-      }
-      return acc;
-    }, {});
+  $: fields = $propertyFormStore;
 
-    try {
-      await onSubmit(transformedFields);
-    } catch (err) {
-      console.error(err);
-
-      if (typeof err === "object" && err !== null) {
-        if ("error" in err) {
-          fields[0].error = err.error as string;
-        } else if (Object.keys(err).length > 0) {
-          fields.forEach((field) => {
-            if (field.databaseFieldName in err) {
-              field.error = err[field.databaseFieldName] as string;
-            }
-          });
-        } else {
-          fields.forEach((field) => {
-            field.error = "Unknown error";
-          });
-        }
-      }
-
-      fields = fields;
-    }
+  function handleFieldChange(fieldName: string, value: any) {
+    propertyFormStore.updateField(fieldName, value);
   }
 
   function handleClear() {
-    if (onClear) {
-      onClear();
-    }
+    propertyFormStore.clearFields();
   }
 </script>
 
 <Close on:close={close} />
 
-<form on:submit|preventDefault={handleSubmit}>
-  {#each fields as field}
+<form on:submit|preventDefault={onSubmit}>
+  {#each fields as field (field.databaseFieldName)}
     {#if field.inputElement === "input"}
       <Input
         label={field.label}
@@ -79,6 +37,7 @@
         disabled={field.disabled}
         error={field.error}
         bind:value={field.value}
+        on:input={(e) => handleFieldChange(field.databaseFieldName, e.target.value)}
       />
     {:else if field.inputElement === "textarea"}
       <Textarea
@@ -87,6 +46,7 @@
         required={field.required}
         error={field.error}
         bind:value={field.value}
+        on:input={(e) => handleFieldChange(field.databaseFieldName, e.target.value)}
       />
     {:else if field.inputElement === "select" && field.options}
       <Dropdown
@@ -95,8 +55,9 @@
         options={field.options}
         disabled={field.disabled}
         required={field.required}
-        error={field.error}
         bind:values={field.value}
+        error={field.error}
+        on:change={(e) => handleFieldChange(field.databaseFieldName, e.detail)}
       />
     {:else if field.inputElement === "checkbox"}
       <Checkbox
@@ -105,6 +66,7 @@
         required={field.required}
         error={field.error}
         bind:checked={field.value}
+        on:change={(e) => handleFieldChange(field.databaseFieldName, e.target.checked)}
       />
     {:else if field.inputElement === "imageInput"}
       <ImageInput
@@ -113,6 +75,7 @@
         required={field.required}
         error={field.error}
         bind:value={field.value}
+        on:change={(e) => handleFieldChange(field.databaseFieldName, e.detail)}
       />
     {/if}
   {/each}

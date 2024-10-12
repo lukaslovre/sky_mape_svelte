@@ -6,8 +6,7 @@
   import { pocketbaseUrl } from "../../PocketBaseInit";
   import { favoriteProperties } from "../../stores/store";
   import type { Property } from "../../types";
-  import { fillPropertyFormFields } from "./PropertyForm/PropertyFormUtils";
-  import { propertyFormFields } from "./PropertyForm/PropertyFormUtils";
+  import { propertyFormStore } from "../../stores/propertyFormStore";
 
   export let property: Property;
 
@@ -26,9 +25,7 @@
 
     console.log("openPropertyEditor", url);
 
-    fillPropertyFormFields(property);
-    console.log(property);
-    console.log(propertyFormFields);
+    propertyFormStore.setFieldValues(property);
 
     // window.open(url, "_blank");
   }

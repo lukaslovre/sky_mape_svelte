@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { activeTab } from "./stores/store";
+  import { activeTab, agents, users } from "./stores/store";
   import Header from "./components/header/Header.svelte";
   import SideNote from "./components/common/SideNote.svelte";
   import Map from "./components/map/Map.svelte";
@@ -7,6 +7,9 @@
   import ClientsPage from "./components/clients/ClientsPage.svelte";
   import OwnersPage from "./components/owners/OwnersPage.svelte";
   import InteractionsPage from "./components/interactions/InteractionsPage.svelte";
+  import { onMount } from "svelte";
+  import { propertyFormStore } from "./stores/propertyFormStore";
+  import { propertyFormFields } from "./components/properties/PropertyForm/PropertyFormUtils";
 
   // SideNote
   type SideNoteParams = {
@@ -16,6 +19,19 @@
   let openSideNote: SideNoteParams | null = null;
   function setSideNote(params: SideNoteParams) {
     openSideNote = params;
+  }
+
+  onMount(() => {
+    propertyFormStore.initializeFields(propertyFormFields);
+  });
+
+  // If $agents or $users change, reinitialize fields
+  function reinitializeFields() {
+    propertyFormStore.initializeFields(propertyFormFields);
+  }
+
+  $: if ($agents || $users) {
+    reinitializeFields();
   }
 </script>
 

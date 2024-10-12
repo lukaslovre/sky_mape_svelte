@@ -1,15 +1,14 @@
 <script lang="ts">
-  import type { Agent, DialogType, Property, UserData } from "../../types";
+  import type { Property } from "../../types";
   import PropertyCard from "./PropertyCard.svelte";
   import PropertyPageButtons from "./PropertyPageButtons.svelte";
-  import { agents, filteredProperties, users } from "../../stores/store";
+  import { filteredProperties } from "../../stores/store";
   import { sortProperties } from "../../utils/properties";
   import PropertyForm from "./PropertyForm/PropertyForm.svelte";
   import { propertyFormFields } from "./PropertyForm/PropertyFormUtils";
   import Header1 from "../common/Header1.svelte";
-  import { getCurrentUser } from "../../auth";
-
-  const currentUser = getCurrentUser();
+  import { propertyFormStore } from "../../stores/propertyFormStore";
+  import { onMount } from "svelte";
 
   // Property sorting
   let sortOption: keyof Property | null = null;
@@ -19,35 +18,11 @@
   }
 
   // Property filtering
-  let showForm = true;
+  let showForm = false;
 
-  function updatePropertyFormFields(agents: Agent[], users: UserData[]) {
-    propertyFormFields.forEach((field) => {
-      if (field.databaseFieldName === "agent_id" && agents.length > 0) {
-        field.options = agents.map((agent) => ({
-          value: agent.id,
-          label: agent.name,
-        }));
-
-        const isEmpty = !field.value || field.value.length === 0;
-
-        field.value = isEmpty ? [currentUser.id] : field.value;
-        field.disabled = currentUser.role === "agent";
-      }
-
-      if (field.databaseFieldName === "ownerId" && users.length > 0) {
-        field.options = users.map((user) => ({
-          value: user.id,
-          label: user.name,
-        }));
-      }
-    });
-
-    console.log("Triggered updatePropertyFormFields");
-    console.log(propertyFormFields);
-  }
-
-  $: updatePropertyFormFields($agents, $users);
+  // onMount(() => {
+  //   propertyFormStore.initializeFields(propertyFormFields);
+  // });
 </script>
 
 <div class="properties-container">
@@ -63,7 +38,7 @@
   {/if}
 
   {#if showForm}
-    <PropertyForm fields={propertyFormFields} close={() => (showForm = false)} />
+    <PropertyForm close={() => (showForm = false)} />
   {:else}
     <div class="properties-grid-container">
       {#each sortProperties($filteredProperties, sortOption) as property (property.id)}
