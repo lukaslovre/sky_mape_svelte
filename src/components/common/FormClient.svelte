@@ -6,6 +6,7 @@
   import Input from "./Input.svelte";
   import Textarea from "./Textarea.svelte";
   import { clientFormStore } from "../../stores/clientFormStore";
+  import type { UserData } from "../../types";
 
   export let onSubmit: (transformedFields: Record<string, any>) => Promise<void>;
   export let onDelete: ((id: string) => Promise<void>) | null = null;
@@ -15,8 +16,8 @@
 
   $: fields = $clientFormStore;
 
-  function handleFieldChange(fieldName: string, value: any) {
-    clientFormStore.updateField(fieldName, value);
+  function handleFieldChange(fieldName: keyof UserData, value: any) {
+    clientFormStore.updateFieldValue(fieldName, value);
   }
 
   function handleClear() {

@@ -1,23 +1,27 @@
 <script lang="ts">
   import { clientFormStore } from "../../stores/clientFormStore";
-  import { clientFormFields, transformFields } from "./ClientFormUtils";
   import { createUser } from "../../models/Clients";
   import FormClient from "../common/FormClient.svelte";
+  import { filters, favoriteProperties } from "../../stores/store";
 
   export let close: () => void;
 
   async function handleSubmit() {
-    console.log($clientFormStore);
-    const transformedFields = transformFields($clientFormStore);
+    const transformedFields = clientFormStore.getAndTransformFields();
+
+    // Add favorites and filters to the transformedFields
+    transformedFields.favoriteProperties = $favoriteProperties;
+    transformedFields.filters = $filters;
+
     console.log(transformedFields);
 
-    // try {
-    //   await createUser(transformedFields);
-    //   alert("Uspješno dodano!");
-    //   close();
-    // } catch (err) {
-    //   handleSubmissionError(err);
-    // }
+    try {
+      await createUser(transformedFields);
+      alert("Uspješno dodano!");
+      close();
+    } catch (err) {
+      handleSubmissionError(err);
+    }
   }
 
   function handleSubmissionError(err: unknown) {

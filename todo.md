@@ -1,5 +1,7 @@
 # TODO
 
+- [] Riješiti apply-anje filtera i sve to sa filterima, refactorati
+
 ## High
 
 - [x] Remove favorites gumb

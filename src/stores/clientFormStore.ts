@@ -1,77 +1,92 @@
-import { writable } from "svelte/store";
-import type { ClientFormFieldType, UserData } from "../types";
-
 import { getCurrentUser } from "../auth";
+import type { FormFieldType, UserData } from "../types";
+import { createFormStore } from "./formStoreCreator";
 
-function createFormStore() {
-  const { subscribe, set, update } = writable<ClientFormFieldType[]>([]);
+export const clientFormStore = createFormStore<UserData>();
 
-  return {
-    subscribe,
-    set,
-    update,
-    initializeFields: (fields: ClientFormFieldType[]) => {
-      const currentUser = getCurrentUser();
-      set(
-        fields.map((field) => {
-          return field;
-        })
-      );
-    },
-    updateField: (fieldName: keyof UserData, value: any) => {
-      update((fields) =>
-        fields.map((field) =>
-          field.databaseFieldName === fieldName ? { ...field, value } : field
-        )
-      );
-    },
-    setFieldValues: (user: UserData) => {
-      update((fields) =>
-        fields.map((field) => {
-          const value = user[field.databaseFieldName];
+export const clientFormFields: FormFieldType<UserData>[] = [
+  {
+    label: "Agency ID",
+    inputElement: "input",
+    databaseFieldName: "agency_id",
+    value: getCurrentUser()?.agency_id || "",
+    required: true,
+    disabled: true,
+    parsingFunction: (value: string) => value,
+    error: null,
+  },
+  {
+    label: "ID",
+    inputElement: "input",
+    databaseFieldName: "id",
+    value: "",
+    required: false,
+    disabled: true,
+    parsingFunction: (value: string) => value,
+    error: null,
+  },
+  {
+    label: "Ime",
+    inputElement: "input",
+    databaseFieldName: "name",
+    value: "",
+    required: true,
+    parsingFunction: (value: string) => value.trim(),
+    error: null,
+  },
+  {
+    label: "Email",
+    inputElement: "input",
+    databaseFieldName: "email",
+    value: "",
+    required: false,
+    parsingFunction: (value: string) => value.trim(),
+    error: null,
+  },
+  {
+    label: "Telefon",
+    inputElement: "input",
+    databaseFieldName: "phone",
+    value: "",
+    required: false,
+    parsingFunction: (value: string) => value.trim(),
+    error: null,
+  },
+  {
+    label: "Tip klijenta",
+    inputElement: "select",
+    databaseFieldName: "userType",
+    value: ["buyer"],
+    required: true,
+    options: [
+      { value: "seller", label: "Prodavatelj" },
+      { value: "buyer", label: "Kupac" },
+    ],
+    parsingFunction: (value: string[]) => value[0],
+    error: null,
+  },
+  {
+    label: "Način plaćanja",
+    inputElement: "select",
+    databaseFieldName: "payment_method",
+    value: [],
+    required: false,
+    options: [
+      { value: "credit", label: "Kredit" },
+      { value: "cash", label: "Gotovina" },
+    ],
+    parsingFunction: (value: string[]) => value[0],
+    error: null,
+  },
+  {
+    label: "Bilješka",
+    inputElement: "textarea",
+    databaseFieldName: "note",
+    value: "",
+    required: false,
+    parsingFunction: (value: string) => value.trim(),
+    error: null,
+  },
+];
 
-          if (value != undefined && value !== "") {
-            if (field.inputElement === "imageInput") {
-              return { ...field, value: "" };
-            } else if (field.inputElement === "select") {
-              return { ...field, value: [value] };
-            } else {
-              return { ...field, value };
-            }
-          } else {
-            if (field.inputElement === "select") {
-              return { ...field, value: [] };
-            } else {
-              return { ...field, value: "" };
-            }
-          }
-        })
-      );
-    },
-
-    clearFields: () => {
-      update((fields) =>
-        fields.map((field) => ({
-          ...field,
-          value:
-            field.inputElement === "select"
-              ? []
-              : field.inputElement === "checkbox"
-              ? false
-              : "",
-          error: null,
-        }))
-      );
-    },
-    setErrors: (errors: Record<keyof UserData, string>) => {
-      update((fields) =>
-        fields.map((field) => ({
-          ...field,
-          error: errors[field.databaseFieldName] || null,
-        }))
-      );
-    },
-  };
-}
-
-export const clientFormStore = createFormStore();
+clientFormStore.initializeFields(clientFormFields);
