@@ -41,39 +41,44 @@ function parsePropertyData(property: Property): Property {
 export async function addProperty(property: Partial<Property>): Promise<void> {
   try {
     const collection = pb.collection("Properties");
-    const res = property.id
-      ? await collection.update(property.id, property)
-      : await collection.create(property);
-    console.log(res);
+    const action = property.id ? "update" : "create";
+    const res = await collection[action](property.id || "", property);
+    console.log(`Property ${action}d:`, res);
   } catch (err) {
     console.error("Error adding/updating property:", err);
-
-    if (err instanceof ClientResponseError) {
-      console.log("ClientResponseError details:");
-
-      if (err.response && typeof err.response.data === "object") {
-        const errorObject: { [key: string]: string } = {};
-        Object.entries(err.response.data).forEach(([key, value]) => {
-          if (
-            typeof value === "object" &&
-            value !== null &&
-            "code" in value &&
-            "message" in value
-          ) {
-            const code = value.code ?? "Unknown code";
-            const message = value.message ?? "Unknown message";
-            errorObject[key] = `${code} - ${message}`;
-          } else {
-            errorObject[key] = String(value);
-          }
-        });
-        throw errorObject;
-      } else if (err.message) {
-        throw { error: err.message };
-      }
-    }
-    throw err; // Re-throw the error for the caller to handle
+    throw handlePropertyError(err);
   }
+}
+
+function handlePropertyError(err: unknown): Error | Record<string, string> {
+  if (err instanceof ClientResponseError) {
+    console.log("ClientResponseError details:");
+    if (err.response?.data && typeof err.response.data === "object") {
+      return parseErrorResponse(err.response.data);
+    } else if (err.message) {
+      return { error: err.message };
+    }
+  }
+  return err as Error;
+}
+
+function parseErrorResponse(data: Record<string, unknown>): Record<string, string> {
+  const errorObject: Record<string, string> = {};
+  Object.entries(data).forEach(([key, value]) => {
+    if (isErrorObject(value)) {
+      const { code = "Unknown code", message = "Unknown message" } = value;
+      errorObject[key] = `${code} - ${message}`;
+    } else {
+      errorObject[key] = String(value);
+    }
+  });
+  return errorObject;
+}
+
+function isErrorObject(value: unknown): value is { code?: string; message?: string } {
+  return (
+    typeof value === "object" && value !== null && ("code" in value || "message" in value)
+  );
 }
 
 export async function deleteProperty(id: string): Promise<void> {

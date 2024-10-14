@@ -6,27 +6,35 @@
   import Header1 from "../common/Header1.svelte";
   import SecondaryButton from "../common/SecondaryButton.svelte";
   import ColoredButton from "../common/ColoredButton.svelte";
+  import ClientForm from "./ClientForm.svelte";
+
+  let showForm = false;
+
+  function toggleForm() {
+    showForm = !showForm;
+  }
 </script>
 
 <div class="buyers-container">
   <Header1>Popis kupaca</Header1>
 
-  <div class="buttons-container">
-    <SecondaryButton
-      text="Spremi novog kupca"
-      onClick={() => {
-        console.log("Save new buyer");
-      }}
-    >
-      <SaveIcon size={24} color={"#1a1a1a"} />
-    </SecondaryButton>
+  {#if !showForm}
+    <div class="buttons-container">
+      <SecondaryButton text="Spremi novog kupca" onClick={toggleForm}>
+        <SaveIcon size={24} color={"#1a1a1a"} />
+      </SecondaryButton>
 
-    <ColoredButton text="Spremi kao tablicu" color="#067925">
-      <SpreadsheetIcon size={24} />
-    </ColoredButton>
-  </div>
+      <ColoredButton text="Spremi kao tablicu" color="#067925">
+        <SpreadsheetIcon size={24} />
+      </ColoredButton>
+    </div>
+  {/if}
 
-  <Table showHeader={true} data={$filteredUsers} />
+  {#if showForm}
+    <ClientForm close={() => (showForm = false)} />
+  {:else}
+    <Table showHeader={true} data={$filteredUsers} />
+  {/if}
 </div>
 
 <style>

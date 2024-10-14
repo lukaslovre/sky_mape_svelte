@@ -4,9 +4,9 @@
   import InternetIcon from "../../assets/icons/InternetIcon.svelte";
   import StarIcon from "../../assets/icons/StarIcon.svelte";
   import { pocketbaseUrl } from "../../PocketBaseInit";
+  import { propertyFormStore } from "../../stores/propertiesFormStore";
   import { favoriteProperties } from "../../stores/store";
   import type { Property } from "../../types";
-  import { propertyFormStore } from "../../stores/propertyFormStore";
 
   export let property: Property;
 

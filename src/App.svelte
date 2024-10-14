@@ -8,8 +8,10 @@
   import OwnersPage from "./components/owners/OwnersPage.svelte";
   import InteractionsPage from "./components/interactions/InteractionsPage.svelte";
   import { onMount } from "svelte";
-  import { propertyFormStore } from "./stores/propertyFormStore";
+  import { propertyFormStore } from "./stores/propertiesFormStore";
   import { propertyFormFields } from "./components/properties/PropertyForm/PropertyFormUtils";
+  import { clientFormStore } from "./stores/clientFormStore";
+  import { clientFormFields } from "./components/clients/ClientFormUtils";
 
   // SideNote
   type SideNoteParams = {
@@ -22,17 +24,13 @@
   }
 
   onMount(() => {
-    propertyFormStore.initializeFields(propertyFormFields);
+    console.log(propertyFormStore.getAndTransformFields());
   });
 
-  // If $agents or $users change, reinitialize fields
-  function reinitializeFields() {
-    propertyFormStore.initializeFields(propertyFormFields);
-  }
-
-  $: if ($agents || $users) {
-    reinitializeFields();
-  }
+  // onMount(() => {
+  //   propertyFormStore.initializeFields(propertyFormFields);
+  //   clientFormStore.initializeFields(clientFormFields);
+  // });
 </script>
 
 <main>

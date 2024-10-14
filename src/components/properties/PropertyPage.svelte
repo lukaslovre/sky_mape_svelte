@@ -5,10 +5,7 @@
   import { filteredProperties } from "../../stores/store";
   import { sortProperties } from "../../utils/properties";
   import PropertyForm from "./PropertyForm/PropertyForm.svelte";
-  import { propertyFormFields } from "./PropertyForm/PropertyFormUtils";
   import Header1 from "../common/Header1.svelte";
-  import { propertyFormStore } from "../../stores/propertyFormStore";
-  import { onMount } from "svelte";
 
   // Property sorting
   let sortOption: keyof Property | null = null;

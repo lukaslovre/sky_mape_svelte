@@ -50,6 +50,7 @@ type UserData = {
   favoriteProperties: Property["id"][];
   userType: "seller" | "buyer";
   payment_method: "credit" | "cash";
+  agency_id: string;
 } & PocketbaseAttributes;
 
 type Agent = {
@@ -109,16 +110,21 @@ type PocketbaseAttributes = {
 
 type inputElement = "input" | "textarea" | "select" | "checkbox" | "imageInput";
 
-type FormFieldType = {
+type FormFieldType<T> = {
   label: string;
   inputElement: inputElement;
-  databaseFieldName: keyof Property;
+  databaseFieldName: keyof T;
   value: any;
   required: boolean;
   options?: { value: string; label: string }[];
   disabled?: boolean;
-  parsingFunction: (value: any) => any;
+  // The parsing function is used to transform the value before it is saved to the database.
+  // It should also return undefined if the value should not be saved.
+  parsingFunction: (value: any) => any | undefined;
   hidden?: boolean;
   default?: any;
   error: string | null;
 };
+
+type ClientFormFieldType = FormFieldType<UserData>;
+type PropertyFormFieldType = FormFieldType<Property>;

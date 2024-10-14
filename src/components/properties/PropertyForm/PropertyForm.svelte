@@ -1,13 +1,12 @@
 <script lang="ts">
   import { addProperty, deleteProperty } from "../../../models/Properties";
-  import { propertyFormStore } from "../../../stores/propertyFormStore";
-  import { transformFields } from "./PropertyFormUtils";
+  import { propertyFormStore } from "../../../stores/propertiesFormStore";
   import Form from "../../common/Form.svelte";
 
   export let close: () => void;
 
   async function handleSubmit() {
-    const transformedFields = transformFields($propertyFormStore);
+    const transformedFields = propertyFormStore.getAndTransformFields();
     console.log(transformedFields);
 
     try {

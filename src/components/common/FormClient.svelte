@@ -1,12 +1,11 @@
 <script lang="ts">
-  import type { FormFieldType, Property } from "../../types";
   import Checkbox from "./Checkbox.svelte";
   import Close from "./Close.svelte";
   import Dropdown from "./Dropdown.svelte";
   import ImageInput from "./ImageInput.svelte";
   import Input from "./Input.svelte";
   import Textarea from "./Textarea.svelte";
-  import { propertyFormStore } from "../../stores/propertiesFormStore";
+  import { clientFormStore } from "../../stores/clientFormStore";
 
   export let onSubmit: (transformedFields: Record<string, any>) => Promise<void>;
   export let onDelete: ((id: string) => Promise<void>) | null = null;
@@ -14,14 +13,14 @@
   export let submitButtonText = "Submit";
   export let deleteButtonText = "Delete";
 
-  $: fields = $propertyFormStore;
+  $: fields = $clientFormStore;
 
-  function handleFieldChange(fieldName: keyof Property, value: any) {
-    propertyFormStore.updateFieldValue(fieldName, value);
+  function handleFieldChange(fieldName: string, value: any) {
+    clientFormStore.updateField(fieldName, value);
   }
 
   function handleClear() {
-    propertyFormStore.clearFields();
+    clientFormStore.clearFields();
   }
 </script>
 

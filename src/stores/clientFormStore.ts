@@ -1,48 +1,34 @@
-import { get, writable } from "svelte/store";
-import type { FormFieldType, Property } from "../types";
-import { agents, users } from "./store";
+import { writable } from "svelte/store";
+import type { ClientFormFieldType, UserData } from "../types";
+
 import { getCurrentUser } from "../auth";
 
 function createFormStore() {
-  const { subscribe, set, update } = writable<FormFieldType[]>([]);
+  const { subscribe, set, update } = writable<ClientFormFieldType[]>([]);
 
   return {
     subscribe,
     set,
     update,
-    initializeFields: (fields: FormFieldType[]) => {
+    initializeFields: (fields: ClientFormFieldType[]) => {
       const currentUser = getCurrentUser();
       set(
         fields.map((field) => {
-          if (field.databaseFieldName === "agent_id") {
-            field.options = get(agents).map((agent) => ({
-              value: agent.id,
-              label: agent.name,
-            }));
-            field.value = [currentUser.id];
-            field.disabled = currentUser.role === "agent";
-          }
-          if (field.databaseFieldName === "ownerId") {
-            field.options = get(users).map((user) => ({
-              value: user.id,
-              label: user.name,
-            }));
-          }
           return field;
         })
       );
     },
-    updateField: (fieldName: string, value: any) => {
+    updateField: (fieldName: keyof UserData, value: any) => {
       update((fields) =>
         fields.map((field) =>
           field.databaseFieldName === fieldName ? { ...field, value } : field
         )
       );
     },
-    setFieldValues: (property: Property) => {
+    setFieldValues: (user: UserData) => {
       update((fields) =>
         fields.map((field) => {
-          const value = property[field.databaseFieldName];
+          const value = user[field.databaseFieldName];
 
           if (value != undefined && value !== "") {
             if (field.inputElement === "imageInput") {
@@ -68,9 +54,7 @@ function createFormStore() {
         fields.map((field) => ({
           ...field,
           value:
-            field.databaseFieldName === "agent_id"
-              ? [getCurrentUser().id]
-              : field.inputElement === "select"
+            field.inputElement === "select"
               ? []
               : field.inputElement === "checkbox"
               ? false
@@ -79,7 +63,7 @@ function createFormStore() {
         }))
       );
     },
-    setErrors: (errors: Record<string, string>) => {
+    setErrors: (errors: Record<keyof UserData, string>) => {
       update((fields) =>
         fields.map((field) => ({
           ...field,
@@ -90,4 +74,4 @@ function createFormStore() {
   };
 }
 
-export const propertyFormStore = createFormStore();
+export const clientFormStore = createFormStore();
