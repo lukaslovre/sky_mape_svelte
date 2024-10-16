@@ -13,7 +13,7 @@
   import MessageIcon from "../../assets/icons/MessageIcon.svelte";
   import KeyIcon from "../../assets/icons/KeyIcon.svelte";
 
-  let tabs: Tabs[] = ["Map", "Properties", "Buyers", "Owners", "Interactions"];
+  let tabs: Tabs[] = ["Map", "Properties", "Buyers", "Owners"]; // Interactions
 
   function handleTabClick(tab: Tabs) {
     $activeTab = tab;
@@ -86,11 +86,20 @@
     gap: 1rem;
   } */
 
+  nav {
+    padding: 1rem 2rem;
+    background-color: #e6e6e6;
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5);
+    z-index: 401;
+    position: relative;
+    overflow-x: auto;
+  }
+
   nav ul {
     list-style: none;
 
     display: flex;
-    flex-direction: column;
+    /* flex-direction: column; */
     gap: 1rem;
   }
 

@@ -14,7 +14,7 @@
 <header>
   <AuthRow />
 
-  <div class="sidebar-navigation-container">
+  <!-- <div class="sidebar-navigation-container">
     <SecondaryButton
       text="Stranice"
       inlineCss="width:100%"
@@ -29,13 +29,13 @@
     >
       <FilterIcon size={24} color="#1A1A1A" />
     </SecondaryButton>
-  </div>
+  </div> -->
 
-  {#if selectedSidebarTab === "pages"}
-    <TabMenu />
-  {:else if selectedSidebarTab === "filters"}
-    <FiltersContainer />
-  {/if}
+  <!-- {#if selectedSidebarTab === "pages"} -->
+  <!-- <TabMenu /> -->
+  <!-- {:else if selectedSidebarTab === "filters"} -->
+  <FiltersContainer />
+  <!-- {/if} -->
 </header>
 
 <style>

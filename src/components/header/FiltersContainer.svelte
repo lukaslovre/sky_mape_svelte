@@ -149,11 +149,11 @@
 
   <div class="buttons-container">
     <button type="reset" class="button" on:click={resetValues}>
-      <ResetIcon /> Filtri i lokacija
+      <ResetIcon /> Filtri
     </button>
     <button type="reset" class="button" on:click={emptyFavoriteProperties}>
       <!-- add star emoji -->
-      <ResetIcon /> Favoriti 🌟
+      <ResetIcon /> Favoriti
     </button>
   </div>
 </div>
@@ -183,6 +183,7 @@
     gap: 0.5rem;
 
     height: 2.5rem;
+    width: 100%;
     padding: 0 1rem;
     background-color: #0d65d9;
     border: 1px solid transparent;

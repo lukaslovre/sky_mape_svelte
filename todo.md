@@ -4,13 +4,11 @@
 
 - [x] primjeni gumb da radi
 
+- [ ] tabovi su gore
+
 - [ ] da se vide properties i filteri na client form
 
 - [ ] nekretnine na tablice prebacit
-
-- [ ] menu bar na buyers
-
-- [ ] tabovi su gore
 
 ## High
 

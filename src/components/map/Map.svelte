@@ -140,8 +140,9 @@
 
 <style>
   section {
+    position: relative;
     width: 100%;
-    height: 100%;
+    height: calc(100vh - 5rem);
   }
 
   /* Global overrides of Leaflet popup styles */

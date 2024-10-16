@@ -12,6 +12,7 @@
   import { propertyFormFields } from "./components/properties/PropertyForm/PropertyFormUtils";
   import { clientFormStore } from "./stores/clientFormStore";
   import { clientFormFields } from "./components/clients/ClientFormUtils";
+  import TabMenu from "./components/header/TabMenu.svelte";
 
   // SideNote
   type SideNoteParams = {
@@ -46,6 +47,8 @@
       value={openSideNote?.value || ""}
     />
 
+    <TabMenu />
+
     {#if $activeTab === "Map"}
       <Map
         on:openSideNote={(e) => {
@@ -77,7 +80,7 @@
   }
 
   .content {
-    height: 100%;
+    height: 100vh;
     width: 100%;
     overflow: scroll;
 
