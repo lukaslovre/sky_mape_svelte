@@ -128,3 +128,11 @@ type FormFieldType<T> = {
 
 type ClientFormFieldType = FormFieldType<UserData>;
 type PropertyFormFieldType = FormFieldType<Property>;
+
+// Component types
+interface MenuItem {
+  label: string;
+  href?: string;
+  icon?: ComponentType;
+  disabled?: boolean;
+}

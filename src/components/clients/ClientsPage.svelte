@@ -4,14 +4,41 @@
   import SaveIcon from "../../assets/icons/SaveIcon.svelte";
   import SpreadsheetIcon from "../../assets/icons/SpreadsheetIcon.svelte";
   import Header1 from "../common/Header1.svelte";
-  import SecondaryButton from "../common/SecondaryButton.svelte";
-  import ColoredButton from "../common/ColoredButton.svelte";
   import ClientForm from "./ClientForm.svelte";
+  import Menubar from "../common/Menubar.svelte";
+  import EditIcon from "../../assets/icons/EditIcon.svelte";
+  import TrashIcon from "../../assets/icons/TrashIcon.svelte";
+  import type { MenuItem } from "../../types";
 
   let showForm = false;
 
   function toggleForm() {
     showForm = !showForm;
+  }
+
+  const menubarItems: MenuItem[] = [
+    { label: "Dodaj", icon: SaveIcon },
+    { label: "Uredi", icon: EditIcon },
+    { label: "Obriši", icon: TrashIcon },
+    { label: "Spremi kao tablicu", icon: SpreadsheetIcon },
+  ];
+
+  function handleItemClick(event: CustomEvent<MenuItem>) {
+    const buttonLabel = event.detail.label;
+
+    console.log(buttonLabel);
+
+    if (buttonLabel === "Dodaj") {
+      toggleForm();
+    } else if (buttonLabel === "Uredi") {
+      console.log("uredi");
+    } else if (buttonLabel === "Obriši") {
+      console.log("obriši");
+    } else if (buttonLabel === "Spremi kao tablicu") {
+      console.log("spremi kao tablicu");
+    } else {
+      console.log("Unknown button pressed in the ClientsPage menubar");
+    }
   }
 </script>
 
@@ -19,15 +46,7 @@
   <Header1>Popis kupaca</Header1>
 
   {#if !showForm}
-    <div class="buttons-container">
-      <SecondaryButton text="Spremi novog kupca" onClick={toggleForm}>
-        <SaveIcon size={24} color={"#1a1a1a"} />
-      </SecondaryButton>
-
-      <ColoredButton text="Spremi kao tablicu" color="#067925">
-        <SpreadsheetIcon size={24} />
-      </ColoredButton>
-    </div>
+    <Menubar items={menubarItems} on:itemClick={handleItemClick} />
   {/if}
 
   {#if showForm}

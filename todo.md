@@ -1,6 +1,12 @@
 # TODO
 
-- [] Riješiti apply-anje filtera i sve to sa filterima, refactorati
+## Clients tab:
+
+- [ ] menu bar na page-evima
+  - [ ] disabled ovisno šta je selectano na stranici
+- [ ] primjeni gumb da radi
+- [ ] edit gumb u tablici
+- [ ] nekretnine na tablice prebacit
 
 ## High
 

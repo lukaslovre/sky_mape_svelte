@@ -43,6 +43,7 @@
     filters: "Filteri",
     payment_method: "Način plaćanja",
     userType: "Tip korisnika",
+    agency_id: "Agencija",
   };
 
   /**

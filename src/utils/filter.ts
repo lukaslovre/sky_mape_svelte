@@ -19,66 +19,52 @@ export function emptyFiltersObject(): Filters {
   };
 }
 
-function parseNumber(value: any, defaultValue: number): number {
-  const parsedValue = parseFloat(value);
-  return isNaN(parsedValue) ? defaultValue : parsedValue || defaultValue;
+function parseNumber(value: unknown, defaultValue: number): number {
+  if (typeof value === "number") return value || defaultValue;
+  if (typeof value === "string") {
+    const parsedValue = parseFloat(value);
+    return isNaN(parsedValue) ? defaultValue : parsedValue;
+  }
+  return defaultValue;
 }
 
-export function parseFilterValues({
-  action,
-  type,
-  minArea,
-  maxArea,
-  minPrice,
-  maxPrice,
-  visibility,
-  status,
-  agentIds,
-  polygons,
-}: Filters): Filters {
+export function parseFilterValues(filters: Partial<Filters>): Filters {
   return {
-    action: action || [],
-    type: type || [],
-    minPrice: parseNumber(minPrice, 0),
-    maxPrice: parseNumber(maxPrice, Infinity),
-    minArea: parseNumber(minArea, 0),
-    maxArea: parseNumber(maxArea, Infinity),
-    visibility: visibility || [],
-    status: status || [],
-    agentIds: agentIds || [],
-    polygons: polygons || [],
+    action: filters.action || [],
+    type: filters.type || [],
+    minPrice: parseNumber(filters.minPrice, 0),
+    maxPrice: parseNumber(filters.maxPrice, Infinity),
+    minArea: parseNumber(filters.minArea, 0),
+    maxArea: parseNumber(filters.maxArea, Infinity),
+    visibility: filters.visibility || [],
+    status: filters.status || [],
+    agentIds: filters.agentIds || [],
+    polygons: filters.polygons || [],
   };
 }
 
 export function filtersIsEmpty(filters: Filters): boolean {
-  const {
-    action,
-    type,
-    minArea,
-    maxArea,
-    minPrice,
-    maxPrice,
-    visibility,
-    status,
-    agentIds,
-    polygons,
-  } = parseFilterValues(filters);
+  const parsedFilters = parseFilterValues(filters);
 
   return (
-    action.length === 0 &&
-    type.length === 0 &&
-    minArea === 0 &&
-    maxArea === Infinity &&
-    minPrice === 0 &&
-    maxPrice === Infinity &&
-    visibility.length === 0 &&
-    status.length === 0 &&
-    agentIds.length === 0 &&
-    polygons.length === 0
+    parsedFilters.action.length === 0 &&
+    parsedFilters.type.length === 0 &&
+    parsedFilters.minArea === 0 &&
+    parsedFilters.maxArea === Infinity &&
+    parsedFilters.minPrice === 0 &&
+    parsedFilters.maxPrice === Infinity &&
+    parsedFilters.visibility.length === 0 &&
+    parsedFilters.status.length === 0 &&
+    parsedFilters.agentIds.length === 0 &&
+    parsedFilters.polygons.length === 0
   );
 }
 
 export function propertyMatchesFilter(property: Property, filters: Filters): boolean {
+  const parsedFilters = parseFilterValues(filters);
+  console.log("Parsed filters:", parsedFilters);
+  console.log("Property:", property);
+
   const {
     action,
     type,
@@ -90,33 +76,56 @@ export function propertyMatchesFilter(property: Property, filters: Filters): boo
     status,
     agentIds,
     polygons,
-  } = parseFilterValues(filters);
+  } = parsedFilters;
 
-  if (property.price < minPrice || property.price > maxPrice) return false;
+  if (property.price < minPrice || property.price > maxPrice) {
+    console.log("Failed price filter");
+    return false;
+  }
 
-  if (property.surfaceArea < minArea || property.surfaceArea > maxArea) return false;
+  if (property.surfaceArea < minArea || property.surfaceArea > maxArea) {
+    console.log("Failed area filter");
+    return false;
+  }
 
-  if (type.length > 0 && !type.includes(property.type)) return false;
+  if (type.length > 0 && !type.includes(property.type)) {
+    console.log("Failed type filter");
+    return false;
+  }
 
-  if (action.length > 0 && !action.includes(property.action)) return false;
+  if (action.length > 0 && !action.includes(property.action)) {
+    console.log("Failed action filter");
+    return false;
+  }
 
   if (
     visibility.length > 0 &&
     !visibility.includes(property.hiddenOnWebsite ? "Hidden" : "Visible")
-  )
+  ) {
+    console.log("Failed visibility filter");
     return false;
+  }
 
-  if (status.length > 0 && !status.includes(property.status)) return false;
+  if (status.length > 0 && !status.includes(property.status)) {
+    console.log("Failed status filter");
+    return false;
+  }
 
-  if (agentIds.length > 0 && !agentIds.includes(property.agent_id)) return false;
+  if (agentIds.length > 0 && !agentIds.includes(property.agent_id)) {
+    console.log("Failed agent filter");
+    return false;
+  }
 
   if (polygons.length > 0) {
     const propertyLatLng = new LatLng(property.lat, property.lng);
 
-    if (polygons.every((polygon) => !latLngIsInPolygon(propertyLatLng, polygon)))
+    if (polygons.every((polygon) => !latLngIsInPolygon(propertyLatLng, polygon))) {
+      console.log("Failed polygon filter");
       return false;
+    }
   }
 
+  console.log("Property passed all filters");
   return true;
 }
 

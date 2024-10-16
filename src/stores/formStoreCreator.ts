@@ -36,7 +36,7 @@ export function createFormStore<T>() {
         )
       );
     },
-    // Set field values based on a given property object
+    // Set field values based on a given object
     setFieldValues: (data: Partial<T>) => {
       update((fields) =>
         fields.map((field) => {
