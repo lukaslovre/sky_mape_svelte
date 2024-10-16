@@ -1,13 +1,12 @@
 <script lang="ts">
-  // Type Imports
   import type { UserData } from "../../types";
   import type { parsePocketbaseUserData } from "../../utils/buyers";
-
-  // Component Imports
   import TableBody from "./TableBody/TableBody.svelte";
   import TableHeader from "./TableHeader/TableHeader.svelte";
+  import { createEventDispatcher } from "svelte";
 
-  // Component Props
+  const dispatch = createEventDispatcher();
+
   export let showHeader: boolean = true;
   export let data: UserData[] = [];
 
@@ -16,10 +15,11 @@
   type ColumnKey = keyof ParsedUserData;
 
   // State Variables
-  let checkboxes: Record<string, boolean> = {};
+  let checkboxes: Record<UserData["id"], boolean> = {};
   let isSelectAll: boolean = false;
 
-  // Column Configuration
+  // The order of the columns in the table.
+  // Also toggle which ones are shown.
   const columnOrder: ColumnKey[] = [
     "name",
     "userType",
@@ -31,6 +31,7 @@
     "filters",
   ];
 
+  // All possible columns and their labels
   const columnNames: Record<ColumnKey, string> = {
     id: "ID",
     name: "Ime",
@@ -44,26 +45,39 @@
     payment_method: "Način plaćanja",
     userType: "Tip korisnika",
     agency_id: "Agencija",
+    collectionId: "Kolekcija ID",
+    collectionName: "Ime kolekcije",
   };
 
-  /**
-   * Toggles the "Select All" checkbox state.
-   */
   function toggleSelectAll() {
     isSelectAll = !isSelectAll;
   }
 
-  /**
-   * Updates the checkboxes based on the "Select All" state.
-   */
-  $: if (isSelectAll) {
+  function setAllCheckboxesTo(value: boolean) {
     checkboxes = data.reduce<Record<string, boolean>>((acc, user) => {
-      acc[user.id] = true;
+      acc[user.id] = value;
       return acc;
     }, {});
-  } else {
-    checkboxes = {};
   }
+
+  // When the selectAll checkbox is checked, toggle all checkboxes in the table
+  $: if (isSelectAll) {
+    setAllCheckboxesTo(true);
+  } else {
+    setAllCheckboxesTo(false);
+  }
+
+  // When checkboxes change, dispatch a custom event
+  $: if (checkboxes) {
+    // Filter out checkboxes with 'false' values
+    const onlyCheckedCheckboxIds = Object.entries(checkboxes)
+      .filter(([userId, isChecked]) => isChecked)
+      .map(([userId]) => userId);
+
+    dispatch("checkboxesChanged", onlyCheckedCheckboxIds);
+  }
+
+  // TODO: When data changes, remove all checkboxes that are no longer in the data
 
   // Retrieves specific attributes from selected rows based on the column name.
   function getSelectedAttributes(columnName: string): string[] {
@@ -80,6 +94,10 @@
       .map(([userId]) => data.find((user) => user.id === userId)?.[attributeKey] ?? "")
       .filter(Boolean) as string[];
   }
+
+  function updateCheckboxes(newCheckboxes: Record<UserData["id"], boolean>) {
+    checkboxes = newCheckboxes;
+  }
 </script>
 
 <section class="table-container">
@@ -94,7 +112,7 @@
     {/if}
 
     {#if data.length > 0}
-      <TableBody {checkboxes} userData={data} columns={columnOrder} />
+      <TableBody {checkboxes} userData={data} columns={columnOrder} {updateCheckboxes} />
     {/if}
   </table>
 </section>

@@ -68,20 +68,35 @@ export function createFormStore<T>() {
     // Clear all field values and errors
     clearFields: () => {
       update((fields) =>
-        fields.map((field) => ({
-          ...field,
-          value:
-            field.databaseFieldName === "agent_id"
-              ? getCurrentUser().id
-                ? [getCurrentUser().id]
-                : undefined
-              : field.inputElement === "select"
-              ? []
-              : field.inputElement === "checkbox"
-              ? false
-              : "",
-          error: null,
-        }))
+        fields.map((field) => {
+          let defaultValue;
+
+          switch (field.databaseFieldName) {
+            case "agent_id":
+              defaultValue = getCurrentUser().id ? [getCurrentUser().id] : undefined;
+              break;
+            case "agency_id":
+              defaultValue = getCurrentUser()?.agency_id || "";
+              break;
+            default:
+              switch (field.inputElement) {
+                case "select":
+                  defaultValue = [];
+                  break;
+                case "checkbox":
+                  defaultValue = false;
+                  break;
+                default:
+                  defaultValue = "";
+              }
+          }
+
+          return {
+            ...field,
+            value: defaultValue,
+            error: null,
+          };
+        })
       );
     },
     // Set error messages for fields

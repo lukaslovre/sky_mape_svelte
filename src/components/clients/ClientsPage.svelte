@@ -9,18 +9,21 @@
   import EditIcon from "../../assets/icons/EditIcon.svelte";
   import TrashIcon from "../../assets/icons/TrashIcon.svelte";
   import type { MenuItem } from "../../types";
+  import { clientFormStore } from "../../stores/clientFormStore";
+  import { deleteUser } from "../../models/Clients";
 
   let showForm = false;
+  let selectedClientIds: string[] = [];
 
   function toggleForm() {
     showForm = !showForm;
   }
 
-  const menubarItems: MenuItem[] = [
-    { label: "Dodaj", icon: SaveIcon },
-    { label: "Uredi", icon: EditIcon },
-    { label: "Obriši", icon: TrashIcon },
-    { label: "Spremi kao tablicu", icon: SpreadsheetIcon },
+  let menubarItems: MenuItem[] = [
+    { label: "Dodaj", icon: SaveIcon, disabled: false },
+    { label: "Uredi", icon: EditIcon, disabled: true },
+    { label: "Obriši", icon: TrashIcon, disabled: true },
+    { label: "Spremi kao tablicu", icon: SpreadsheetIcon, disabled: false },
   ];
 
   function handleItemClick(event: CustomEvent<MenuItem>) {
@@ -31,14 +34,75 @@
     if (buttonLabel === "Dodaj") {
       toggleForm();
     } else if (buttonLabel === "Uredi") {
-      console.log("uredi");
+      if (selectedClientIds.length === 1) {
+        const selectedClient = findSelectedClient(selectedClientIds[0]);
+
+        if (selectedClient) {
+          clientFormStore.setFieldValues(selectedClient);
+          toggleForm();
+        }
+      }
     } else if (buttonLabel === "Obriši") {
-      console.log("obriši");
+      if (selectedClientIds.length > 0) {
+        // Create a new array of promises
+        const promises = selectedClientIds.map(async (id) => {
+          await deleteUser(id);
+        });
+
+        // Wait for all promises to resolve
+        Promise.all(promises)
+          .then(() => {
+            alert("Klijenti obrisani");
+          })
+          .catch((err) => {
+            console.error("Error deleting users:", err);
+          });
+      }
     } else if (buttonLabel === "Spremi kao tablicu") {
       console.log("spremi kao tablicu");
     } else {
       console.log("Unknown button pressed in the ClientsPage menubar");
     }
+  }
+
+  function findSelectedClient(id: string) {
+    return $filteredUsers.find((user) => user.id === id);
+  }
+
+  function updateMenubarItems(rowsSelected: number) {
+    // Set all to enabled
+    menubarItems.map((item) => {
+      item.disabled = false;
+      return item;
+    });
+
+    // Now apply rules based on the number of rows selected
+    if (rowsSelected === 0) {
+      setItemWithLabelToDisabled("Uredi");
+      setItemWithLabelToDisabled("Obriši");
+    }
+    if (rowsSelected > 1) {
+      setItemWithLabelToDisabled("Uredi");
+    }
+
+    // trigger re-render
+    menubarItems = menubarItems;
+  }
+
+  function setItemWithLabelToDisabled(label: string) {
+    menubarItems.map((item) => {
+      if (item.label === label) {
+        item.disabled = true;
+      }
+      return item;
+    });
+  }
+
+  function handleCheckboxChange(event: CustomEvent<string[]>) {
+    selectedClientIds = event.detail;
+    console.log(selectedClientIds);
+
+    updateMenubarItems(selectedClientIds.length);
   }
 </script>
 
@@ -52,7 +116,11 @@
   {#if showForm}
     <ClientForm close={() => (showForm = false)} />
   {:else}
-    <Table showHeader={true} data={$filteredUsers} />
+    <Table
+      showHeader={true}
+      data={$filteredUsers}
+      on:checkboxesChanged={handleCheckboxChange}
+    />
   {/if}
 </div>
 

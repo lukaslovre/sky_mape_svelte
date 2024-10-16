@@ -1,38 +1,50 @@
 <script lang="ts">
+  // Import necessary components and functions
   import CheckmarkIcon from "../../../assets/icons/CheckmarkIcon.svelte";
   import { applyUserFilters } from "../../../stores/actions";
   import type { Filters, UserData } from "../../../types";
   import { parsePocketbaseUserData } from "../../../utils/buyers";
   import Popup from "../../common/Popup.svelte";
+  import Checkbox from "./Checkbox.svelte";
   import CopyableCell from "./CopyableCell.svelte";
 
+  // Define the type for parsed user data
   type ParsedUserData = ReturnType<typeof parsePocketbaseUserData>[0];
 
   // Props
   export let checkboxes: Record<string, boolean>;
   export let userData: UserData[];
   export let columns: (keyof ParsedUserData)[];
+  export let updateCheckboxes: (newCheckboxes: Record<UserData["id"], boolean>) => void;
+
+  // Reactive parsed user data (transforms the dates from string to Date objects)
+  $: parsedUserData = parsePocketbaseUserData(userData);
+
+  // Helper Functions
+  // Check if a value is an object
+  const isObject = (value: any): boolean => typeof value === "object" && value !== null;
+
+  // Check if a value has a length property
+  const hasLength = (value: any): boolean => typeof value.length === "number";
+
+  // Check if a column is copyable
+  const isCopyable = (column: keyof ParsedUserData): boolean =>
+    ["email", "phone"].includes(column as string);
+
+  const updateCheckboxState = (userId: string, checked: boolean) => {
+    checkboxes = { ...checkboxes, [userId]: checked };
+    updateCheckboxes(checkboxes);
+  };
+
+  /*
+    divider
+  */
 
   // Popup state
   let popupLocation: [number, number] = [0, 0];
   let popupContent: string = "";
 
-  // Reactive parsed user data
-  $: parsedUserData = parsePocketbaseUserData(userData);
-
-  // Helper Functions
-  const isObject = (value: any): boolean => typeof value === "object" && value !== null;
-
-  const hasLength = (value: any): boolean => typeof value.length === "number";
-
-  const isCopyable = (column: keyof ParsedUserData): boolean =>
-    ["email", "phone"].includes(column as string);
-
-  // Event Handlers
-  const toggleCheckbox = (userId: string) => {
-    checkboxes[userId] = !checkboxes[userId];
-  };
-
+  // Show filters popup
   const showFiltersPopup = (userId: UserData["id"], event: MouseEvent) => {
     const target = event.currentTarget as HTMLElement;
     if (!target) return;
@@ -59,11 +71,13 @@
     }
   };
 
+  // Hide filters popup
   const hideFiltersPopup = () => {
     popupLocation = [0, 0];
     popupContent = "";
   };
 
+  // Handle applying filters
   const handleApplyFilters = (user: ParsedUserData) => {
     applyUserFilters(user.filters, user.favoriteProperties);
   };
@@ -78,33 +92,29 @@
 <tbody>
   {#each parsedUserData as user}
     <tr>
-      <!-- Checkbox Cell -->
+      <!-- Checkbox Cell. First Column -->
       <td>
-        <input
-          type="checkbox"
-          name={`selected-${user.id}`}
-          id={`selected-${user.id}`}
-          checked={checkboxes[user.id]}
-          on:change|stopPropagation={() => toggleCheckbox(user.id)}
+        <Checkbox
+          value={user.id ?? ""}
+          checked={checkboxes[user.id] ?? false}
+          updateState={updateCheckboxState}
         />
-        <label for={`selected-${user.id}`}>
-          {#if checkboxes[user.id]}
-            <CheckmarkIcon />
-          {/if}
-        </label>
       </td>
 
-      <!-- Dynamic Columns -->
+      <!-- Other, Dynamic Columns -->
       {#each columns as column}
         <td>
           {#if isObject(user[column])}
+            <!-- Handle object values -->
             {#if hasLength(user[column])}
+              <!-- Array-like objects -->
               {#if user[column].length > 0}
                 {user[column].join(", ")}
               {:else}
                 <span class="empty">N/A</span>
               {/if}
             {:else}
+              <!-- Non-array objects (assumed to be filters) -->
               <button
                 class="applyFiltersButton"
                 on:mouseenter={(e) => showFiltersPopup(user.id, e)}
@@ -115,10 +125,13 @@
               </button>
             {/if}
           {:else if user[column] === ""}
+            <!-- Empty string values -->
             <span class="empty">N/A</span>
           {:else if isCopyable(column)}
+            <!-- Copyable values (email, phone) -->
             <CopyableCell value={user[column]} />
           {:else}
+            <!-- All other values -->
             {user[column]}
           {/if}
         </td>
@@ -157,28 +170,6 @@
 
   .empty {
     color: hsl(0, 0%, 50%);
-  }
-
-  input[type="checkbox"] {
-    display: none;
-  }
-  label {
-    cursor: pointer;
-
-    width: 1.5rem;
-    height: 1.5rem;
-    border-radius: 0.25rem;
-    background-color: transparent;
-    border: 2px solid #808080;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  input[type="checkbox"]:checked + label {
-    background-color: #0b5eda;
-    border-color: #0b5eda;
   }
 
   button.applyFiltersButton {

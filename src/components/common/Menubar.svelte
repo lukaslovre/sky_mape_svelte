@@ -1,29 +1,3 @@
-<!-- Menubar.svelte -->
-<!-- 
-# Props (Inputs)
-items: An array of menu item objects, each containing:
-    label: String (required) - The text to display for the menu item
-    href: String (optional) - The URL to navigate to when clicked
-    icon: String (optional) - Icon name or path to display alongside the label
-children: Array (optional) - Sub-menu items with the same structure
-theme: String (optional) - To control the visual appearance (e.g., 'light', 'dark')
-logo: String (optional) - URL or path to the logo image
-brandName: String (optional) - Text to display as the brand name
-
-#Internal State
-activeItem: Stores the currently active/selected menu item
-openDropdowns: An array or set to keep track of which dropdowns are currently open
-
-# Events
-itemClick: Emitted when a menu item is clicked, passing the item object
-dropdownToggle: Emitted when a dropdown is opened or closed
-
-# Methods
-toggleDropdown(item): Opens or closes a dropdown menu
-closeAllDropdowns(): Closes all open dropdowns
-setActiveItem(item): Sets the active menu item 
--->
-
 <script lang="ts">
   import { createEventDispatcher, type ComponentType } from "svelte";
   import type { MenuItem } from "../../types";

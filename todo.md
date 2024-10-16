@@ -2,10 +2,8 @@
 
 ## Clients tab:
 
-- [ ] menu bar na page-evima
-  - [ ] disabled ovisno šta je selectano na stranici
+- [ ] menu bar na property
 - [ ] primjeni gumb da radi
-- [ ] edit gumb u tablici
 - [ ] nekretnine na tablice prebacit
 
 ## High

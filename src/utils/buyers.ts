@@ -1,6 +1,6 @@
 import type { UserData } from "../types";
 
-export function parsePocketbaseUserData(data: UserData[]) {
+export function parsePocketbaseUserData(data: UserData[]): Partial<UserData>[] {
   return data.map((user) => {
     const { collectionId, collectionName, ...columnsToKeep } = user;
 

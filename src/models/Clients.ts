@@ -1,5 +1,4 @@
-import type { PocketbaseAttributes, UserData } from "../types";
-// import { LatLng } from "leaflet";
+import type { UserData } from "../types";
 
 import { pb } from "../PocketBaseInit";
 import { ClientResponseError } from "pocketbase";
@@ -42,6 +41,32 @@ export async function getUsers(): Promise<UserData[]> {
   }
 }
 
+// CREATE
+export async function createUser(data: Partial<UserData>): Promise<void> {
+  try {
+    const collection = pb.collection<UserData>("Clients");
+    const action = data.id ? "update" : "create";
+    const res = await collection[action](data.id || "", data);
+    console.log(`User ${action}d:`, res);
+  } catch (err) {
+    console.error("Error adding/updating user:", err);
+    throw handleClientError(err);
+  }
+}
+
+// DELETE
+export async function deleteUser(id: string): Promise<void> {
+  try {
+    const collection = pb.collection<UserData>("Clients");
+    const res = await collection.delete(id);
+    console.log("User deleted:", res);
+  } catch (err) {
+    console.error("Error deleting user:", err);
+    throw handleClientError(err);
+  }
+}
+
+// ERROR HANDLING
 function handleClientError(err: unknown): Error | Record<string, string> {
   if (err instanceof ClientResponseError) {
     console.log("ClientResponseError details:");
@@ -72,14 +97,4 @@ function isErrorObject(value: unknown): value is { code?: string; message?: stri
   return (
     typeof value === "object" && value !== null && ("code" in value || "message" in value)
   );
-}
-
-// CREATE
-
-export async function createUser(data: Partial<UserData>): Promise<UserData> {
-  const record = await pb.collection<UserData>("Clients").create(data);
-
-  console.log("User created:", record);
-
-  return record;
 }
