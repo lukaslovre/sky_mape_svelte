@@ -2,7 +2,7 @@
 import type { LatLng } from "leaflet";
 import type { Property, UserData } from "../types";
 import { filters, favoriteProperties, selectedPropertyIds } from "./store";
-import { emptyFiltersObject } from "../utils/filter";
+import { emptyFiltersObject, parseFilterValues } from "../utils/filter";
 
 // Save a polygon to filters without mutating the original state
 export function savePolygon(polygon: LatLng[]) {
@@ -41,8 +41,15 @@ export function applyUserFilters(
   userFilters: UserData["filters"],
   userFavoriteProperties: Property["id"][]
 ) {
-  filters.set(userFilters || emptyFiltersObject());
-  favoriteProperties.set(userFavoriteProperties);
+  if (userFilters && typeof userFilters === "object") {
+    const parsedFilters = parseFilterValues(userFilters);
+
+    filters.set(parsedFilters);
+  }
+
+  if (userFavoriteProperties && Array.isArray(userFavoriteProperties)) {
+    favoriteProperties.set(userFavoriteProperties);
+  }
 }
 
 // Clear all favorite properties

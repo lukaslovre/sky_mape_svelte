@@ -2,7 +2,7 @@
 
 ## Clients tab:
 
-- [ ] primjeni gumb da radi
+- [x] primjeni gumb da radi
 
 - [ ] da se vide properties i filteri na client form
 

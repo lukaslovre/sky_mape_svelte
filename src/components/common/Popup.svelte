@@ -13,15 +13,19 @@
 
 <style>
   .popup {
-    position: absolute;
+    /* position: absolute; */
+    /* How can i get absolute position of the whole screen, not from the first parent with "relative" position? */
+    position: fixed;
     z-index: 1000;
     background-color: rgba(0, 0, 0, 0.85);
     color: white;
-    line-height: 1.5;
-    padding: 1rem;
+    font-size: 0.875rem;
+    line-height: 1.75;
+    padding: 0.875rem;
     border-radius: 0.5rem;
     pointer-events: none; /* Prevents the popup from interfering with mouse events */
-    transform: translate(-100%, -100%); /* Adjusts the position to be above the target */
+    /* Adjusts the position to be above the target */
+    transform: translate(-100%, -100%);
     width: max-content;
     max-width: 50vw;
     white-space: pre;

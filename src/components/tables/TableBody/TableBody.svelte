@@ -1,6 +1,4 @@
 <script lang="ts">
-  // Import necessary components and functions
-  import CheckmarkIcon from "../../../assets/icons/CheckmarkIcon.svelte";
   import { applyUserFilters } from "../../../stores/actions";
   import type { Filters, UserData } from "../../../types";
   import { parsePocketbaseUserData } from "../../../utils/buyers";
@@ -47,46 +45,76 @@
   // Show filters popup
   const showFiltersPopup = (userId: UserData["id"], event: MouseEvent) => {
     const target = event.currentTarget as HTMLElement;
-    if (!target) return;
 
-    const rect = target.getBoundingClientRect();
+    if (!target || !(target instanceof HTMLElement)) {
+      console.log("No target element found or not an HTMLElement");
+      return;
+    }
+
+    const { right, top } = target.getBoundingClientRect();
 
     // Position the popup near the button
-    popupLocation = [rect.right, rect.top - 10];
+    popupLocation = [right, top - 8];
 
     const userFilters = userData.find((user) => user.id === userId)?.filters || null;
 
-    if (userFilters) {
-      const polygonsCount = userFilters.polygons.length;
-      popupContent = JSON.stringify(
-        {
-          ...userFilters,
-          polygons: polygonsCount,
-        },
-        null,
-        2
-      );
-    } else {
+    if (!userFilters) {
       popupContent = "Nema filtera";
+      return;
     }
+
+    // remove keys with empty values
+    const filteredUserFilters = removeEmptyValuesFromFilters(userFilters);
+
+    if (filteredUserFilters?.polygons?.length) {
+      filteredUserFilters.polygons = filteredUserFilters.polygons.length;
+    }
+
+    popupContent = JSON.stringify(filteredUserFilters, null, 2);
+    console.log("Popup content set to:", popupContent);
   };
+
+  function removeEmptyValuesFromFilters(filters: Filters) {
+    console.log("filters", filters);
+    return Object.fromEntries(
+      Object.entries(filters).filter(([key, value]) => {
+        if (value) {
+          if (Array.isArray(value)) {
+            return value.length > 0;
+          }
+          return true;
+        }
+        return false;
+      })
+    );
+  }
 
   // Hide filters popup
   const hideFiltersPopup = () => {
-    popupLocation = [0, 0];
+    console.log("hideFiltersPopup called");
+    popupLocation = [-1000, -1000]; // Move off-screen instead of [0, 0]
     popupContent = "";
+    console.log("Popup location reset to:", popupLocation);
+    console.log("Popup content cleared");
   };
 
   // Handle applying filters
   const handleApplyFilters = (user: ParsedUserData) => {
-    applyUserFilters(user.filters, user.favoriteProperties);
+    console.log("handleApplyFilters called with user:", user);
+    console.log("Applying filters:", user.filters);
+    console.log("Favorite properties:", user.favoriteProperties);
+    if (user.filters || user.favoriteProperties) {
+      applyUserFilters(user.filters, user.favoriteProperties);
+    }
   };
 </script>
 
 <!-- Popup Component -->
-<Popup screenLocation={popupLocation}>
-  {popupContent}
-</Popup>
+{#if popupContent}
+  <Popup screenLocation={popupLocation}>
+    {popupContent}
+  </Popup>
+{/if}
 
 <!-- Table Body -->
 <tbody>
