@@ -25,15 +25,9 @@
   import UserPolygons from "./UserPolygons.svelte";
 
   let mapInstance: L.Map | undefined;
-  let eventListenersSet: boolean = false;
-
-  // Reactive variable to store drawing polygon coordinates
   let drawingPolygonCoords: LatLng[] = [];
-
   let userPolygonsVisibility: boolean = false;
-  function toggleUserPolygonsVisibility() {
-    userPolygonsVisibility = !userPolygonsVisibility;
-  }
+  let eventListenersSet: boolean = false;
 
   // Event Handlers
   function handleMapClick(e: L.LeafletMouseEvent) {
@@ -41,7 +35,6 @@
 
     // Check if the click is near the start point
     if (isClickNearStart(mapInstance, e.latlng, drawingPolygonCoords)) {
-      handleFinishDrawing();
       isDrawing.set(false);
       return;
     }
@@ -60,33 +53,44 @@
     resetSelectedProperty();
   }
 
+  function handleMouseMove(e: L.LeafletMouseEvent) {
+    if (!$isDrawing || drawingPolygonCoords.length === 0) return;
+
+    // Update the last coordinate with the current mouse position for dynamic drawing
+    drawingPolygonCoords = [...drawingPolygonCoords.slice(0, -1), e.latlng];
+  }
+
+  function handleKeyPress(e: L.LeafletKeyboardEvent) {
+    const key = e.originalEvent.key;
+
+    if (key === "Enter") {
+      if ($isDrawing) {
+        isDrawing.set(false);
+      }
+    } else if (key === "c") {
+      fitViewToFilteredProperties(mapInstance, $propertiesBoundingBox);
+    } else if (key === "d") {
+      isDrawing.set(true);
+    }
+  }
+
   function setEventListeners(mapInstance: L.Map) {
     mapInstance.on("click", handleMapClick);
     mapInstance.on("popupclose", handlePopupClose);
-
-    mapInstance.on("mousemove", (e: L.LeafletMouseEvent) => {
-      if (!$isDrawing || drawingPolygonCoords.length === 0) return;
-      // Update the last coordinate with the current mouse position for dynamic drawing
-      drawingPolygonCoords = [...drawingPolygonCoords.slice(0, -1), e.latlng];
-    });
-
-    mapInstance.on("keypress", (e: L.LeafletKeyboardEvent) => {
-      const key = e.originalEvent.key;
-      console.log(key);
-      if (key === "Enter") {
-        if ($isDrawing) {
-          handleFinishDrawing();
-          isDrawing.set(false);
-        }
-      } else if (key === "c") {
-        fitViewToFilteredProperties(mapInstance, $propertiesBoundingBox);
-      }
-    });
+    mapInstance.on("mousemove", handleMouseMove);
+    mapInstance.on("keypress", handleKeyPress);
   }
 
+  $: if (mapInstance && !eventListenersSet) {
+    setEventListeners(mapInstance);
+    eventListenersSet = true;
+  }
+
+  // Other
   function handleFinishDrawing() {
     if (!mapInstance) return;
 
+    // Must have at least 4 coordinates because 1 will be removed before saving
     if (drawingPolygonCoords.length > 3) {
       // Remove the last temporary coordinate before saving
       drawingPolygonCoords.pop();
@@ -97,14 +101,13 @@
     drawingPolygonCoords = [];
   }
 
-  $: if (mapInstance && !eventListenersSet) {
-    setEventListeners(mapInstance);
-    eventListenersSet = true;
-  }
-
   // Reactive statement to handle drawing state changes
   $: if (!$isDrawing) {
     handleFinishDrawing();
+  }
+
+  function toggleUserPolygonsVisibility() {
+    userPolygonsVisibility = !userPolygonsVisibility;
   }
 </script>
 

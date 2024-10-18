@@ -16,9 +16,15 @@
     class:isDrawing={$isDrawing}
     id="location"
     on:click={handleDrawButtonClick}
-    ><DrawIcon />
-    {$isDrawing ? "Završi" : "Nacrtaj"}</button
   >
+    <DrawIcon />
+    {$isDrawing ? "Završi" : "Nacrtaj"}
+    {#if $isDrawing}
+      <span class="shortcut">[Enter]</span>
+    {:else}
+      <span class="shortcut">[D]</span>
+    {/if}
+  </button>
 </div>
 
 <style>
@@ -50,6 +56,12 @@
       background-color 75ms ease-out,
       outline 75ms ease-out,
       border 75ms ease-out;
+  }
+
+  .button .shortcut {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: hsl(0, 0%, 50%);
   }
 
   .button:hover {
