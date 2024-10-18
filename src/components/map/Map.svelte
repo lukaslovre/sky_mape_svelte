@@ -17,7 +17,7 @@
   import DrawnPolygonsList from "./overlays/DrawnPolygonsList.svelte";
   import { Map, TileLayer } from "sveaflet";
   import { mapOptions } from "../../assets/mapConfigValues";
-  import { savePolygon } from "../../stores/actions";
+  import { fitViewToFilteredProperties, savePolygon } from "../../stores/actions";
   import FitBoundsButton from "./overlays/FitBoundsButton.svelte";
   import ShowUserPolygonsButton from "./overlays/ShowUserPolygonsButton.svelte";
   import PropertyMarkers from "./PropertyMarkers.svelte";
@@ -25,7 +25,7 @@
   import UserPolygons from "./UserPolygons.svelte";
 
   let mapInstance: L.Map | undefined;
-  let eventListenersSet = false;
+  let eventListenersSet: boolean = false;
 
   // Reactive variable to store drawing polygon coordinates
   let drawingPolygonCoords: LatLng[] = [];
@@ -69,12 +69,25 @@
       // Update the last coordinate with the current mouse position for dynamic drawing
       drawingPolygonCoords = [...drawingPolygonCoords.slice(0, -1), e.latlng];
     });
+
+    mapInstance.on("keypress", (e: L.LeafletKeyboardEvent) => {
+      const key = e.originalEvent.key;
+      console.log(key);
+      if (key === "Enter") {
+        if ($isDrawing) {
+          handleFinishDrawing();
+          isDrawing.set(false);
+        }
+      } else if (key === "c") {
+        fitViewToFilteredProperties(mapInstance, $propertiesBoundingBox);
+      }
+    });
   }
 
   function handleFinishDrawing() {
     if (!mapInstance) return;
 
-    if (drawingPolygonCoords.length >= 3) {
+    if (drawingPolygonCoords.length > 3) {
       // Remove the last temporary coordinate before saving
       drawingPolygonCoords.pop();
       savePolygon(drawingPolygonCoords);
@@ -82,11 +95,6 @@
 
     // Reset drawing coordinates
     drawingPolygonCoords = [];
-
-    // Change view to fit all properties
-    // if ($propertiesBoundingBox) {
-    //   mapInstance?.fitBounds($propertiesBoundingBox);
-    // }
   }
 
   $: if (mapInstance && !eventListenersSet) {
@@ -94,22 +102,10 @@
     eventListenersSet = true;
   }
 
-  // Reactive statement to fit map bounds when propertiesBoundingBox changes
-  // $: if ($propertiesBoundingBox && mapInstance) {
-  //   console.log("Fitting bounds to propertiesBoundingBox");
-  //   mapInstance.fitBounds($propertiesBoundingBox);
-  // }
-
   // Reactive statement to handle drawing state changes
   $: if (!$isDrawing) {
     handleFinishDrawing();
   }
-
-  // Reactive statement to pan to the last selected property
-  // $: if ($selectedPropertyIds.length) {
-  //   const lastSelectedId = $selectedPropertyIds[$selectedPropertyIds.length - 1];
-  //   panToPropertyById(mapInstance, lastSelectedId);
-  // }
 </script>
 
 <section>

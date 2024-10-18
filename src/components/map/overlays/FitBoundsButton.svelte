@@ -1,19 +1,24 @@
 <script lang="ts">
+  import { fitViewToFilteredProperties } from "../../../stores/actions";
   import { propertiesBoundingBox } from "../../../stores/store";
 
   export let mapInstance: L.Map | undefined;
 
   function fitBounds() {
-    if (!mapInstance || !$propertiesBoundingBox) return;
-
-    mapInstance.fitBounds($propertiesBoundingBox, { maxZoom: 15 }); // exportat možda?
+    fitViewToFilteredProperties(mapInstance, $propertiesBoundingBox);
   }
 </script>
 
-<button class="fit-bounds-button" on:click={fitBounds}>Center</button>
+<button class="fit-bounds-button" on:click={fitBounds}>
+  Center <span class="fit-bounds-button-shortcut">[C]</span>
+</button>
 
 <style>
   .fit-bounds-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
     background-color: #fff;
     border-radius: 0.5rem;
     padding: 0.5rem 1.5rem;
@@ -21,5 +26,11 @@
 
     font-weight: 600;
     font-size: 0.875rem;
+  }
+
+  .fit-bounds-button-shortcut {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: hsl(0, 0%, 50%);
   }
 </style>

@@ -1,5 +1,5 @@
 // actions.js
-import type { LatLng } from "leaflet";
+import type { LatLng, LatLngBounds } from "leaflet";
 import type { Property, UserData } from "../types";
 import { filters, favoriteProperties, selectedPropertyIds } from "./store";
 import { emptyFiltersObject, parseFilterValues } from "../utils/filter";
@@ -55,4 +55,14 @@ export function applyUserFilters(
 // Clear all favorite properties
 export function emptyFavorites() {
   favoriteProperties.set([]);
+}
+
+// Fit the view to the bounds of the properties
+export function fitViewToFilteredProperties(
+  mapInstance: L.Map | undefined,
+  propertiesBoundingBox: LatLngBounds | null
+) {
+  if (!mapInstance || !propertiesBoundingBox) return;
+
+  mapInstance.fitBounds(propertiesBoundingBox, { maxZoom: 15 });
 }

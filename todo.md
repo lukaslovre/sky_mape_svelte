@@ -1,10 +1,20 @@
 # TODO
 
+## MVP
+
+- spremanje klijenata
+- spremanje nekretnina
+- filtriranje (matchanje)
+
+## Glavni plan
+
+1. riješiti dupliciranje nekretnina (data import from CVS i/ili API integracija)
+
 ## Clients tab:
 
 - [x] primjeni gumb da radi
 
-- [ ] tabovi su gore
+- [x] tabovi su gore
 
 - [ ] da se vide properties i filteri na client form
 
@@ -16,25 +26,7 @@
 - [x] Svi nacrtani polygoni su kao u nekom notification baru ali u točnim oblicima.
 - [x] Može se stisnuti na njih da se zumira na njih, ili trash da se obrište.
 
-**Subota**
-
-- [x] Kada se crta polygon, kad se stisne na početni rub se završni crtanje
-- [x] Napravit da se ručno mora pozvat fitPropertiesInView() funkcija neka -> ima gumb na mapi za to, biti konzervativan s automatskim zumiranjem inače
-- [x] Kreirati Agents tablica i dodati agent_id foregin key u tablicu Nekretnina. Dodati funkcionalnost odabira agenta za nekretnine.
-- [x] Dodati atribut za Kupac: način plačanja (credit | cash)
-
-**Nedelja**
-
-- [x] Dodati tab vlasnici koji funkcionira isto ko kupci samo je unija vlasnika odabranih nekretnina (za razliku od unije potencijalnih kupaca odabranih nekretnina)
-- [x] Nova kategorija (slobodno, in progress, sold)
-
-- [x] Interaction history for clients. UI, tablica, funckionalnost. gdje je samo timeline
-
-- [x] Agent filter
-
-- [x] Show all drawings je gumb na mapi
-
-- [x] isDrawing je u store-u
+## Low
 
 - [ ] auth
 
@@ -43,8 +35,6 @@
 - [ ] (isto novi tab, znači 5 tabova, to bi možda trebalo lijevo prebacit ko sidebar... -> i onda bi imo dva side bara (tj kategorije unutar-> filter i page))
 
 - [ ] Mogućnost priložiti/spremiti dokumente koji su onda povezani sa nekom nekretninom te se mogu brzo pristupiti. Na buyers mora bit isto tablica jer je ovo vec previse polja i gumba. Kad se stisne na mapi na nekretninu onda je samo 1 nekretnina odabrana i prikazana na listi. Ima polje dokumenti koji isto izbaci side-note sa svim file-ovima, google drive style.
-
-## Low
 
 - [ ] Interactions filtriranje i više informacija, kad dobijem povratno
 
@@ -100,13 +90,3 @@
 - Data Encryption: Protect sensitive client and property information.
 - Audit Logs: Track changes and access for compliance purposes.
 - GDPR Compliance Tools: Features to manage data consent and deletion requests.
-
-## MVP
-
-- spremanje klijenata
-- spremanje nekretnina
-- filtriranje (matchanje)
-
-## Glavni plan
-
-1. riješiti dupliciranje nekretnina (data import from CVS i/ili API integracija)
