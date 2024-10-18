@@ -16,9 +16,9 @@
 
 - [x] tabovi su gore
 
-- [ ] da se vide properties i filteri na client form
-
 - [ ] nekretnine na tablice prebacit
+
+- [ ] da se vide properties i filteri na client form
 
 ## High
 

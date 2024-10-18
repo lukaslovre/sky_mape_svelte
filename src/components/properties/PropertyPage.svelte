@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { MenuItem, Property } from "../../types";
   import PropertyCard from "./PropertyCard.svelte";
-  import PropertyPageButtons from "./PropertyPageButtons.svelte";
   import { filteredProperties } from "../../stores/store";
   import { sortProperties } from "../../utils/properties";
   import PropertyForm from "./PropertyForm/PropertyForm.svelte";
@@ -10,6 +9,7 @@
   import SortIcon from "../../assets/icons/SortIcon.svelte";
   import SpreadsheetIcon from "../../assets/icons/SpreadsheetIcon.svelte";
   import Menubar from "../common/Menubar.svelte";
+  import Table from "../tables/propertiesTable/Table.svelte";
 
   // Property sorting
 
@@ -55,6 +55,13 @@
       console.log("Spremi kao tablicu");
     }
   }
+
+  // Table specific
+  let selectedPropertyIds: string[] = [];
+
+  function handleCheckboxChange(event: CustomEvent<string[]>) {
+    console.log(event.detail);
+  }
 </script>
 
 <div class="properties-container">
@@ -67,11 +74,17 @@
   {#if showForm}
     <PropertyForm close={() => (showForm = false)} />
   {:else}
-    <div class="properties-grid-container">
+    <Table
+      showHeader={true}
+      data={$filteredProperties}
+      on:checkboxesChanged={handleCheckboxChange}
+    />
+
+    <!-- <div class="properties-grid-container">
       {#each sortProperties($filteredProperties, sortOptions[selectedSortOptionIndex]) as property (property.id)}
         <PropertyCard {property} on:openSideNote />
       {/each}
-    </div>
+    </div> -->
   {/if}
 </div>
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import CheckmarkIcon from "../../../assets/icons/CheckmarkIcon.svelte";
+  import CheckmarkIcon from "../../../../assets/icons/CheckmarkIcon.svelte";
 
   export let value: string;
   export let checked: boolean;

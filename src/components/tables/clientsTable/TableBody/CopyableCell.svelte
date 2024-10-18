@@ -1,6 +1,6 @@
 <script lang="ts">
-  import CheckmarkIcon from "../../../assets/icons/CheckmarkIcon.svelte";
-  import CopyIcon from "../../../assets/icons/CopyIcon.svelte";
+  import CheckmarkIcon from "../../../../assets/icons/CheckmarkIcon.svelte";
+  import CopyIcon from "../../../../assets/icons/CopyIcon.svelte";
 
   export let value: string;
 

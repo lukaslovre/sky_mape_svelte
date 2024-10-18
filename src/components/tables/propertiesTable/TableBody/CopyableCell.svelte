@@ -1,18 +1,14 @@
 <script lang="ts">
-  import CheckmarkIcon from "../../../assets/icons/CheckmarkIcon.svelte";
-  import CopyIcon from "../../../assets/icons/CopyIcon.svelte";
+  import CheckmarkIcon from "../../../../assets/icons/CheckmarkIcon.svelte";
+  import CopyIcon from "../../../../assets/icons/CopyIcon.svelte";
 
-  export let label: string;
-  export let getSelectedAttributes: (columnName: string) => string[];
+  export let value: string;
 
   let copySuccess = false;
 
   async function copyToClipboard() {
     try {
-      const values = getSelectedAttributes(label);
-      console.log(values);
-
-      await navigator.clipboard.writeText(values.join(", "));
+      await navigator.clipboard.writeText(value);
       copySuccess = true;
 
       setTimeout(() => {
@@ -20,13 +16,13 @@
       }, 1000);
     } catch (err) {
       copySuccess = false;
-      alert("Kopiranje nije uspelo");
+      alert("Kopiranje nije uspjelo");
     }
   }
 </script>
 
-<th class="copyable" on:click|stopPropagation={copyToClipboard}>
-  {label}
+<button class="copyable" on:click|stopPropagation={copyToClipboard}>
+  {value}
 
   <div class="copyIcon">
     {#if copySuccess}
@@ -35,11 +31,14 @@
       <CopyIcon color="#000" size={24} />
     {/if}
   </div>
-</th>
+</button>
 
 <style>
   .copyable {
     position: relative;
+
+    color: #0b5eda;
+    text-align: left;
     cursor: pointer;
   }
 
@@ -47,25 +46,10 @@
     opacity: 1;
   }
 
-  th,
-  td {
-    /* border: 1px solid hsl(0, 0%, 90%); */
-    border-bottom: 1px solid hsl(0, 0%, 90%);
-    padding: 0.75rem 1.5rem;
-    font-size: 0.875rem;
-    text-align: left;
-
-    transition: background-color 100ms ease-out;
-  }
-
-  th {
-    background-color: #fff;
-  }
-
   .copyIcon {
     position: absolute;
     top: 50%;
-    right: 0.5rem;
+    right: -0.5rem;
     transform: translateY(-50%);
 
     background-color: #fff;

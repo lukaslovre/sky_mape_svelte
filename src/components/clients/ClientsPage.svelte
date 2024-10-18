@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Table from "../tables/Table.svelte";
+  import Table from "../tables/clientsTable/Table.svelte";
   import { filteredUsers } from "../../stores/store";
   import SaveIcon from "../../assets/icons/SaveIcon.svelte";
   import SpreadsheetIcon from "../../assets/icons/SpreadsheetIcon.svelte";

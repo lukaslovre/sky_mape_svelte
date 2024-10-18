@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Table from "../tables/Table.svelte";
+  import Table from "../tables/clientsTable/Table.svelte";
   import { filteredOwners } from "../../stores/store";
   import Header1 from "../common/Header1.svelte";
 </script>

@@ -26,8 +26,8 @@ type Property = {
   type: PropertyType;
   action: PropertyAction;
   imgUrl: string[];
-  title: string;
-  description: string;
+  // title: string;
+  // description: string;
   surfaceArea: number;
   price: number;
   websiteUrl: string;

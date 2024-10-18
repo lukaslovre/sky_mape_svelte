@@ -1,6 +1,5 @@
 <script lang="ts">
-  import type { UserData } from "../../types";
-  import type { parsePocketbaseUserData } from "../../utils/buyers";
+  import type { Property } from "../../../types";
   import TableBody from "./TableBody/TableBody.svelte";
   import TableHeader from "./TableHeader/TableHeader.svelte";
   import { createEventDispatcher } from "svelte";
@@ -8,43 +7,56 @@
   const dispatch = createEventDispatcher();
 
   export let showHeader: boolean = true;
-  export let data: UserData[] = [];
+  export let data: Property[] = [];
 
   // Type Definitions
-  type ParsedUserData = ReturnType<typeof parsePocketbaseUserData>[0];
-  type ColumnKey = keyof ParsedUserData;
+  type ColumnKey = keyof Property;
 
   // State Variables
-  let checkboxes: Record<UserData["id"], boolean> = {};
+  let checkboxes: Record<Property["id"], boolean> = {};
   let isSelectAll: boolean = false;
 
   // The order of the columns in the table.
   // Also toggle which ones are shown.
   const columnOrder: ColumnKey[] = [
-    "name",
-    "userType",
-    "email",
-    "phone",
-    "note",
-    "payment_method",
-    "favoriteProperties",
-    "filters",
+    "imgUrl",
+    "type",
+    "action",
+    "surfaceArea",
+    "price",
+    "websiteUrl",
+    "hiddenOnWebsite",
+    "bedrooms",
+    "bathrooms",
+    "ownerId",
+    "propertyNotes",
+    "sellerNotes",
+    "status",
+    "agent_id",
+    "created",
   ];
 
   // All possible columns and their labels
   const columnNames: Record<ColumnKey, string> = {
     id: "ID",
-    name: "Ime",
-    email: "Email",
-    phone: "Telefon",
-    note: "Napomena",
+    lat: "Latituda",
+    lng: "Longituda",
+    type: "Tip",
+    action: "Akcija",
+    imgUrl: "Slika",
+    surfaceArea: "Površina",
+    price: "Cijena",
+    websiteUrl: "Web URL",
+    hiddenOnWebsite: "Vidljivost",
+    bedrooms: "Spavaće sobe",
+    bathrooms: "Kupaonice",
+    ownerId: "Vlasnik",
+    propertyNotes: "Napomena",
+    sellerNotes: "Napomene prodavača",
+    agent_id: "Agent",
+    status: "Status",
     created: "Kreirano",
     updated: "Ažurirano",
-    favoriteProperties: "Favoriti",
-    filters: "Filteri",
-    payment_method: "Način plaćanja",
-    userType: "Tip korisnika",
-    agency_id: "Agencija",
     collectionId: "Kolekcija ID",
     collectionName: "Ime kolekcije",
   };
@@ -54,8 +66,8 @@
   }
 
   function setAllCheckboxesTo(value: boolean) {
-    checkboxes = data.reduce<Record<string, boolean>>((acc, user) => {
-      acc[user.id] = value;
+    checkboxes = data.reduce<Record<string, boolean>>((acc, property) => {
+      acc[property.id] = value;
       return acc;
     }, {});
   }
@@ -71,8 +83,8 @@
   $: if (checkboxes) {
     // Filter out checkboxes with 'false' values
     const onlyCheckedCheckboxIds = Object.entries(checkboxes)
-      .filter(([userId, isChecked]) => isChecked)
-      .map(([userId]) => userId);
+      .filter(([propertyId, isChecked]) => isChecked)
+      .map(([propertyId]) => propertyId);
 
     dispatch("checkboxesChanged", onlyCheckedCheckboxIds);
   }
@@ -91,11 +103,14 @@
     // Extract the attribute values from selected users
     return Object.entries(checkboxes)
       .filter(([, isChecked]) => isChecked)
-      .map(([userId]) => data.find((user) => user.id === userId)?.[attributeKey] ?? "")
+      .map(
+        ([propertyId]) =>
+          data.find((property) => property.id === propertyId)?.[attributeKey] ?? ""
+      )
       .filter(Boolean) as string[];
   }
 
-  function updateCheckboxes(newCheckboxes: Record<UserData["id"], boolean>) {
+  function updateCheckboxes(newCheckboxes: Record<Property["id"], boolean>) {
     checkboxes = newCheckboxes;
   }
 </script>
@@ -112,7 +127,12 @@
     {/if}
 
     {#if data.length > 0}
-      <TableBody {checkboxes} userData={data} columns={columnOrder} {updateCheckboxes} />
+      <TableBody
+        {checkboxes}
+        propertyData={data}
+        columns={columnOrder}
+        {updateCheckboxes}
+      />
     {/if}
   </table>
 </section>

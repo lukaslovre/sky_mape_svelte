@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { applyUserFilters } from "../../../stores/actions";
-  import type { Filters, UserData } from "../../../types";
-  import { parsePocketbaseUserData } from "../../../utils/buyers";
-  import Popup from "../../common/Popup.svelte";
+  import { applyUserFilters } from "../../../../stores/actions";
+  import type { Filters, UserData } from "../../../../types";
+  import { parsePocketbaseUserData } from "../../../../utils/buyers";
+  import Popup from "../../../common/Popup.svelte";
   import Checkbox from "./Checkbox.svelte";
   import CopyableCell from "./CopyableCell.svelte";
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import CheckmarkIcon from "../../../assets/icons/CheckmarkIcon.svelte";
+  import CheckmarkIcon from "../../../../assets/icons/CheckmarkIcon.svelte";
   import CopyableCell from "./CopyableCell.svelte";
 
   export let toggleSelectAll: () => void;
