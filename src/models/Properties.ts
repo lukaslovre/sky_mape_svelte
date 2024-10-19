@@ -34,8 +34,16 @@ export async function getProperties(): Promise<Property[]> {
 function parsePropertyData(property: Property): Property {
   return {
     ...property,
-    imgUrl: property.imgUrl.map((url) => pb.files.getUrl(property, url)),
+    imgUrl: property.imgUrl.map((url) =>
+      pb.files.getUrl(property, url, { thumb: "256x256" })
+    ),
   };
+}
+
+export function removeThumbFromUrl(url: string): string {
+  const index = url.indexOf("?thumb");
+  if (index === -1) return url;
+  return url.slice(0, index);
 }
 
 export async function addProperty(property: Partial<Property>): Promise<void> {

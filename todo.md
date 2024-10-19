@@ -18,6 +18,9 @@
 
 - [ ] nekretnine na tablice prebacit
 
+  - [x] sort bi column name
+  - [x] edit i delete Menubar items
+
 - [ ] da se vide properties i filteri na client form
 
 ## High

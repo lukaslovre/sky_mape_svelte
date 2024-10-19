@@ -1,7 +1,9 @@
 <script lang="ts">
+  import { removeThumbFromUrl } from "../../../../models/Properties";
   import { agents, users } from "../../../../stores/store";
   import type { Property } from "../../../../types";
   import { formatWithCommas } from "../../../../utils/numbers";
+  import PropertyCard from "../../../properties/PropertyCard.svelte";
   import Checkbox from "./Checkbox.svelte";
   import CopyableCell from "./CopyableCell.svelte";
 
@@ -56,7 +58,7 @@
 
 <!-- Table Body -->
 <tbody>
-  {#each propertyData as property}
+  {#each propertyData as property (property.id)}
     <tr>
       <!-- Checkbox Cell. First Column -->
       <td>
@@ -76,7 +78,11 @@
               <!-- Array-like objects -->
               {#if property[column].length > 0}
                 {#if column === "imgUrl"}
-                  <a href={property[column][0]} target="_blank" class="img-link">
+                  <a
+                    href={removeThumbFromUrl(property[column][0])}
+                    target="_blank"
+                    class="img-link"
+                  >
                     <img src={property[column][0]} alt={property.id} />
                   </a>
                 {:else}
