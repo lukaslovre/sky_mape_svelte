@@ -3,9 +3,10 @@
   import MinMaxInput from "./MinMaxInput.svelte";
   import ResetIcon from "../../assets/icons/ResetIcon.svelte";
   import LocationInput from "./LocationInput.svelte";
-  import { filters, agents } from "../../stores/store";
+  import { filters, agents, favoriteProperties } from "../../stores/store";
   import type { Filters } from "../../types";
   import { emptyFavorites, resetFilters } from "../../stores/actions";
+  import { parseFilterValues, removeEmptyValuesFromFilters } from "../../utils/filter";
 
   function resetValues() {
     resetFilters();
@@ -149,11 +150,13 @@
 
   <div class="buttons-container">
     <button type="reset" class="button" on:click={resetValues}>
-      <ResetIcon /> Filtri
+      <ResetIcon /> Filtri ({Object.keys(
+        removeEmptyValuesFromFilters(parseFilterValues($filters))
+      ).length})
     </button>
     <button type="reset" class="button" on:click={emptyFavoriteProperties}>
       <!-- add star emoji -->
-      <ResetIcon /> Favoriti
+      <ResetIcon /> Favoriti ({$favoriteProperties.length})
     </button>
   </div>
 </div>

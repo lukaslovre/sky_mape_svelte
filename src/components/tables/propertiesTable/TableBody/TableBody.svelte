@@ -1,9 +1,8 @@
 <script lang="ts">
   import { removeThumbFromUrl } from "../../../../models/Properties";
-  import { agents, users } from "../../../../stores/store";
+  import { agents, favoriteProperties, users } from "../../../../stores/store";
   import type { Property } from "../../../../types";
   import { formatWithCommas } from "../../../../utils/numbers";
-  import PropertyCard from "../../../properties/PropertyCard.svelte";
   import Checkbox from "./Checkbox.svelte";
   import CopyableCell from "./CopyableCell.svelte";
 
@@ -45,6 +44,7 @@
   function parseVisibility(property: Property): string {
     return property.hiddenOnWebsite ? "Off-market" : "Public";
   }
+
   function parseId(property: Property, column: keyof Property): string {
     if (column === "agent_id") {
       return $agents.find((agent) => agent.id === property.agent_id)?.name ?? "N/A";
@@ -59,7 +59,7 @@
 <!-- Table Body -->
 <tbody>
   {#each propertyData as property (property.id)}
-    <tr>
+    <tr class:favorited={$favoriteProperties.includes(property.id)}>
       <!-- Checkbox Cell. First Column -->
       <td>
         <Checkbox
@@ -133,6 +133,10 @@
 
   tr:hover {
     background-color: hsla(0, 0%, 100%, 0.5);
+  }
+
+  tr.favorited {
+    background-color: hsla(50, 100%, 70%, 0.5);
   }
 
   tbody tr:last-child td:first-child {

@@ -38,8 +38,8 @@ export function toggleSelectedProperty(propertyId: Property["id"]) {
 
 // Apply user-specific filters and favorite properties
 export function applyUserFilters(
-  userFilters: UserData["filters"],
-  userFavoriteProperties: Property["id"][]
+  userFilters: UserData["filters"] | undefined,
+  userFavoriteProperties: Property["id"][] | undefined
 ) {
   if (userFilters && typeof userFilters === "object") {
     const parsedFilters = parseFilterValues(userFilters);

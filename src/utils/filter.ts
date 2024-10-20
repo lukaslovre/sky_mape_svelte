@@ -129,6 +129,27 @@ export function propertyMatchesFilter(property: Property, filters: Filters): boo
   return true;
 }
 
+export function removeEmptyValuesFromFilters(filters: Filters) {
+  console.log("Filters before removing empty values:", filters);
+
+  const filteredFilters = Object.fromEntries(
+    Object.entries(filters).filter(([key, value]) => {
+      if (value) {
+        if (Array.isArray(value)) {
+          return value.length > 0;
+        } else if (value === Infinity) {
+          return false;
+        }
+        return true;
+      }
+      return false;
+    })
+  );
+
+  console.log("Filters after removing empty values:", filteredFilters);
+  return filteredFilters;
+}
+
 // Imam: usere i filtrirane propertye
 // Trebam: za svaki property vidjeti koji useri (filter dakle) ga matchaju
 // Trebam: i onda napraviti uniju tih usera

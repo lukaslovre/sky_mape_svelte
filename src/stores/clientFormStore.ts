@@ -59,7 +59,7 @@ export const clientFormFields: FormFieldType<UserData>[] = [
     value: ["buyer"],
     required: true,
     options: [
-      { value: "seller", label: "Prodavatelj" },
+      { value: "seller", label: "Prodavač" },
       { value: "buyer", label: "Kupac" },
     ],
     parsingFunction: (value: string[]) => value[0],

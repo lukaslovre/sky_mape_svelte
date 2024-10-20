@@ -2,6 +2,7 @@
   import { applyUserFilters } from "../../../../stores/actions";
   import type { Filters, UserData } from "../../../../types";
   import { parsePocketbaseUserData } from "../../../../utils/buyers";
+  import { removeEmptyValuesFromFilters } from "../../../../utils/filter";
   import Popup from "../../../common/Popup.svelte";
   import Checkbox from "./Checkbox.svelte";
   import CopyableCell from "./CopyableCell.svelte";
@@ -73,21 +74,6 @@
     popupContent = JSON.stringify(filteredUserFilters, null, 2);
     console.log("Popup content set to:", popupContent);
   };
-
-  function removeEmptyValuesFromFilters(filters: Filters) {
-    console.log("filters", filters);
-    return Object.fromEntries(
-      Object.entries(filters).filter(([key, value]) => {
-        if (value) {
-          if (Array.isArray(value)) {
-            return value.length > 0;
-          }
-          return true;
-        }
-        return false;
-      })
-    );
-  }
 
   // Hide filters popup
   const hideFiltersPopup = () => {
