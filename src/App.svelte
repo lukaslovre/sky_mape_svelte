@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { activeTab, agents, users } from "./stores/store";
+  import { activeTab } from "./stores/store";
   import Header from "./components/header/Header.svelte";
   import SideNote from "./components/common/SideNote.svelte";
   import Map from "./components/map/Map.svelte";
@@ -9,9 +9,6 @@
   import InteractionsPage from "./components/interactions/InteractionsPage.svelte";
   import { onMount } from "svelte";
   import { propertyFormStore } from "./stores/propertiesFormStore";
-  import { propertyFormFields } from "./components/properties/PropertyForm/PropertyFormUtils";
-  import { clientFormStore } from "./stores/clientFormStore";
-  import { clientFormFields } from "./components/clients/ClientFormUtils";
   import TabMenu from "./components/header/TabMenu.svelte";
 
   // SideNote

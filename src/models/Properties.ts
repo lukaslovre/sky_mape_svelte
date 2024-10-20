@@ -49,9 +49,13 @@ export function removeThumbFromUrl(url: string): string {
 export async function addProperty(property: Partial<Property>): Promise<void> {
   try {
     const collection = pb.collection("Properties");
-    const action = property.id ? "update" : "create";
-    const res = await collection[action](property.id || "", property);
-    console.log(`Property ${action}d:`, res);
+    if (property.id) {
+      const res = await collection.update(property.id, property);
+      console.log("Property updated:", res);
+    } else {
+      const res = await collection.create(property);
+      console.log("Property created:", res);
+    }
   } catch (err) {
     console.error("Error adding/updating property:", err);
     throw handlePropertyError(err);

@@ -45,9 +45,13 @@ export async function getUsers(): Promise<UserData[]> {
 export async function createUser(data: Partial<UserData>): Promise<void> {
   try {
     const collection = pb.collection<UserData>("Clients");
-    const action = data.id ? "update" : "create";
-    const res = await collection[action](data.id || "", data);
-    console.log(`User ${action}d:`, res);
+    if (data.id) {
+      const res = await collection.update(data.id, data);
+      console.log("User updated:", res);
+    } else {
+      const res = await collection.create(data);
+      console.log("User created:", res);
+    }
   } catch (err) {
     console.error("Error adding/updating user:", err);
     throw handleClientError(err);

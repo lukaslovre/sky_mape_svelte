@@ -3,6 +3,7 @@
   import { createUser } from "../../models/Clients";
   import FormClient from "../common/FormClient.svelte";
   import { filters, favoriteProperties } from "../../stores/store";
+  import { parseFilterValues } from "../../utils/filter";
 
   export let close: () => void;
 
@@ -11,7 +12,7 @@
 
     // Add favorites and filters to the transformedFields
     transformedFields.favoriteProperties = $favoriteProperties;
-    transformedFields.filters = $filters;
+    transformedFields.filters = parseFilterValues($filters);
 
     console.log(transformedFields);
 

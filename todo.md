@@ -10,25 +10,6 @@
 
 1. riješiti dupliciranje nekretnina (data import from CVS i/ili API integracija)
 
-## Clients tab:
-
-- [x] primjeni gumb da radi
-
-- [x] tabovi su gore
-
-- [x] nekretnine na tablice prebacit
-
-  - [x] sort bi column name
-  - [x] edit i delete Menubar items
-
-- [x] to-do
-
-## High
-
-- [x] Remove favorites gumb
-- [x] Svi nacrtani polygoni su kao u nekom notification baru ali u točnim oblicima.
-- [x] Može se stisnuti na njih da se zumira na njih, ili trash da se obrište.
-
 ## Low
 
 - [ ] auth
