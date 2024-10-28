@@ -7,9 +7,6 @@
   - postoje strelice lijevo|desno za prolaženje kroz sve filteredProperties
 - menubar na owner
 
-- ako je dropdown selectan, onda strelice mijenjaju vrijednost
-- radio opcija na dropdown elementu
-
 ## MVP
 
 - spremanje klijenata

@@ -16,10 +16,6 @@
 
   $: fields = $clientFormStore;
 
-  function handleFieldChange(fieldName: keyof UserData, value: any) {
-    clientFormStore.updateFieldValue(fieldName, value);
-  }
-
   function handleClear() {
     clientFormStore.clearFields();
   }
@@ -37,7 +33,6 @@
         disabled={field.disabled}
         error={field.error}
         bind:value={field.value}
-        on:input={(e) => handleFieldChange(field.databaseFieldName, e.target.value)}
       />
     {:else if field.inputElement === "textarea"}
       <Textarea
@@ -46,7 +41,6 @@
         required={field.required}
         error={field.error}
         bind:value={field.value}
-        on:input={(e) => handleFieldChange(field.databaseFieldName, e.target.value)}
       />
     {:else if field.inputElement === "select" && field.options}
       <Dropdown
@@ -57,7 +51,7 @@
         required={field.required}
         bind:values={field.value}
         error={field.error}
-        on:change={(e) => handleFieldChange(field.databaseFieldName, e.detail)}
+        multipleValues={false}
       />
     {:else if field.inputElement === "checkbox"}
       <Checkbox
@@ -66,7 +60,6 @@
         required={field.required}
         error={field.error}
         bind:checked={field.value}
-        on:change={(e) => handleFieldChange(field.databaseFieldName, e.target.checked)}
       />
     {:else if field.inputElement === "imageInput"}
       <ImageInput
@@ -75,7 +68,6 @@
         required={field.required}
         error={field.error}
         bind:value={field.value}
-        on:change={(e) => handleFieldChange(field.databaseFieldName, e.detail)}
       />
     {/if}
   {/each}

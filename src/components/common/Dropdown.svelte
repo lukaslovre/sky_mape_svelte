@@ -11,13 +11,76 @@
   export let disabled: boolean = false;
   export let required: boolean = false;
   export let error: string | null = null;
+  export let multipleValues: boolean = true;
 
   let isOpen: boolean = false;
+  let focusedOptionIndex: number = -1;
+  let dropdownElement: HTMLDivElement;
+
+  $: selectedValuesLabel = getLabelsFromValues(values);
+
+  function getLabelsFromValues(values: string[], separator: string = ", ") {
+    if (!Array.isArray(values)) return "Values nije array";
+
+    if (values.length === 0) return "Nije odabrano";
+
+    return values
+      .map((value) => {
+        const option = options.find((option) => option.value === value);
+        return option?.label;
+      })
+      .filter(Boolean)
+      .join(separator);
+  }
 
   function handleOptionClick(value: string) {
-    const containsValue = values.includes(value);
+    if (!multipleValues) {
+      // Single select mode
+      const isSelected = values.includes(value);
+      values = isSelected ? [] : [value];
+    } else {
+      // Multi select mode
+      const isSelected = values.includes(value);
+      values = isSelected ? values.filter((v) => v !== value) : [...values, value];
+    }
+  }
 
-    values = containsValue ? values.filter((v) => v !== value) : [...values, value];
+  function handleKeyDown(event: KeyboardEvent) {
+    if (!isOpen) {
+      if (event.key === "Enter" || event.key === " " || event.key === "ArrowDown") {
+        event.preventDefault();
+        isOpen = true;
+        focusedOptionIndex =
+          values.length > 0
+            ? options.findIndex((option) => option.value === values[0])
+            : 0;
+      }
+      return;
+    }
+
+    switch (event.key) {
+      case "ArrowDown":
+        event.preventDefault();
+        focusedOptionIndex = (focusedOptionIndex + 1) % options.length;
+        break;
+      case "ArrowUp":
+        event.preventDefault();
+        focusedOptionIndex =
+          focusedOptionIndex <= 0 ? options.length - 1 : focusedOptionIndex - 1;
+        break;
+      case "Enter":
+      case " ":
+        event.preventDefault();
+        handleOptionClick(options[focusedOptionIndex].value);
+        break;
+      case "Escape":
+        event.preventDefault();
+        isOpen = false;
+        break;
+      case "Tab":
+        isOpen = false;
+        break;
+    }
   }
 
   function resetValue() {
@@ -29,60 +92,66 @@
     isOpen = !isOpen;
   }
 
-  function getLabelsFromValues(separator: string = ", ") {
-    if (!Array.isArray(values)) return "";
-    return values
-      .map((value) => {
-        const option = options.find((option) => option.value === value);
-        return option?.label;
-      })
-      .join(separator);
-  }
-
   onMount(() => {
     if (!disabled) {
-      window.addEventListener("click", (e) => {
-        if (isOpen) {
-          const target = e.target as HTMLElement;
-          const isCurrentButton = target.id === id;
-          const isOptionButton = target.classList.contains("dropdown-input-option");
+      window.addEventListener("click", handleClickOutside);
 
-          if (!isCurrentButton && !isOptionButton) {
-            isOpen = false;
-          }
-        }
-      });
+      return () => {
+        window.removeEventListener("click", handleClickOutside);
+      };
     }
   });
+
+  function handleClickOutside(event: MouseEvent) {
+    if (dropdownElement && !dropdownElement.contains(event.target as Node)) {
+      isOpen = false;
+    }
+  }
 </script>
 
-<div class="dropdown-input" class:disabled>
+<div
+  class="dropdown-input"
+  class:disabled
+  bind:this={dropdownElement}
+  role="combobox"
+  aria-expanded={isOpen}
+  aria-haspopup="listbox"
+  aria-controls="dropdown-options"
+>
   <Label forId={id} text={`${required ? "*" : ""} ${label}`} />
+
   {#if error}
     <p class="error">{error}</p>
   {/if}
 
-  <!-- Add html attributes so it acts like a <select> element (selectable, etc) -->
   <button
+    {id}
     type="button"
     class="dropdown-input-current"
     {disabled}
-    {id}
     on:click={toggleDropdownOptionsVisibility}
+    on:keydown={handleKeyDown}
+    aria-label={label}
   >
-    {values.length === 0 ? "Nije odabrano" : getLabelsFromValues()}
+    {selectedValuesLabel}
     <DropdownTriangleIcon />
   </button>
 
-  <div class="dropdown-input-options" style:display={isOpen ? "flex" : "none"}>
-    {#each options as { label, value }}
+  <div
+    class="dropdown-input-options"
+    class:open={isOpen}
+    role="listbox"
+    aria-multiselectable={multipleValues}
+  >
+    {#each options as { label, value }, i}
       <button
         type="button"
         class="dropdown-input-option"
         class:selected={values.includes(value)}
-        on:click={() => {
-          handleOptionClick(value);
-        }}
+        class:focused={focusedOptionIndex === i}
+        role="option"
+        aria-selected={values.includes(value)}
+        on:click={() => handleOptionClick(value)}
       >
         <div class="checkbox-square">
           {#if values.includes(value)}
@@ -103,7 +172,6 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    /* width: fit-content; */
   }
 
   .dropdown-input.disabled {
@@ -118,13 +186,13 @@
   }
 
   .dropdown-input-current {
-    /* width: 100%; */
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 0.5rem;
     height: 2.5rem;
     padding: 0 1rem;
+    width: 100%;
 
     border-radius: 0.5rem;
     outline: 1px solid transparent;
@@ -156,14 +224,19 @@
     left: 0;
     z-index: 2;
     width: max-content;
-
+    display: none;
     flex-direction: column;
 
     border-radius: 0.375rem;
     background-color: #ffffff;
     box-shadow: 0 0.125rem 1rem rgba(0, 0, 0, 0.4);
   }
-  .dropdown-input-options .dropdown-input-option {
+
+  .dropdown-input-options.open {
+    display: flex;
+  }
+
+  .dropdown-input-option {
     border: none;
     outline: none;
 
@@ -174,6 +247,7 @@
 
     padding: 1rem;
     padding-right: 2rem;
+    width: 100%;
 
     border-radius: 0.375rem;
     background-color: #ffffff;
@@ -185,12 +259,13 @@
     cursor: pointer;
   }
 
-  .dropdown-input-options .dropdown-input-option:hover,
-  .dropdown-input-options .dropdown-input-option:focus {
+  .dropdown-input-option:hover,
+  .dropdown-input-option:focus,
+  .dropdown-input-option.focused {
     background-color: hsl(0, 0%, 95%);
   }
 
-  .dropdown-input-options .dropdown-input-option .checkbox-square {
+  .checkbox-square {
     width: 1.5rem;
     height: 1.5rem;
     border-radius: 0.25rem;
@@ -201,18 +276,18 @@
     align-items: center;
     justify-content: center;
   }
-  .dropdown-input-options .dropdown-input-option.selected .checkbox-square {
+  .dropdown-input-option.selected .checkbox-square {
     background-color: #0b5eda;
     border-color: #0b5eda;
   }
 
   /* Divideri između opcija */
-  .dropdown-input-options .dropdown-input-option {
+  .dropdown-input-option {
     border-bottom: 1px solid #e6e6e6;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   }
-  .dropdown-input-options .dropdown-input-option:last-child {
+  .dropdown-input-option:last-child {
     border-bottom: none;
     border-bottom-left-radius: 0.375rem;
     border-bottom-right-radius: 0.375rem;

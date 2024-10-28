@@ -51,6 +51,7 @@
         required={field.required}
         bind:values={field.value}
         error={field.error}
+        multipleValues={false}
       />
     {:else if field.inputElement === "checkbox"}
       <Checkbox
