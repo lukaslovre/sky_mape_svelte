@@ -15,7 +15,15 @@
     <p class="error">{error}</p>
   {/if}
 
-  <input type="text" name={id} {id} bind:value {disabled} class:disabled />
+  <input
+    type="text"
+    name={id}
+    {id}
+    bind:value
+    {disabled}
+    class:disabled
+    autocomplete="off"
+  />
 </div>
 
 <style>

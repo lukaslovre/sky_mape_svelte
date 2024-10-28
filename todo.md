@@ -1,5 +1,16 @@
 # TODO
 
+- editanje polygona
+  - kad se stisne polygon se pokaže popup sa edit|delete gumbima
+- kada se stisne nekretina, sidebar je detailed view nekretnine
+  - ikona na mapi ima 'selected' state
+  - postoje strelice lijevo|desno za prolaženje kroz sve filteredProperties
+- menubar na owner
+
+- može se napisati k|m u price i onda zamijeni to slovo sa 3|6 nula
+- ako je dropdown selectan, onda strelice mijenjaju vrijednost
+- radio opcija na dropdown elementu
+
 ## MVP
 
 - spremanje klijenata
@@ -16,11 +27,7 @@
 
 - [ ] Na property gridu imati kao grid divider i onda su ispod "favoriti koji ne matchaju filtere"
 
-- [ ] (isto novi tab, znači 5 tabova, to bi možda trebalo lijevo prebacit ko sidebar... -> i onda bi imo dva side bara (tj kategorije unutar-> filter i page))
-
 - [ ] Mogućnost priložiti/spremiti dokumente koji su onda povezani sa nekom nekretninom te se mogu brzo pristupiti. Na buyers mora bit isto tablica jer je ovo vec previse polja i gumba. Kad se stisne na mapi na nekretninu onda je samo 1 nekretnina odabrana i prikazana na listi. Ima polje dokumenti koji isto izbaci side-note sa svim file-ovima, google drive style.
-
-- [ ] Interactions filtriranje i više informacija, kad dobijem povratno
 
 - [ ] Srediti lijepo side-note funkcionalnost (UI)
 

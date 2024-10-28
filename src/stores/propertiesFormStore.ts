@@ -81,7 +81,7 @@ export const propertyFormFields: FormFieldType<Property>[] = [
     error: null,
   },
   {
-    label: "Image",
+    label: "Image (max 10MB)",
     inputElement: "imageInput",
     databaseFieldName: "imgUrl",
     value: "",
@@ -224,10 +224,12 @@ users.subscribe((users) => {
   if (Array.isArray(users)) {
     propertyFormStore.updateFieldOptions(
       "ownerId",
-      users.map((user) => ({
-        value: user.id,
-        label: user.name,
-      }))
+      users
+        .filter((user) => user.userType === "seller")
+        .map((user) => ({
+          value: user.id,
+          label: user.name,
+        }))
     );
   }
 });

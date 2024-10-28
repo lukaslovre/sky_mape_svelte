@@ -22,15 +22,15 @@
     console.log(err);
 
     if (typeof err === "object" && err !== null) {
-      if (Object.keys(err).length > 0) {
+      if ("error" in err) {
+        alert(err.error);
+      } else if (Object.keys(err).length > 0) {
         propertyFormStore.setErrors(err as Record<string, string>);
       } else {
-        if ("error" in err) {
-          alert(err.error);
-        } else {
-          alert("Unknown error");
-        }
+        alert("Unknown error");
       }
+    } else {
+      alert("Unknown error");
     }
   }
 
