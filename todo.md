@@ -7,7 +7,6 @@
   - postoje strelice lijevo|desno za prolaženje kroz sve filteredProperties
 - menubar na owner
 
-- može se napisati k|m u price i onda zamijeni to slovo sa 3|6 nula
 - ako je dropdown selectan, onda strelice mijenjaju vrijednost
 - radio opcija na dropdown elementu
 

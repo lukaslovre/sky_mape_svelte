@@ -7,6 +7,18 @@
   export let required: boolean = false;
   export let disabled: boolean = false;
   export let error: string | null = null;
+
+  function handleInput() {
+    // If the `databaseFieldName` is 'price' | 'surfaceArea', check if there is a 'k' | 'm' at the end of the value
+    // If it is, replace the character with '000' | '000000' respectively
+    if (id === "price" || id === "surfaceArea") {
+      if (value.endsWith("k")) {
+        value = value.replace("k", "000");
+      } else if (value.endsWith("m")) {
+        value = value.replace("m", "000000");
+      }
+    }
+  }
 </script>
 
 <div class="input">
@@ -23,6 +35,7 @@
     {disabled}
     class:disabled
     autocomplete="off"
+    on:input={handleInput}
   />
 </div>
 

@@ -95,7 +95,7 @@ export const propertyFormFields: FormFieldType<Property>[] = [
     error: null,
   },
   {
-    label: "Price (€)",
+    label: "Price (€) (može se koristiti slovo 'k' ili 'm')",
     inputElement: "input",
     databaseFieldName: "price",
     value: "",
@@ -107,7 +107,7 @@ export const propertyFormFields: FormFieldType<Property>[] = [
     error: null,
   },
   {
-    label: "Surface Area (m²)",
+    label: "Surface Area (m²) (može se koristiti slovo 'k' ili 'm')",
     inputElement: "input",
     databaseFieldName: "surfaceArea",
     value: "",
