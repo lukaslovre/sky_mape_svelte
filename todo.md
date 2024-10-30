@@ -1,5 +1,10 @@
 # TODO
 
+## Danas:
+
+- kad se doda novi entity, uzeti response sa backenda i pushati u array
+- selected property basic
+
 - editanje polygona
   - kad se stisne polygon se pokaže popup sa edit|delete gumbima
 - kada se stisne nekretina, sidebar je detailed view nekretnine

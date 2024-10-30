@@ -2,6 +2,8 @@ import type { Property } from "../types";
 
 import { pb } from "../PocketBaseInit";
 import { ClientResponseError } from "pocketbase";
+import { handlePocketbaseError } from "./errorHandling";
+import { addPropertyToStore, updatePropertyInStore } from "../stores/actions";
 
 // EXAMPLE DATA
 // {
@@ -22,12 +24,16 @@ import { ClientResponseError } from "pocketbase";
 // }
 
 export async function getProperties(): Promise<Property[]> {
-  // you can also fetch all records at once via getFullList
-  const data = await pb.collection<Property>("Properties").getFullList();
+  try {
+    const data = await pb.collection<Property>("Properties").getFullList();
 
-  console.log(data);
+    console.log(data);
 
-  return data.map(parsePropertyData);
+    return data.map(parsePropertyData);
+  } catch (err) {
+    console.error("Error fetching properties:", err);
+    throw handlePocketbaseError(err);
+  }
 }
 
 // Adds absolute URLs to the image URLs
@@ -48,57 +54,33 @@ export function removeThumbFromUrl(url: string): string {
 
 export async function addProperty(property: Partial<Property>): Promise<void> {
   try {
-    const collection = pb.collection("Properties");
+    const collection = pb.collection<Property>("Properties");
     if (property.id) {
+      // Update existing property
       const res = await collection.update(property.id, property);
       console.log("Property updated:", res);
+      updatePropertyInStore(res);
     } else {
+      // Create new property
       const res = await collection.create(property);
       console.log("Property created:", res);
+      addPropertyToStore(res);
     }
   } catch (err) {
     console.error("Error adding/updating property:", err);
-    throw handlePropertyError(err);
+    throw handlePocketbaseError(err);
   }
-}
-
-function handlePropertyError(err: unknown): Error | Record<string, string> {
-  if (err instanceof ClientResponseError) {
-    console.log("ClientResponseError details:");
-    if (err.response?.data && typeof err.response.data === "object") {
-      return parseErrorResponse(err.response.data);
-    } else if (err.message) {
-      return { error: err.message };
-    }
-  }
-  return err as Error;
-}
-
-function parseErrorResponse(data: Record<string, unknown>): Record<string, string> {
-  const errorObject: Record<string, string> = {};
-  Object.entries(data).forEach(([key, value]) => {
-    if (isErrorObject(value)) {
-      const { code = "Unknown code", message = "Unknown message" } = value;
-      errorObject[key] = `${code} - ${message}`;
-    } else {
-      errorObject[key] = String(value);
-    }
-  });
-  return errorObject;
-}
-
-function isErrorObject(value: unknown): value is { code?: string; message?: string } {
-  return (
-    typeof value === "object" && value !== null && ("code" in value || "message" in value)
-  );
 }
 
 export async function deleteProperty(id: string): Promise<void> {
   if (!id) {
     throw new Error("Id is required");
   }
+
   try {
-    await pb.collection("Properties").delete(id);
+    const collection = pb.collection<Property>("Properties");
+    const res = await collection.delete(id);
+    console.log("Property deleted:", res);
   } catch (err) {
     console.log(err);
     alert("Error deleting property");

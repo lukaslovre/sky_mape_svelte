@@ -1,7 +1,13 @@
 // actions.js
 import type { LatLng, LatLngBounds } from "leaflet";
 import type { Property, UserData } from "../types";
-import { filters, favoriteProperties, selectedPropertyIds } from "./store";
+import {
+  filters,
+  favoriteProperties,
+  selectedPropertyIds,
+  properties,
+  users,
+} from "./store";
 import { emptyFiltersObject, parseFilterValues } from "../utils/filter";
 
 // Save a polygon to filters without mutating the original state
@@ -65,4 +71,32 @@ export function fitViewToFilteredProperties(
   if (!mapInstance || !propertiesBoundingBox) return;
 
   mapInstance.fitBounds(propertiesBoundingBox, { maxZoom: 15 });
+}
+
+// Property actions
+export function addPropertyToStore(property: Property) {
+  properties.update((currentProperties) => {
+    return [...currentProperties, property];
+  });
+}
+export function updatePropertyInStore(property: Property) {
+  properties.update((currentProperties) => {
+    return currentProperties.map((currentProperty) =>
+      currentProperty.id === property.id ? property : currentProperty
+    );
+  });
+}
+
+// Client actions
+export function addClientToStore(client: UserData) {
+  users.update((user) => {
+    return [...user, client];
+  });
+}
+export function updateClientInStore(client: UserData) {
+  users.update((user) => {
+    return user.map((currentUser) =>
+      currentUser.id === client.id ? client : currentUser
+    );
+  });
 }
