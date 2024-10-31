@@ -63,6 +63,15 @@ export function emptyFavorites() {
   favoriteProperties.set([]);
 }
 
+// Toggle favorite
+export function toggleFavorite(propertyId: Property["id"]) {
+  favoriteProperties.update((currentFavorites) =>
+    currentFavorites.includes(propertyId)
+      ? currentFavorites.filter((id) => id !== propertyId)
+      : [...currentFavorites, propertyId]
+  );
+}
+
 // Fit the view to the bounds of the properties
 export function fitViewToFilteredProperties(
   mapInstance: L.Map | undefined,

@@ -62,8 +62,8 @@ export function filtersIsEmpty(filters: Filters): boolean {
 
 export function propertyMatchesFilter(property: Property, filters: Filters): boolean {
   const parsedFilters = parseFilterValues(filters);
-  console.log("Parsed filters:", parsedFilters);
-  console.log("Property:", property);
+  // console.log("Parsed filters:", parsedFilters);
+  // console.log("Property:", property);
 
   const {
     action,
@@ -79,22 +79,22 @@ export function propertyMatchesFilter(property: Property, filters: Filters): boo
   } = parsedFilters;
 
   if (property.price < minPrice || property.price > maxPrice) {
-    console.log("Failed price filter");
+    // console.log("Failed price filter");
     return false;
   }
 
   if (property.surfaceArea < minArea || property.surfaceArea > maxArea) {
-    console.log("Failed area filter");
+    // console.log("Failed area filter");
     return false;
   }
 
   if (type.length > 0 && !type.includes(property.type)) {
-    console.log("Failed type filter");
+    // console.log("Failed type filter");
     return false;
   }
 
   if (action.length > 0 && !action.includes(property.action)) {
-    console.log("Failed action filter");
+    // console.log("Failed action filter");
     return false;
   }
 
@@ -102,17 +102,17 @@ export function propertyMatchesFilter(property: Property, filters: Filters): boo
     visibility.length > 0 &&
     !visibility.includes(property.hiddenOnWebsite ? "Hidden" : "Visible")
   ) {
-    console.log("Failed visibility filter");
+    // console.log("Failed visibility filter");
     return false;
   }
 
   if (status.length > 0 && !status.includes(property.status)) {
-    console.log("Failed status filter");
+    // console.log("Failed status filter");
     return false;
   }
 
   if (agentIds.length > 0 && !agentIds.includes(property.agent_id)) {
-    console.log("Failed agent filter");
+    // console.log("Failed agent filter");
     return false;
   }
 
@@ -120,12 +120,12 @@ export function propertyMatchesFilter(property: Property, filters: Filters): boo
     const propertyLatLng = new LatLng(property.lat, property.lng);
 
     if (polygons.every((polygon) => !latLngIsInPolygon(propertyLatLng, polygon))) {
-      console.log("Failed polygon filter");
+      // console.log("Failed polygon filter");
       return false;
     }
   }
 
-  console.log("Property passed all filters");
+  // console.log("Property passed all filters");
   return true;
 }
 

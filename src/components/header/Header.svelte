@@ -1,5 +1,7 @@
 <script lang="ts">
+  import { selectedSidebarCategory } from "../../stores/uiStateStore";
   import AuthRow from "../auth/AuthRow.svelte";
+  import PropertiesInSidebar from "../propertiesInSidebar/PropertiesInSidebar.svelte";
   import FiltersContainer from "./FiltersContainer.svelte";
 
   // type SidebarTab = "pages" | "filters";
@@ -23,33 +25,16 @@
     </div>
   </div>
 
-  <!-- <div class="sidebar-navigation-container">
-    <SecondaryButton
-      text="Stranice"
-      inlineCss="width:100%"
-      onClick={() => (selectedSidebarTab = "pages")}
-    >
-      <HouseIcon size={24} color="#1A1A1A" backgroundColor="hsl(0, 0%, 80%)" />
-    </SecondaryButton>
-    <SecondaryButton
-      text="Filter"
-      inlineCss="width:100%"
-      onClick={() => (selectedSidebarTab = "filters")}
-    >
-      <FilterIcon size={24} color="#1A1A1A" />
-    </SecondaryButton>
-  </div> -->
-
-  <!-- {#if selectedSidebarTab === "pages"} -->
-  <!-- <TabMenu /> -->
-  <!-- {:else if selectedSidebarTab === "filters"} -->
-  <FiltersContainer />
-  <!-- {/if} -->
+  {#if $selectedSidebarCategory === "filters"}
+    <FiltersContainer />
+  {:else if $selectedSidebarCategory === "selectedProperty"}
+    <PropertiesInSidebar />
+  {/if}
 </header>
 
 <style>
   header {
-    width: 22rem;
+    width: 24rem;
     z-index: 402;
     flex-shrink: 0;
 
@@ -58,6 +43,7 @@
     gap: 3rem;
 
     overflow-y: auto;
+    overflow-x: hidden;
 
     background-color: #f5f5f5;
     padding: 1.5rem;

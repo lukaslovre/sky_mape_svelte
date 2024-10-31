@@ -2,7 +2,6 @@
 
 ## Danas:
 
-- kad se doda novi entity, uzeti response sa backenda i pushati u array
 - selected property basic
 
 - editanje polygona
