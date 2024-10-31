@@ -67,6 +67,7 @@ export const filteredUsers: Readable<UserData[]> = derived(
 );
 
 // TODO: u budučnosti, možda, napraviti da uvijek gleda samo filteredProperties, dakle nebi postojala potreba da properties i selectedPropertyIds budu uključeni u ovaj derived store
+
 // Derived store for filtered owners
 export const filteredOwners: Readable<UserData[]> = derived(
   [users, filteredProperties, properties, selectedPropertyIds],

@@ -3,6 +3,7 @@
 
   type Direction = "left" | "up" | "right" | "down";
   export let direction: Direction = "right";
+  export let onClick: () => void = () => {};
 
   $: directionInDegrees = {
     left: 180,
@@ -12,7 +13,7 @@
   }[direction];
 </script>
 
-<button type="button">
+<button type="button" on:click={onClick}>
   <ChevronIcon size={32} rotation={directionInDegrees} color={"#0B5EDA"} />
 </button>
 
