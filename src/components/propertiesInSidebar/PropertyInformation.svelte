@@ -62,7 +62,7 @@
   <Thumbnail imageUrl={property.imgUrl[0]} />
 
   {#each Object.entries(propertyForDisplay) as [key, value]}
-    <InfoRow label={key} {value} />
+    <InfoRow label={key} {value} isUndefined={value === "N/A"} />
   {/each}
 </div>
 

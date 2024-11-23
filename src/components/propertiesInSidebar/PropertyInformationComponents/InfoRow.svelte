@@ -1,9 +1,10 @@
 <script lang="ts">
   export let label: string;
   export let value: any;
+  export let isUndefined: boolean = false;
 </script>
 
-<div class="info-row">
+<div class="info-row" class:is-undefined={isUndefined}>
   <p class="info-label">{label}</p>
   <p class="info-value">{value}</p>
 </div>
@@ -14,6 +15,9 @@
     flex-direction: column;
     gap: 0.25rem;
     line-height: 150%;
+  }
+  .info-row.is-undefined {
+    opacity: 0.25;
   }
 
   .info-label {
