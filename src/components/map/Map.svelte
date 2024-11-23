@@ -53,6 +53,10 @@
     resetSelectedProperty();
   }
 
+  function handlePopupOpen(e: any) {
+    console.log(e);
+  }
+
   function handleMouseMove(e: L.LeafletMouseEvent) {
     if (!$isDrawing || drawingPolygonCoords.length === 0) return;
 
@@ -77,6 +81,7 @@
   function setEventListeners(mapInstance: L.Map) {
     mapInstance.on("click", handleMapClick);
     mapInstance.on("popupclose", handlePopupClose);
+    // mapInstance.on("popupopen", handlePopupOpen);
     mapInstance.on("mousemove", handleMouseMove);
     mapInstance.on("keypress", handleKeyPress);
   }

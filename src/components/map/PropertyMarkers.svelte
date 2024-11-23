@@ -58,6 +58,17 @@
       );
     });
   }
+
+  // // Reactive statement to open popup when selectedPropertyIds changes
+  // $: if (Object.keys(markerInstances).length > 0 && $selectedPropertyIds) {
+  //   Object.entries(markerInstances).forEach(([propertyId, marker]) => {
+  //     if ($selectedPropertyIds.includes(propertyId)) {
+  //       marker.openPopup();
+  //     } else {
+  //       // marker.closePopup();
+  //     }
+  //   });
+  // }
 </script>
 
 <!-- Iterate over each property and render a Marker -->
@@ -75,6 +86,7 @@
       options={{
         closeButton: false,
       }}
+      data-property-id={property.id}
     >
       <PropertyCard {property} on:openSideNote />
     </Popup>
