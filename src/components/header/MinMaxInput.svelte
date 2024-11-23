@@ -1,16 +1,22 @@
 <script lang="ts">
+  import { parseValueWithSuffix } from "../../utils/numbers";
   import Label from "../common/Label.svelte";
 
   export let label: string;
   export let id: string;
-  export let minValue: number;
-  export let maxValue: number;
+  export let minValue: string;
+  export let maxValue: string;
+
+  function handleInput() {
+    minValue = parseValueWithSuffix(minValue);
+    maxValue = parseValueWithSuffix(maxValue);
+  }
 </script>
 
 <div class="min-max-input">
   <Label forId={`${id}-min`} text={label} />
 
-  <div class="inputsContainer">
+  <div class="inputsContainer" on:input={handleInput}>
     <input type="text" name={id + "-min"} id={id + "-min"} bind:value={minValue} />
     <input type="text" name={id + "-max"} id={id + "-max"} bind:value={maxValue} />
   </div>

@@ -1,5 +1,4 @@
 <script lang="ts">
-  import DropdownInput from "./DropdownInput.svelte";
   import MinMaxInput from "./MinMaxInput.svelte";
   import ResetIcon from "../../assets/icons/ResetIcon.svelte";
   import LocationInput from "./LocationInput.svelte";
@@ -7,6 +6,7 @@
   import type { Filters } from "../../types";
   import { emptyFavorites, resetFilters } from "../../stores/actions";
   import { parseFilterValues, removeEmptyValuesFromFilters } from "../../utils/filter";
+  import Dropdown from "../common/Dropdown.svelte";
 
   function resetValues() {
     resetFilters();
@@ -24,7 +24,9 @@
     });
 
     // Delete the current array element with id "agentIds"
-    inputs = inputs.filter((input) => input.id !== "agentIds");
+    inputs = inputs.filter(
+      (input) => input.type === "divider" || input.id !== "agentIds"
+    );
 
     inputs = [
       ...inputs,
@@ -52,6 +54,9 @@
         id: string;
         filtersBindMin: keyof Filters;
         filtersBindMax: keyof Filters;
+      }
+    | {
+        type: "divider";
       };
 
   let inputs: InputType[] = [
@@ -92,6 +97,9 @@
       filtersBindMax: "maxArea",
     },
     {
+      type: "divider",
+    },
+    {
       type: "dropdown",
       label: "Vidljivost",
       id: "visibility",
@@ -127,13 +135,15 @@
 
 <div class="filters-container">
   <div class="inputs-container">
+    <LocationInput />
     {#each inputs as input}
       {#if input.type === "dropdown"}
-        <DropdownInput
+        <Dropdown
           label={input.label}
           id={input.id}
           options={input.options}
           bind:values={$filters[input.filtersBind]}
+          multipleValues={true}
         />
       {:else if input.type === "min-max"}
         <MinMaxInput
@@ -142,10 +152,10 @@
           bind:minValue={$filters[input.filtersBindMin]}
           bind:maxValue={$filters[input.filtersBindMax]}
         />
+      {:else if input.type === "divider"}
+        <hr class="filtersDivider" />
       {/if}
     {/each}
-
-    <LocationInput />
   </div>
 
   <div class="buttons-container">
@@ -177,6 +187,11 @@
   .buttons-container {
     display: flex;
     gap: 1rem;
+  }
+
+  hr.filtersDivider {
+    border: 0;
+    border-top: 1px solid #e0e0e0;
   }
 
   .button {

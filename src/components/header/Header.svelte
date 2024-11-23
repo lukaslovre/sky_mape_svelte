@@ -3,10 +3,6 @@
   import AuthRow from "../auth/AuthRow.svelte";
   import PropertiesInSidebar from "../propertiesInSidebar/PropertiesInSidebar.svelte";
   import FiltersContainer from "./FiltersContainer.svelte";
-
-  // type SidebarTab = "pages" | "filters";
-
-  // let selectedSidebarTab: SidebarTab = "pages";
 </script>
 
 <header>
@@ -82,10 +78,5 @@
   .feedback-link:hover {
     background-color: hsl(214, 89%, 45%);
     color: hsl(214, 89%, 95%);
-  }
-
-  .sidebar-navigation-container {
-    display: flex;
-    gap: 1rem;
   }
 </style>

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { parseValueWithSuffix } from "../../utils/numbers";
   import Label from "./Label.svelte";
 
   export let label: string;
@@ -12,11 +13,7 @@
     // If the `databaseFieldName` is 'price' | 'surfaceArea', check if there is a 'k' | 'm' at the end of the value
     // If it is, replace the character with '000' | '000000' respectively
     if (id === "price" || id === "surfaceArea") {
-      if (value.endsWith("k")) {
-        value = value.replace("k", "000");
-      } else if (value.endsWith("m")) {
-        value = value.replace("m", "000000");
-      }
+      value = parseValueWithSuffix(value);
     }
   }
 </script>
