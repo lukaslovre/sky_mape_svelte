@@ -112,6 +112,7 @@
 <div
   class="dropdown-input"
   class:disabled
+  class:none-selected={!values?.length}
   bind:this={dropdownElement}
   role="combobox"
   aria-expanded={isOpen}
@@ -177,6 +178,9 @@
   .dropdown-input.disabled {
     opacity: 0.5;
     pointer-events: none;
+  }
+  .dropdown-input.none-selected .dropdown-input-current {
+    color: #808080;
   }
 
   .error {

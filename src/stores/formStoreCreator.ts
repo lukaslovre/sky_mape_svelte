@@ -50,7 +50,11 @@ export function createFormStore<T>() {
             if (field.inputElement === "imageInput") {
               return { ...field, value: "" };
             } else if (field.inputElement === "select") {
-              return { ...field, value: [value] };
+              if (!Array.isArray(value)) {
+                return { ...field, value: [value] };
+              } else {
+                return { ...field, value };
+              }
             } else {
               return { ...field, value };
             }

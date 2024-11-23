@@ -2,9 +2,6 @@
 
 ## Danas:
 
-- koristiti novu dropdown komponentu u filterima
-- popravit k/m
-
 ## Ostatak:
 
 - selected property basic

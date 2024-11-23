@@ -1,3 +1,4 @@
+import { getCurrentUser } from "../auth";
 import type { FormFieldType, Property, UserData } from "../types";
 import { createFormStore } from "./formStoreCreator";
 import { agents, users } from "./store";
@@ -210,6 +211,7 @@ propertyFormStore.initializeFields(propertyFormFields);
 // Subscribe to the agents and users stores and update the options of the select fields
 agents.subscribe((agents) => {
   if (Array.isArray(agents)) {
+    // Set the options of the "agent_id" field to the agents
     propertyFormStore.updateFieldOptions(
       "agent_id",
       agents.map((agent) => ({
@@ -217,6 +219,12 @@ agents.subscribe((agents) => {
         label: agent.name,
       }))
     );
+  }
+
+  // Set the value of the "agent_id" field to the current user
+  const currentUser = getCurrentUser().id ? [getCurrentUser().id] : undefined;
+  if (currentUser) {
+    propertyFormStore.updateFieldValue("agent_id", currentUser);
   }
 });
 
