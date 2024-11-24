@@ -226,7 +226,7 @@
     position: absolute;
     top: calc(100% + 0.5rem);
     left: 0;
-    z-index: 2;
+    z-index: 1001; /* Leaflet map has high z-index, this is to compensate */
     width: max-content;
     display: none;
     flex-direction: column;

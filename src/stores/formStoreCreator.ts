@@ -40,29 +40,47 @@ export function createFormStore<T>() {
     setFieldValues: (data: Partial<T>) => {
       update((fields) =>
         fields.map((field) => {
-          const value = data[field.databaseFieldName];
+          // Special case for latLng input, will refactor in the future
+          if (field.databaseFieldName === "lat") {
+            // If the field is lat, it means the data is a latLng object, so we need to split it and set the values of lat and lng
+            //  access the lat and lng values from the data object
+            const lat = data["lat"];
+            const lng = data["lng"];
 
-          if (
-            value != undefined &&
-            value !== "" &&
-            (!Array.isArray(value) || value.length > 0)
-          ) {
-            if (field.inputElement === "imageInput") {
-              return { ...field, value: "" };
-            } else if (field.inputElement === "select") {
-              if (!Array.isArray(value)) {
-                return { ...field, value: [value] };
+            // If the values are not undefined, set the values of the lat and lng fields
+            if (lat != undefined && lng != undefined) {
+              return {
+                ...field,
+                value: { lat, lng },
+              };
+            } else {
+              return field;
+            }
+          } else {
+            const value = data[field.databaseFieldName];
+
+            if (
+              value != undefined &&
+              value !== "" &&
+              (!Array.isArray(value) || value.length > 0)
+            ) {
+              if (field.inputElement === "imageInput") {
+                return { ...field, value: "" };
+              } else if (field.inputElement === "select") {
+                if (!Array.isArray(value)) {
+                  return { ...field, value: [value] };
+                } else {
+                  return { ...field, value };
+                }
               } else {
                 return { ...field, value };
               }
             } else {
-              return { ...field, value };
-            }
-          } else {
-            if (field.inputElement === "select") {
-              return { ...field, value: [] };
-            } else {
-              return { ...field, value: "" };
+              if (field.inputElement === "select") {
+                return { ...field, value: [] };
+              } else {
+                return { ...field, value: "" };
+              }
             }
           }
         })
@@ -81,6 +99,12 @@ export function createFormStore<T>() {
               break;
             case "agency_id":
               defaultValue = getCurrentUser()?.agency_id || "";
+              break;
+            case "lat":
+              defaultValue = {
+                lat: 45.815011,
+                lng: 15.981919,
+              };
               break;
             default:
               switch (field.inputElement) {
@@ -126,6 +150,17 @@ export function createFormStore<T>() {
           if (value == undefined) {
             return {};
           }
+
+          // If its the special latLng input, split it into lat and lng
+          // (Need special case because its 1 field but 2 values)
+          if (field.inputElement === "latLngMapInput") {
+            // Value is now {lat: number, lng: number}
+            return {
+              lat: value.lat,
+              lng: value.lng,
+            };
+          }
+
           return { [field.databaseFieldName]: value };
         })
         .reduce((acc, curr) => ({ ...acc, ...curr }), {}) as Partial<T>;

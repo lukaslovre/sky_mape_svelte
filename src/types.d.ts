@@ -108,7 +108,13 @@ type PocketbaseAttributes = {
   collectionName: string;
 };
 
-type inputElement = "input" | "textarea" | "select" | "checkbox" | "imageInput";
+type inputElement =
+  | "input"
+  | "textarea"
+  | "select"
+  | "checkbox"
+  | "imageInput"
+  | "latLngMapInput";
 
 type FormFieldType<T> = {
   label: string;

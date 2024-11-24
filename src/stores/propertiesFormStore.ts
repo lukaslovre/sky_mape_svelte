@@ -29,28 +29,15 @@ export const propertyFormFields: FormFieldType<Property>[] = [
     error: null,
   },
   {
-    label:
-      "Latitude (Shift+Click na `Karta` kopira koordinate u međuspremnik, Ctrl+V za paste)",
-    inputElement: "input",
+    label: "Lat & Lng",
+    inputElement: "latLngMapInput",
     databaseFieldName: "lat",
-    value: "",
-    required: true,
-    parsingFunction: (value: string) => {
-      const parsedValue = parseFloat(value);
-      return isNaN(parsedValue) ? undefined : parsedValue;
+    value: {
+      lat: 45.815011,
+      lng: 15.981919,
     },
-    error: null,
-  },
-  {
-    label: "Longitude",
-    inputElement: "input",
-    databaseFieldName: "lng",
-    value: "",
     required: true,
-    parsingFunction: (value: string) => {
-      const parsedValue = parseFloat(value);
-      return isNaN(parsedValue) ? undefined : parsedValue;
-    },
+    parsingFunction: (value: { lat: number; lng: number }) => value,
     error: null,
   },
   {

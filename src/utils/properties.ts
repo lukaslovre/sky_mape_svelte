@@ -1,7 +1,6 @@
 import { get } from "svelte/store";
 import { properties } from "../stores/store";
 import type { Property } from "../types";
-import { propertyFormFields } from "../components/properties/PropertyForm/PropertyFormUtils";
 
 export function getPropertyFromId(ids: Property["id"][]) {
   return ids

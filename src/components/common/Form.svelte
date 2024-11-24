@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { FormFieldType, Property } from "../../types";
   import Checkbox from "./Checkbox.svelte";
   import Close from "./Close.svelte";
   import Dropdown from "./Dropdown.svelte";
@@ -7,6 +6,7 @@
   import Input from "./Input.svelte";
   import Textarea from "./Textarea.svelte";
   import { propertyFormStore } from "../../stores/propertiesFormStore";
+  import CoordinateSelectionMap from "./CoordinateSelectionMap.svelte";
 
   export let onSubmit: (transformedFields: Record<string, any>) => Promise<void>;
   export let onDelete: ((id: string) => Promise<void>) | null = null;
@@ -69,6 +69,17 @@
         error={field.error}
         bind:value={field.value}
       />
+    {:else if field.inputElement === "latLngMapInput"}
+      <div class="latLngMapInputContainer">
+        <CoordinateSelectionMap
+          lat={field.value.lat}
+          lng={field.value.lng}
+          onCoordinatesSelected={(lat, lng) => {
+            field.value.lat = lat;
+            field.value.lng = lng;
+          }}
+        />
+      </div>
     {/if}
   {/each}
 
@@ -95,6 +106,13 @@
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
+  }
+
+  .latLngMapInputContainer {
+    width: 100%;
+    height: 25rem;
+    border: 1px solid #cccccc;
+    box-shadow: 0 2px 1px rgba(0, 0, 0, 0.125);
   }
 
   button {
