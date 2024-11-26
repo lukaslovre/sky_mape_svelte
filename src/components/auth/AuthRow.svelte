@@ -6,28 +6,28 @@
   let isAuth = userIsAuthenticated();
   let user = getCurrentUser();
   let showLoginPopup: boolean = false;
+
+  function handleLogOutClick() {
+    logOut();
+    window.location.reload();
+  }
+
+  function toggleLoginPopupVisibility() {
+    showLoginPopup = !showLoginPopup;
+  }
 </script>
 
 <div id="auth-row">
   {#if isAuth}
     <UserDisplay {user} />
 
-    <button
-      on:click={() => {
-        logOut();
-        window.location.reload();
-      }}>Exit</button
-    >
+    <button on:click={handleLogOutClick}>Log out</button>
   {:else}
     {#if showLoginPopup}
       <LoginPopup />
     {/if}
 
-    <button
-      on:click={async () => {
-        showLoginPopup = !showLoginPopup;
-      }}>Prijavi se</button
-    >
+    <button on:click={toggleLoginPopupVisibility}>Prijavi se</button>
   {/if}
 </div>
 

@@ -8,6 +8,7 @@
   export let required: boolean = false;
   export let disabled: boolean = false;
   export let error: string | null = null;
+  export let placeholder: string = "";
 
   function handleInput() {
     // If the `databaseFieldName` is 'price' | 'surfaceArea', check if there is a 'k' | 'm' at the end of the value
@@ -32,6 +33,7 @@
     {disabled}
     class:disabled
     autocomplete="off"
+    {placeholder}
     on:input={handleInput}
   />
 </div>

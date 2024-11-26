@@ -209,7 +209,7 @@ agents.subscribe((agents) => {
   }
 
   // Set the value of the "agent_id" field to the current user
-  const currentUser = getCurrentUser().id ? [getCurrentUser().id] : undefined;
+  const currentUser = getCurrentUser()?.id ? [getCurrentUser().id] : undefined;
   if (currentUser) {
     propertyFormStore.updateFieldValue("agent_id", currentUser);
   }

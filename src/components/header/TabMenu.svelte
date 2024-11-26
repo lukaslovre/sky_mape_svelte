@@ -12,10 +12,17 @@
   import PeopleIcon from "../../assets/icons/PeopleIcon.svelte";
   import MessageIcon from "../../assets/icons/MessageIcon.svelte";
   import KeyIcon from "../../assets/icons/KeyIcon.svelte";
+  import { userIsAuthenticated } from "../../auth";
 
   let tabs: Tabs[] = ["Map", "Properties", "Buyers", "Owners"]; // Interactions
 
   function handleTabClick(tab: Tabs) {
+    // Only allow singed in user to access any tab other than Map
+    if (tab !== "Map" && !userIsAuthenticated()) {
+      alert("Morate biti prijavljeni da biste pristupili ovoj podstranici.");
+      return;
+    }
+
     $activeTab = tab;
   }
 

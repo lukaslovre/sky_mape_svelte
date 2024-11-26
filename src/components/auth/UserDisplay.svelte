@@ -6,15 +6,13 @@
 
 <div id="user-display">
   <img src={user.avatar} alt="pfp" />
-  <span id="label">Prijavljeni ste kao: {user.username} ({user.role})</span>
+  <span id="label">Korisnik: {user.username} ({user.role})</span>
 </div>
 
 <style>
   #user-display {
     background-color: transparent;
-    border: 1px solid #d9d9d9;
-    border-radius: 0.5rem;
-    padding: 0.5rem 1rem;
+    margin-right: auto;
 
     display: flex;
     gap: 0.75rem;
@@ -22,8 +20,8 @@
   }
 
   img {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 2rem;
+    height: 2rem;
     border-radius: 50%;
 
     background-color: #fff;

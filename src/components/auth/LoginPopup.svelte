@@ -20,8 +20,13 @@
 </script>
 
 <form id="login-form" on:submit|preventDefault={handleSubmit}>
-  <Input label="email" id="loginEmail" bind:value={email} />
-  <Input label="password" id="loginPassword" bind:value={password} />
+  <Input label="email" id="loginEmail" bind:value={email} placeholder={"npr. lukaslov"} />
+  <Input
+    label="password"
+    id="loginPassword"
+    bind:value={password}
+    placeholder={"npr. testtest"}
+  />
 
   <p class="error-message">{errorMessage}</p>
 
