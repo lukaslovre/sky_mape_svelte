@@ -1,9 +1,19 @@
 import type { Property } from "../types";
 
-export function getIconForProperty(property: Property, isFavorite: boolean): string {
+type OnlyNeededPropertyAttributes = {
+  type: Property["type"];
+  hiddenOnWebsite: Property["hiddenOnWebsite"];
+  id?: Property["id"];
+};
+
+export function getIconForProperty(
+  property: OnlyNeededPropertyAttributes,
+  isFavorite: boolean
+): string {
+  console.log(property);
   const propertyType = property.type.toLowerCase();
 
-  if (property.id.startsWith("temporary")) {
+  if (property.id?.startsWith("temporary")) {
     return `${propertyType}-temporary.png`;
   }
 

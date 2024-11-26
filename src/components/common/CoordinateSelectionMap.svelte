@@ -10,15 +10,18 @@
 
 <script lang="ts">
   import { Map, Marker, TileLayer } from "sveaflet";
-  import { mapOptions } from "../../assets/mapConfigValues";
+  import { mapOptions, markerOptions } from "../../assets/mapConfigValues";
   import { onDestroy } from "svelte";
+  import L from "leaflet";
 
   export let lat: number;
   export let lng: number;
   export let onCoordinatesSelected: (lat: number, lng: number) => void;
-  export let zoom: number = 15;
+  export let zoom: number = 13;
+  export let iconUrl: string = "";
 
   let map: L.Map | undefined = undefined;
+  let marker: L.Marker | undefined = undefined;
 
   function clickHandler(e: L.LeafletMouseEvent) {
     const { lat, lng } = e.latlng;
@@ -27,6 +30,17 @@
 
   $: if (map) {
     map.on("click", clickHandler);
+  }
+
+  $: if (marker) {
+    if (iconUrl) {
+      marker.setIcon(
+        new L.Icon({
+          ...markerOptions,
+          iconUrl: iconUrl,
+        })
+      );
+    }
   }
 
   onDestroy(() => {
@@ -46,5 +60,5 @@
 >
   <TileLayer url={"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"} />
 
-  <Marker latLng={[lat, lng]} />
+  <Marker latLng={[lat, lng]} bind:instance={marker} />
 </Map>

@@ -44,7 +44,7 @@ export const propertyFormFields: FormFieldType<Property>[] = [
     label: "Property Type",
     inputElement: "select",
     databaseFieldName: "type",
-    value: [],
+    value: ["House"],
     required: true,
     options: [
       { value: "House", label: "House" },

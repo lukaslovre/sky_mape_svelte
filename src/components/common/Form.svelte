@@ -7,6 +7,7 @@
   import Textarea from "./Textarea.svelte";
   import { propertyFormStore } from "../../stores/propertiesFormStore";
   import CoordinateSelectionMap from "./CoordinateSelectionMap.svelte";
+  import { getIconForProperty } from "../../utils/propertyIcons";
 
   export let onSubmit: (transformedFields: Record<string, any>) => Promise<void>;
   export let onDelete: ((id: string) => Promise<void>) | null = null;
@@ -19,6 +20,19 @@
   function handleClear() {
     propertyFormStore.clearFields();
   }
+
+  //
+  $: markerIconUrl = getIconForProperty(
+    {
+      hiddenOnWebsite:
+        fields.find((field) => field.databaseFieldName === "hiddenOnWebsite")?.value ||
+        false,
+      type:
+        fields.find((field) => field.databaseFieldName === "type")?.value.at(0) ||
+        "House",
+    },
+    false
+  );
 </script>
 
 <Close on:close={close} />
@@ -78,6 +92,7 @@
             field.value.lat = lat;
             field.value.lng = lng;
           }}
+          iconUrl={markerIconUrl}
         />
       </div>
     {/if}
@@ -85,7 +100,7 @@
 
   <button type="submit">{submitButtonText}</button>
   <button type="button" class="clear-button" on:click={handleClear}>Reset form</button>
-  {#if onDelete && fields.find((field) => field.databaseFieldName === "id")?.value}
+  <!-- {#if onDelete && fields.find((field) => field.databaseFieldName === "id")?.value}
     <button
       type="button"
       class="delete-button"
@@ -98,7 +113,7 @@
     >
       {deleteButtonText}
     </button>
-  {/if}
+  {/if} -->
 </form>
 
 <style>

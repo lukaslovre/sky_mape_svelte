@@ -95,7 +95,7 @@ export function createFormStore<T>() {
 
           switch (field.databaseFieldName) {
             case "agent_id":
-              defaultValue = getCurrentUser().id ? [getCurrentUser().id] : undefined;
+              defaultValue = getCurrentUser()?.id ? [getCurrentUser().id] : undefined;
               break;
             case "agency_id":
               defaultValue = getCurrentUser()?.agency_id || "";
@@ -105,6 +105,12 @@ export function createFormStore<T>() {
                 lat: 45.815011,
                 lng: 15.981919,
               };
+              break;
+            case "status":
+              defaultValue = ["available"];
+              break;
+            case "type":
+              defaultValue = ["House"];
               break;
             default:
               switch (field.inputElement) {
