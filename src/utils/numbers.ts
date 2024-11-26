@@ -12,15 +12,19 @@ const MULTIPLIERS = {
 
 type Suffix = keyof typeof MULTIPLIERS;
 
-export function parseValueWithSuffix(value: string): string {
-  const suffix = value.slice(-1).toLowerCase() as Suffix;
-
-  if (!(suffix in MULTIPLIERS)) {
+export function parseValueWithSuffix<T>(value: T): T | string {
+  if (typeof value !== "string") {
     return value;
   }
 
   const numericValue = parseFloat(value);
   if (isNaN(numericValue)) {
+    return value;
+  }
+
+  const suffix = value.slice(-1).toLowerCase() as Suffix;
+
+  if (!(suffix in MULTIPLIERS)) {
     return value;
   }
 

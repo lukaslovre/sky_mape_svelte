@@ -24,14 +24,4 @@ export function getCurrentUser() {
   }
 
   return user;
-
-  // if (pb?.authStore?.model?.avatar) {
-  //   const newUrl = pb.files.getUrl(pb.authStore.model, pb.authStore.model.avatar, {
-  //     thumb: "100x100",
-  //   });
-
-  //   console.log(newUrl);
-  // }
-
-  // return pb.authStore.model as Agent;
 }
