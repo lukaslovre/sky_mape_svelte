@@ -7,10 +7,10 @@
   import CopyableCell from "./CopyableCell.svelte";
 
   // Props
-  export let checkboxes: Record<string, boolean>;
+  export let selectedPropertyIds: Property["id"][] = [];
   export let propertyData: Property[];
   export let columns: (keyof Property)[];
-  export let updateCheckboxes: (newCheckboxes: Record<Property["id"], boolean>) => void;
+  export let handleCheckboxClick: (propertyId: Property["id"], newState: boolean) => void;
 
   // Helper Functions
   // Check if a value is an object
@@ -22,11 +22,6 @@
   // Check if a column is copyable
   const isCopyable = (column: keyof Property): boolean =>
     ["websiteUrl"].includes(column as string);
-
-  const updateCheckboxState = (propertyId: string, checked: boolean) => {
-    checkboxes = { ...checkboxes, [propertyId]: checked };
-    updateCheckboxes(checkboxes);
-  };
 
   // Table value parsing
   function parsePrice(property: Property): string {
@@ -64,8 +59,8 @@
       <td>
         <Checkbox
           value={property.id ?? ""}
-          checked={checkboxes[property.id] ?? false}
-          updateState={updateCheckboxState}
+          checked={selectedPropertyIds.includes(property.id)}
+          updateState={handleCheckboxClick}
         />
       </td>
 

@@ -11,51 +11,95 @@
 
   // Property sorting
   let sortOption: keyof Property | null = null;
+
   $: sortedProperties = sortProperties($filteredProperties, sortOption);
+  $: removeUnfilteredPropertiesFromSelection($filteredProperties);
+
   function handleChangeSortOption(event: CustomEvent<keyof Property>) {
     sortOption = event.detail;
+  }
+
+  function removeUnfilteredPropertiesFromSelection(filteredProperties: Property[]) {
+    selectedPropertyIds = selectedPropertyIds.filter((id) => {
+      return filteredProperties.some((property) => property.id === id);
+    });
   }
 
   // Property filtering
   let showForm: boolean = false;
 
   function handleItemClick(event: CustomEvent<MenuItem>) {
-    const buttonLabel = event.detail.label;
+    const buttonLabel = event.detail.label; // Dodaj, Spremi kao tablicu, Uredi, Obriši
     console.log(`${buttonLabel} label clicked.`);
 
-    if (buttonLabel === "Dodaj") {
-      showForm = true;
-    } else if (buttonLabel === "Spremi kao tablicu") {
-      console.log("Spremi kao tablicu");
-    } else if (buttonLabel === "Uredi") {
-      if (selectedPropertyIds.length !== 1) return;
+    switch (buttonLabel) {
+      case "Dodaj":
+        handleAdd();
+        break;
 
-      const selectedProperty = findSelectedProperty(selectedPropertyIds[0]);
+      case "Spremi kao tablicu":
+        handleSaveAsTable();
+        break;
 
-      if (selectedProperty) {
-        propertyFormStore.setFieldValues(selectedProperty);
-        showForm = true;
-      }
-    } else if (buttonLabel === "Obriši") {
-      if (selectedPropertyIds.length === 0) return;
+      case "Uredi":
+        handleEdit();
+        break;
 
-      // Create a new array of promises
-      const promises = selectedPropertyIds.map(async (id) => {
-        await deleteProperty(id);
-      });
+      case "Obriši":
+        handleDelete();
+        break;
 
-      Promise.all(promises)
-        .then(() => {
-          alert("Nekretnine obrisane");
-        })
-        .catch((err) => {
-          console.error("Error deleting properties:", err);
-        });
-    } else {
-      console.log("Unknown button pressed in the PropertyPage menubar");
+      default:
+        console.log("Unknown button pressed in the PropertyPage menubar");
     }
   }
 
+  // Shows the form for adding a new property
+  function handleAdd() {
+    propertyFormStore.clearFields();
+    showForm = true;
+  }
+
+  // Alerts that saving as table is not implemented
+  function handleSaveAsTable() {
+    alert(`"Spremi kao tablicu" još nije implementirano.`);
+  }
+
+  // Handles editing of a selected property
+  function handleEdit() {
+    if (selectedPropertyIds.length !== 1) return;
+
+    const selectedProperty = findSelectedProperty(selectedPropertyIds[0]);
+
+    if (selectedProperty) {
+      propertyFormStore.setFieldValues(selectedProperty);
+      showForm = true;
+    }
+  }
+
+  // Deletes selected properties
+  function handleDelete() {
+    if (selectedPropertyIds.length === 0) return;
+
+    const confirmDeletion = window.confirm(
+      `Are you sure you want to delete ${selectedPropertyIds.length} selected properties?`
+    );
+    if (!confirmDeletion) return;
+
+    const promises = selectedPropertyIds.map(async (id) => {
+      await deleteProperty(id);
+    });
+
+    Promise.all(promises)
+      .then(() => {
+        alert("Nekretnine obrisane");
+      })
+      .catch((err) => {
+        console.error("Error deleting properties:", err);
+      });
+  }
+
+  // Util
   function findSelectedProperty(id: string) {
     return $filteredProperties.find((property) => property.id === id);
   }
@@ -63,9 +107,15 @@
   // Table specific
   let selectedPropertyIds: string[] = [];
 
-  function handleCheckboxChange(event: CustomEvent<string[]>) {
-    console.log(event.detail);
-    selectedPropertyIds = event.detail;
+  function handleCheckboxClick(propertyId: Property["id"], newState: boolean): void {
+    // True = ON, False = OFF
+    if (newState) {
+      selectedPropertyIds = selectedPropertyIds.includes(propertyId)
+        ? selectedPropertyIds
+        : [...selectedPropertyIds, propertyId];
+    } else {
+      selectedPropertyIds = selectedPropertyIds.filter((id) => id !== propertyId);
+    }
   }
 </script>
 
@@ -78,16 +128,15 @@
       {handleItemClick}
       on:sortProperties={handleChangeSortOption}
     />
-  {/if}
 
-  {#if showForm}
-    <PropertyForm close={() => (showForm = false)} />
-  {:else}
     <Table
       showHeader={true}
       data={sortedProperties}
-      on:checkboxesChanged={handleCheckboxChange}
+      {handleCheckboxClick}
+      {selectedPropertyIds}
     />
+  {:else}
+    <PropertyForm close={() => (showForm = false)} />
   {/if}
 </div>
 

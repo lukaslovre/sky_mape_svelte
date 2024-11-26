@@ -27,6 +27,7 @@
 
   // Handler for marker click events
   function handleMarkerClick(propertyId: string, event: L.LeafletMouseEvent) {
+    // BUG: This does not work, haven't tested why
     if (event.originalEvent.ctrlKey || event.originalEvent.metaKey) {
       // Multi-select with Ctrl (Windows) or Command (Mac)
       toggleSelectedProperty(propertyId);
@@ -76,7 +77,12 @@
   <Marker
     latLng={new LatLng(property.lat, property.lng)}
     options={{
-      opacity: $filteredProperties.includes(property) ? 1 : 0.25,
+      opacity: $filteredProperties.includes(property)
+        ? // ? 1  // THIS IS A TEMPORARY SOLUTION TO DISPLAY THE SELECTED PROPERTY
+          $selectedPropertyIds.includes(property.id)
+          ? 0.5
+          : 1
+        : 0.25,
       ...markerOptions,
     }}
     bind:instance={markerInstances[property.id]}
