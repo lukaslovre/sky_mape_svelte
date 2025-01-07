@@ -1,6 +1,6 @@
 # TODO
 
-## Danas:
+Zamjeniti sve fetch sa axios
 
 ## Ostatak:
 
