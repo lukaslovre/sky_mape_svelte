@@ -15,12 +15,10 @@ export function logOut() {
 }
 
 export function getCurrentUser() {
-  // TODO: set .avatar to have a valid url
-
-  let user = pb.authStore.model as Agent;
+  let user = pb.authStore.record as Agent | null;
 
   if (user?.avatar) {
-    user.avatar = pb.files.getUrl(user, user.avatar, { thumb: "100x100" });
+    user.avatar = pb.files.getURL(user, user.avatar, { thumb: "100x100" });
   }
 
   return user;

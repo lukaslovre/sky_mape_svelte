@@ -1,10 +1,65 @@
 import type { LatLng } from "leaflet";
+import type { RecordModel } from "pocketbase";
 
-type Tabs = "Map" | "Properties" | "Buyers" | "Owners" | "Interactions" | "Admin";
-type DialogType = "saveBuyer" | "saveProperty";
+//////////////
+// Pocketbase Collection Types/Schemas
+//////////////
 
-type PropertyType = "Apartment" | "House" | "Land" | "Commercial";
-type PropertyAction = "Rent" | "Sale";
+type PocketbaseAttributes = RecordModel & {
+  created: string;
+  updated: string;
+};
+
+type Agent = {
+  email: string;
+  emailVisibility: boolean?;
+  verified: boolean?;
+
+  username: string;
+  name: string;
+  avatar: string?;
+  phone: string?;
+  role: "admin" | "agent";
+  agency_id: Agency["id"];
+} & PocketbaseAttributes;
+
+type Agency = {
+  name: string;
+  active: boolean;
+} & PocketbaseAttributes;
+
+type Client = {
+  name: string;
+  phone: string?;
+  email: string?;
+  note: string?;
+  filters: Filters?;
+  favoriteProperties: Property["id"][]; // TODO: Check if it returns empty array if not set
+  userType: "seller" | "buyer";
+  payment_method: "credit" | "cash" | null;
+  agency_id: Agency["id"];
+} & PocketbaseAttributes;
+
+type Property = {
+  lat: number;
+  lng: number;
+  type: "Apartment" | "House" | "Land" | "Commercial";
+  action: "Rent" | "Sale";
+  imgUrl: string[]; // TODO: Check if it returns empty array if not set
+  surfaceArea: number?;
+  price: number?;
+  websiteUrl: string?;
+  hiddenOnWebsite: boolean?;
+  bedrooms: number?;
+  bathrooms: number?;
+  ownerId: Client["id"]?;
+  propertyNotes: string?;
+  sellerNotes: string?;
+  status: "available" | "processing" | "sold";
+  agent_id: Agent["id"];
+} & PocketbaseAttributes;
+
+// TOOD: Use Zod for Filters
 type PropertyVisibilityOptions = "Visible" | "Hidden";
 
 type Filters = {
@@ -20,93 +75,46 @@ type Filters = {
   polygons: LatLng[][];
 };
 
-type Property = {
-  lat: number;
-  lng: number;
-  type: PropertyType;
-  action: PropertyAction;
-  imgUrl: string[];
-  // title: string;
-  // description: string;
-  surfaceArea: number;
-  price: number;
-  websiteUrl: string;
-  hiddenOnWebsite: boolean;
-  bedrooms: number;
-  bathrooms: number;
-  ownerId: UserData["id"];
-  propertyNotes: string;
-  sellerNotes: string;
-  agent_id: Agent["id"];
-  status: "available" | "processing" | "sold";
-} & PocketbaseAttributes;
+// type InteractionType =
+//   | "Contacted"
+//   | "PropertyViewingScheduled"
+//   | "PropertyViewingCompleted"
+//   | "OfferMade"
+//   | "OfferReceived"
+//   | "Negotiation"
+//   | "ContractSigned"
+//   | "SaleClosed"
+//   | "FollowUp"
+//   | "InquiryReceived"
+//   | "EmailSent"
+//   | "PhoneCall"
+//   | "MeetingScheduled"
+//   | "DocumentSent"
+//   | "PaymentReceived"
+//   | "InspectionScheduled"
+//   | "AppraisalScheduled"
+//   | "Other";
 
-type UserData = {
-  name: string;
-  phone: string;
-  email: string;
-  note: string;
-  filters: Filters | null;
-  favoriteProperties: Property["id"][];
-  userType: "seller" | "buyer";
-  payment_method: "credit" | "cash";
-  agency_id: string;
-} & PocketbaseAttributes;
+// type Interaction = {
+//   agent_id: Agent["id"];
+//   user_id?: UserData["id"];
+//   property_id?: Property["id"];
+//   type: InteractionType;
+//   note: string;
+//   date?: string;
+//   expand?: {
+//     agent_id: Agent;
+//     user_id?: UserData;
+//     property_id?: Property;
+//   };
+// } & PocketbaseAttributes;
 
-type Agent = {
-  username: string;
-  verified: boolean;
-  emailVisibility: boolean;
-  email: string;
-  phone: string;
-  name: string;
-  avatar: string;
-  phone: string;
-  role: "admin" | "agent";
-  agency_id: string;
-} & PocketbaseAttributes;
+//////////////
+// UI Types
+//////////////
 
-type InteractionType =
-  | "Contacted"
-  | "PropertyViewingScheduled"
-  | "PropertyViewingCompleted"
-  | "OfferMade"
-  | "OfferReceived"
-  | "Negotiation"
-  | "ContractSigned"
-  | "SaleClosed"
-  | "FollowUp"
-  | "InquiryReceived"
-  | "EmailSent"
-  | "PhoneCall"
-  | "MeetingScheduled"
-  | "DocumentSent"
-  | "PaymentReceived"
-  | "InspectionScheduled"
-  | "AppraisalScheduled"
-  | "Other";
-
-type Interaction = {
-  agent_id: Agent["id"];
-  user_id?: UserData["id"];
-  property_id?: Property["id"];
-  type: InteractionType;
-  note: string;
-  date?: string;
-  expand?: {
-    agent_id: Agent;
-    user_id?: UserData;
-    property_id?: Property;
-  };
-} & PocketbaseAttributes;
-
-type PocketbaseAttributes = {
-  id: string;
-  created: string;
-  updated: string;
-  collectionId: string;
-  collectionName: string;
-};
+type Tabs = "Map" | "Properties" | "Buyers" | "Owners" | "Interactions" | "Admin";
+type DialogType = "saveBuyer" | "saveProperty";
 
 type inputElement =
   | "input"
