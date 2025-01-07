@@ -7,7 +7,7 @@ import {
   propertyMatchesFilter,
   usersMatchingProperties,
 } from "../utils/filter";
-import type { Filters, Property, Tabs, UserData, Agent } from "../types";
+import type { Filters, Property, Tabs, Client, Agent } from "../types";
 import { LatLngBounds } from "leaflet";
 import { getProperties } from "../models/Properties";
 import { getUsers } from "../models/Clients";
@@ -16,15 +16,13 @@ import { getAgentsFromDb } from "../models/Agents";
 
 // Initial store states
 const initialFilters: Filters = emptyFiltersObject();
-const initialTab: Tabs = "Map";
 
 // Writable stores
 export const filters: Writable<Filters> = writable(initialFilters);
-export const activeTab: Writable<Tabs> = writable(initialTab);
 export const selectedPropertyIds: Writable<Property["id"][]> = writable([]);
 export const properties: Writable<Property[]> = writable([]);
 export const favoriteProperties: Writable<Property["id"][]> = writable([]);
-export const users: Writable<UserData[]> = writable([]);
+export const users: Writable<Client[]> = writable([]);
 export const agents: Writable<Agent[]> = writable([]);
 
 // Secondary writable stores
@@ -46,7 +44,7 @@ export const filteredProperties: Readable<Property[]> = derived(
 );
 
 // Derived store for filtered users
-export const filteredUsers: Readable<UserData[]> = derived(
+export const filteredUsers: Readable<Client[]> = derived(
   [users, filteredProperties, properties, selectedPropertyIds],
   ([$users, $filteredProperties, $properties, $selectedPropertyIds]) => {
     if ($selectedPropertyIds.length === 1) {
@@ -69,7 +67,7 @@ export const filteredUsers: Readable<UserData[]> = derived(
 // TODO: u budučnosti, možda, napraviti da uvijek gleda samo filteredProperties, dakle nebi postojala potreba da properties i selectedPropertyIds budu uključeni u ovaj derived store
 
 // Derived store for filtered owners
-export const filteredOwners: Readable<UserData[]> = derived(
+export const filteredOwners: Readable<Client[]> = derived(
   [users, filteredProperties, properties, selectedPropertyIds],
   ([$users, $filteredProperties, $properties, $selectedPropertyIds]) => {
     if ($selectedPropertyIds.length === 1) {

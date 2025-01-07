@@ -1,5 +1,5 @@
 import { getCurrentUser } from "../auth";
-import type { FormFieldType, Property, UserData } from "../types";
+import type { FormFieldType, Property, Client } from "../types";
 import { createFormStore } from "./formStoreCreator";
 import { agents, users } from "./store";
 
@@ -209,9 +209,9 @@ agents.subscribe((agents) => {
   }
 
   // Set the value of the "agent_id" field to the current user
-  const currentUser = getCurrentUser()?.id ? [getCurrentUser().id] : undefined;
+  const currentUser = getCurrentUser()?.id;
   if (currentUser) {
-    propertyFormStore.updateFieldValue("agent_id", currentUser);
+    propertyFormStore.updateFieldValue("agent_id", [currentUser]);
   }
 });
 

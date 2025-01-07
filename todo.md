@@ -1,3 +1,9 @@
+# App data flow:
+
+1. Load
+2. Check auth
+3. fetch allowed/agency data
+
 # TODO
 
 Zamjeniti sve fetch sa axios

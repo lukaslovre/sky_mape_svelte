@@ -1,5 +1,6 @@
 import { derived, writable, type Readable, type Writable } from "svelte/store";
 import { selectedPropertyIds } from "./store";
+import type { Tabs } from "../types";
 
 type SidebarCategory = "filters" | "selectedProperty";
 
@@ -14,3 +15,7 @@ export const selectedSidebarCategory: Readable<SidebarCategory> = derived(
 );
 
 // Actions
+
+const initialTab: Tabs = "Map";
+export const tabsList: Tabs[] = ["Map", "Properties", "Buyers", "Owners"];
+export const activeTab: Writable<Tabs> = writable(initialTab);

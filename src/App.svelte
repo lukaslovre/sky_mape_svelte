@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { activeTab } from "./stores/store";
   import Header from "./components/header/Header.svelte";
   import SideNote from "./components/common/SideNote.svelte";
   import Map from "./components/map/Map.svelte";
@@ -10,6 +9,7 @@
   import { onMount } from "svelte";
   import { propertyFormStore } from "./stores/propertiesFormStore";
   import TabMenu from "./components/header/TabMenu.svelte";
+  import { activeTab } from "./stores/uiStateStore";
 
   // SideNote
   type SideNoteParams = {
@@ -25,6 +25,7 @@
     console.log(propertyFormStore.getAndTransformFields());
   });
 
+  // TODO: Check if it's better to do this here or in the .ts file of the store.
   // onMount(() => {
   //   propertyFormStore.initializeFields(propertyFormFields);
   //   clientFormStore.initializeFields(clientFormFields);

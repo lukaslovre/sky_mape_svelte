@@ -1,10 +1,10 @@
 import { getCurrentUser } from "../auth";
-import type { FormFieldType, UserData } from "../types";
+import type { FormFieldType, Client } from "../types";
 import { createFormStore } from "./formStoreCreator";
 
-export const clientFormStore = createFormStore<UserData>();
+export const clientFormStore = createFormStore<Client>();
 
-export const clientFormFields: FormFieldType<UserData>[] = [
+export const clientFormFields: FormFieldType<Client>[] = [
   {
     label: "Agency ID",
     inputElement: "input",

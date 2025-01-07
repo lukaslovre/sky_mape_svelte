@@ -3,6 +3,10 @@
   import AuthRow from "../auth/AuthRow.svelte";
   import PropertiesInSidebar from "../propertiesInSidebar/PropertiesInSidebar.svelte";
   import FiltersContainer from "./FiltersContainer.svelte";
+
+  const feedbackEmail = "lovretic2002@gmail.com";
+  const docLink =
+    "https://docs.google.com/document/d/1kUdQpw3vukVma3I58J0qT-dN85amSR8JU_UItpwqRDM/edit?usp=sharing";
 </script>
 
 <header>
@@ -10,13 +14,9 @@
     <AuthRow />
 
     <div class="feedback-container">
-      <p class="feedback-text">Feedback: lovretic2002@gmail.com</p>
-      <a
-        class="feedback-text feedback-link"
-        href="https://docs.google.com/document/d/1kUdQpw3vukVma3I58J0qT-dN85amSR8JU_UItpwqRDM/edit?usp=sharing"
-        target="_blank"
-      >
-        Roadmap docx
+      <p class="feedback-text">Feedback: {feedbackEmail}</p>
+      <a class="feedback-text feedback-link" href={docLink} target="_blank">
+        Upute.docx
       </a>
     </div>
   </div>
@@ -64,7 +64,7 @@
     font-size: 0.625rem;
     font-weight: 600;
     color: hsl(214, 89%, 45%);
-    background-color: hsl(214, 89%, 95%);
+    background-color: hsl(214, 89%, 92%);
     padding: 0.25rem 0.5rem;
     border-radius: 0.25rem;
   }

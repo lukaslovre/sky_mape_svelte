@@ -34,7 +34,7 @@ type Client = {
   email: string?;
   note: string?;
   filters: Filters?;
-  favoriteProperties: Property["id"][]; // TODO: Check if it returns empty array if not set
+  favoriteProperties: Property["id"][]; // Returns empty array if not set
   userType: "seller" | "buyer";
   payment_method: "credit" | "cash" | null;
   agency_id: Agency["id"];
@@ -45,7 +45,7 @@ type Property = {
   lng: number;
   type: "Apartment" | "House" | "Land" | "Commercial";
   action: "Rent" | "Sale";
-  imgUrl: string[]; // TODO: Check if it returns empty array if not set
+  imgUrl: string[]; // Returns empty array if not set
   surfaceArea: number?;
   price: number?;
   websiteUrl: string?;
@@ -59,7 +59,7 @@ type Property = {
   agent_id: Agent["id"];
 } & PocketbaseAttributes;
 
-// TOOD: Use Zod for Filters
+// TODO: Use Zod for Filters
 type PropertyVisibilityOptions = "Visible" | "Hidden";
 
 type Filters = {
@@ -113,7 +113,7 @@ type Filters = {
 // UI Types
 //////////////
 
-type Tabs = "Map" | "Properties" | "Buyers" | "Owners" | "Interactions" | "Admin";
+type Tabs = "Map" | "Properties" | "Buyers" | "Owners"; // | "Interactions" | "Admin";
 type DialogType = "saveBuyer" | "saveProperty";
 
 type inputElement =
