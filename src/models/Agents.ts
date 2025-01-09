@@ -9,9 +9,9 @@ export async function getAgentsFromDb(): Promise<Agent[]> {
   return data.map(parseAgentData);
 }
 
-function parseAgentData(agent: Agent): Agent {
+const parseAgentData = (agent: Agent): Agent => {
   return {
     ...agent,
-    avatar: pb.files.getUrl(agent, agent.avatar),
+    avatar: agent.avatar ? pb.files.getURL(agent, agent.avatar) : agent.avatar,
   };
-}
+};

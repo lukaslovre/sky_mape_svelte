@@ -1,7 +1,5 @@
-import type { UserData } from "../types";
-
+import type { Client } from "../types";
 import { pb } from "../PocketBaseInit";
-import { ClientResponseError } from "pocketbase";
 import { handlePocketbaseError } from "./errorHandling";
 import { addClientToStore, updateClientInStore } from "../stores/actions";
 
@@ -32,21 +30,20 @@ import { addClientToStore, updateClientInStore } from "../stores/actions";
 //     "updated": "2024-07-06 16:38:32.192Z"
 //   }
 
-export async function getUsers(): Promise<UserData[]> {
+export async function getUsers(): Promise<Client[]> {
   try {
-    const data = await pb.collection<UserData>("Clients").getFullList();
+    const data = await pb.collection<Client>("Clients").getFullList();
     console.log(data);
     return data;
   } catch (err) {
-    console.error("Error fetching users:", err);
     throw handlePocketbaseError(err);
   }
 }
 
 // CREATE
-export async function createUser(data: Partial<UserData>): Promise<void> {
+export async function createUser(data: Partial<Client>): Promise<void> {
   try {
-    const collection = pb.collection<UserData>("Clients");
+    const collection = pb.collection<Client>("Clients");
     if (data.id) {
       // Update existing user
       const res = await collection.update(data.id, data);
@@ -59,7 +56,6 @@ export async function createUser(data: Partial<UserData>): Promise<void> {
       addClientToStore(res);
     }
   } catch (err) {
-    console.error("Error adding/updating user:", err);
     throw handlePocketbaseError(err);
   }
 }
@@ -71,11 +67,10 @@ export async function deleteUser(id: string): Promise<void> {
   }
 
   try {
-    const collection = pb.collection<UserData>("Clients");
+    const collection = pb.collection<Client>("Clients");
     const res = await collection.delete(id);
     console.log("User deleted:", res);
   } catch (err) {
-    console.error("Error deleting user:", err);
     throw handlePocketbaseError(err);
   }
 }

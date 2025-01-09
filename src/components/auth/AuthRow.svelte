@@ -18,7 +18,7 @@
 </script>
 
 <div id="auth-row">
-  {#if isAuth}
+  {#if isAuth && user}
     <UserDisplay {user} />
 
     <button on:click={handleLogOutClick}>Log out</button>

@@ -138,13 +138,14 @@
     <LocationInput />
     {#each inputs as input}
       {#if input.type === "dropdown"}
-        <Dropdown
+        <p>Wait...</p>
+        <!-- <Dropdown
           label={input.label}
           id={input.id}
           options={input.options}
           bind:values={$filters[input.filtersBind]}
           multipleValues={true}
-        />
+        /> -->
       {:else if input.type === "min-max"}
         <MinMaxInput
           label={input.label}

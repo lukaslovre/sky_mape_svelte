@@ -3,15 +3,12 @@
   import { onMount } from "svelte";
   import DropdownTriangleIcon from "../../assets/icons/DropdownTriangleIcon.svelte";
   import Label from "./Label.svelte";
+  import type { FormFieldType } from "../../types";
 
-  export let label: string;
-  export let id: string;
-  export let options: { label: string; value: string }[];
-  export let values: string[];
-  export let disabled: boolean = false;
-  export let required: boolean = false;
-  export let error: string | null = null;
+  // TODO: možda napravit da je ovo generički dropdown, dakle ne samo za formField. A onda se može napravit wrapper za formField
+  // Okay, that's a good idea. What props should a generic dropdown have? Options, values, multipleValues, disabled, label, required, error, id, onValueChange
   export let multipleValues: boolean = true;
+  export let 
 
   let isOpen: boolean = false;
   let focusedOptionIndex: number = -1;

@@ -1,5 +1,5 @@
 export function formatWithCommas(number: number) {
-  // format number to have commas every 3 digits
+  // format number to have commas every 3 digits, eg. 1000000 -> 1,000,000, 1000 -> 1,000
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
@@ -29,4 +29,14 @@ export function parseValueWithSuffix<T>(value: T): T | string {
   }
 
   return (numericValue * MULTIPLIERS[suffix]).toString();
+}
+
+export function bytesToHumanReadable(bytes: number) {
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+
+  if (bytes === 0) return "0 Byte";
+
+  const i = Math.floor(Math.log(bytes) / Math.log(1024));
+
+  return `${(bytes / Math.pow(1024, i)).toFixed(2)} ${sizes[i]}`;
 }

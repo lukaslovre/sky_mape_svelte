@@ -56,7 +56,8 @@
 
   // Shows the form for adding a new property
   function handleAdd() {
-    propertyFormStore.clearFields();
+    // propertyFormStore.clearFields();
+    propertyFormStore.resetForm();
     showForm = true;
   }
 

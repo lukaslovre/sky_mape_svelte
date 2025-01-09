@@ -26,13 +26,23 @@
     <div class="content-row">
       <EuroIcon />
       <p>
-        {`${formatWithCommas(property.price)} ${property.action === "Rent" ? "/ mj." : ""}`}
+        {#if property.price}
+          {formatWithCommas(property.price)} {property.action === "Rent" ? "/ mj." : ""}
+        {:else}
+          N/A
+        {/if}
       </p>
     </div>
 
     <div class="content-row">
       <SurfaceIcon />
-      <p>{`${formatWithCommas(property.surfaceArea)} m²`}</p>
+      <p>
+        {#if property.surfaceArea}
+          {formatWithCommas(property.surfaceArea)} m²
+        {:else}
+          N/A
+        {/if}
+      </p>
     </div>
 
     <button

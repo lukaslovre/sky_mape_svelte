@@ -1,40 +1,68 @@
 <script lang="ts">
+  import type { FormFieldType } from "../../types";
+  import { bytesToHumanReadable } from "../../utils/numbers";
   import Label from "./Label.svelte";
 
-  export let label: string;
-  export let id: string;
-  export let value: File | null = null;
-  export let required: boolean = false;
-  export let error: string | null = null;
+  export let formField: FormFieldType<any>;
 
   function handleFileChange(event: Event) {
     const target = event.target as HTMLInputElement;
-    if (target.files && target.files.length > 0) {
-      value = target.files[0];
-    } else {
-      value = null;
+    const files = target.files;
+
+    if (!files || files.length === 0) {
+      formField.value = null;
+      return;
     }
+
+    const file = files[0];
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      formField.error = "Please select an image file";
+      return;
+    }
+
+    const error = formField.validators
+      .map((validator) => validator(file))
+      .filter((error) => error !== null)
+      .join(" AND ");
+
+    formField.error = error || undefined;
+    formField.value = error ? null : file;
+    // if error clear the input
+    if (error) {
+      target.value = "";
+    }
+
+    console.log(`${formField.databaseFieldName} input parsed:`, formField.value);
   }
 </script>
 
 <div class="image-input">
-  <Label forId={id} text={`${required ? "*" : ""} ${label}`} />
+  <Label
+    forId={formField.databaseFieldName}
+    text={`${formField.label} ${formField.required ? "(required)" : ""} `}
+  />
 
-  {#if error}
-    <p class="error">{error}</p>
+  {#if formField.error}
+    <p class="error">{formField.error}</p>
   {/if}
 
   <input
     type="file"
     accept="image/*"
-    name={id}
-    {id}
+    name={formField.databaseFieldName}
+    id={formField.databaseFieldName}
     on:change={handleFileChange}
-    {required}
+    required={formField.required}
   />
 
-  {#if value}
-    <p>Selected file: {value.name}</p>
+  {#if formField.value}
+    <div class="pill-container">
+      <span class="pill">{formField.value.name}</span>
+      <span class="pill">{bytesToHumanReadable(formField.value.size)}</span>
+      <span class="pill">{formField.value.type}</span>
+    </div>
   {/if}
 </div>
 
@@ -74,5 +102,21 @@
     color: #ff0000;
     font-size: 0.875rem;
     font-weight: 400;
+  }
+
+  .pill-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .pill {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: hsl(214, 89%, 40%);
+    font-family: monospace;
+
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    background-color: hsla(214, 89%, 75%, 0.25);
   }
 </style>

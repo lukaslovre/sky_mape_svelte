@@ -1,16 +1,46 @@
 <script lang="ts">
-  export let label: string;
-  export let id: string;
-  export let checked: boolean;
-  export let required: boolean = false;
-  export let error: string | null = null;
+  import type { FormFieldType } from "../../types";
+
+  export let formField: FormFieldType<any>;
+
+  function handleInput(e: Event) {
+    const rawValue = (e.target as HTMLInputElement).checked;
+
+    console.log(`${formField.databaseFieldName} input raw:`, rawValue);
+
+    // Parse
+    const parsedValue = formField.parsingFunction
+      ? formField.parsingFunction(rawValue)
+      : rawValue;
+
+    // Validate
+    const error = formField.validators
+      .map((validator) => validator(parsedValue))
+      .filter((error) => error !== null)
+      .join(" AND ");
+
+    // Update field
+    formField.error = error || undefined;
+    formField.value = error ? rawValue : parsedValue;
+
+    console.log(`${formField.databaseFieldName} input parsed:`, formField.value);
+  }
 </script>
 
 <div class="checkbox">
-  <input type="checkbox" {id} bind:checked />
-  <label for={id}>{`${required ? "*" : ""} ${label}`}</label>
-  {#if error}
-    <p class="error">{error}</p>
+  <input
+    type="checkbox"
+    name={formField.databaseFieldName}
+    id={formField.databaseFieldName}
+    checked={formField.value}
+    on:change={handleInput}
+    disabled={formField.disabled}
+  />
+  <label for={formField.databaseFieldName}>
+    {`${formField.label} ${formField.required ? "(required)" : ""}`}
+  </label>
+  {#if formField.error}
+    <p class="error">{formField.error}</p>
   {/if}
 </div>
 

@@ -4,9 +4,6 @@ import type { Tabs } from "../types";
 
 type SidebarCategory = "filters" | "selectedProperty";
 
-// let initialSidebarCategory: SidebarCategory = "filters";
-let initialSidebarCategory: SidebarCategory = "selectedProperty";
-
 // selectedSidebarCategory should actually be a derived value that depends on selectedPropertyIds
 export const selectedSidebarCategory: Readable<SidebarCategory> = derived(
   selectedPropertyIds,

@@ -6,16 +6,18 @@
   export let close: () => void;
 
   async function handleSubmit() {
-    const transformedFields = propertyFormStore.getAndTransformFields();
-    console.log(transformedFields);
+    propertyFormStore.print();
+    // const transformedFields = propertyFormStore.getAndTransformFields();
 
-    try {
-      await addProperty(transformedFields);
-      alert("Uspješno dodano!");
-      close();
-    } catch (err) {
-      handleSubmissionError(err);
-    }
+    // console.log(transformedFields);
+
+    // try {
+    //   await addProperty(transformedFields);
+    //   alert("Uspješno dodano!");
+    //   close();
+    // } catch (err) {
+    //   handleSubmissionError(err);
+    // }
   }
 
   function handleSubmissionError(err: unknown) {
@@ -33,11 +35,6 @@
       alert("Unknown error");
     }
   }
-
-  async function handleDelete(id: string) {
-    await deleteProperty(id);
-    close();
-  }
 </script>
 
-<Form onSubmit={handleSubmit} onDelete={handleDelete} {close} />
+<Form onSubmit={handleSubmit} {close} />

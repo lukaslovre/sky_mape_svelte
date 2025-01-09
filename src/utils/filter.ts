@@ -1,5 +1,5 @@
 import { LatLng } from "leaflet";
-import type { Filters, Property, UserData } from "../types";
+import type { Filters, Property, Client } from "../types";
 import { latLngIsInPolygon } from "./geo";
 
 // TODO: napravit lijepo typescript da kad se promjeni u filters nešto da mi svugdje kaže gdje treba promjeniti
@@ -157,9 +157,9 @@ export function removeEmptyValuesFromFilters(filters: Filters) {
 // TODO: buduća optimizacija: jednom kada se user matcha s propertyem (dakle kada upadne u popis),
 //  ne treba ga ponovno matchati
 export function usersMatchingProperties(
-  users: UserData[],
+  users: Client[],
   properties: Property[]
-): UserData[] {
+): Client[] {
   const usersMatchingProperties = users.filter((user) => {
     if (!user.filters) return false;
 
@@ -170,9 +170,9 @@ export function usersMatchingProperties(
 }
 
 export function ownersMatchingProperties(
-  users: UserData[],
+  users: Client[],
   properties: Property[]
-): UserData[] {
+): Client[] {
   const ownersMatchingProperties = users.filter((user) => {
     return properties.some((property) => property.ownerId === user.id);
   });

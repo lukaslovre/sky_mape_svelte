@@ -1,19 +1,58 @@
 <script lang="ts">
+  import type { FormFieldType } from "../../types";
   import Label from "./Label.svelte";
 
-  export let label: string;
-  export let id: string;
-  export let value: string;
-  export let required: boolean = false;
-  export let error: string | null = null;
+  export let formField: FormFieldType<any>;
+
+  function handleInput(e: Event) {
+    const rawValue = (e.target as HTMLTextAreaElement).value;
+
+    console.log(`${formField.databaseFieldName} input raw:`, rawValue);
+
+    // If empty and not required
+    if (rawValue === "" && !formField.required) {
+      formField.value = "";
+      formField.error = undefined;
+      return;
+    }
+
+    // Parse
+    const parsedValue = formField.parsingFunction
+      ? formField.parsingFunction(rawValue)
+      : rawValue;
+
+    // Validate
+    const error = formField.validators
+      .map((validator) => validator(parsedValue))
+      .filter((error) => error !== null)
+      .join(" AND ");
+
+    // Update field
+    formField.error = error || undefined;
+    formField.value = error ? rawValue : parsedValue;
+
+    console.log(`${formField.databaseFieldName} input parsed:`, formField.value);
+  }
 </script>
 
 <div class="textarea">
-  <Label forId={id} text={`${required ? "*" : ""} ${label}`} />
-  {#if error}
-    <p class="error">{error}</p>
+  <Label
+    forId={formField.databaseFieldName}
+    text={`${formField.label} ${formField.required ? "(required)" : ""} `}
+  />
+  {#if formField.error}
+    <p class="error">{formField.error}</p>
   {/if}
-  <textarea {id} name={id} bind:value></textarea>
+
+  <textarea
+    id={formField.databaseFieldName}
+    name={formField.databaseFieldName}
+    value={formField.value}
+    placeholder={formField.placeholder}
+    disabled={formField.disabled}
+    autocomplete="off"
+    on:input={handleInput}
+  ></textarea>
 </div>
 
 <style>

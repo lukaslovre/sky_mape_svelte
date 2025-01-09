@@ -1,6 +1,6 @@
 // actions.js
 import type { LatLng, LatLngBounds } from "leaflet";
-import type { Property, UserData } from "../types";
+import type { Property, Client } from "../types";
 import {
   filters,
   favoriteProperties,
@@ -44,7 +44,7 @@ export function toggleSelectedProperty(propertyId: Property["id"]) {
 
 // Apply user-specific filters and favorite properties
 export function applyUserFilters(
-  userFilters: UserData["filters"] | undefined,
+  userFilters: Client["filters"] | undefined,
   userFavoriteProperties: Property["id"][] | undefined
 ) {
   if (userFilters && typeof userFilters === "object") {
@@ -97,12 +97,12 @@ export function updatePropertyInStore(property: Property) {
 }
 
 // Client actions
-export function addClientToStore(client: UserData) {
+export function addClientToStore(client: Client) {
   users.update((user) => {
     return [...user, client];
   });
 }
-export function updateClientInStore(client: UserData) {
+export function updateClientInStore(client: Client) {
   users.update((user) => {
     return user.map((currentUser) =>
       currentUser.id === client.id ? client : currentUser

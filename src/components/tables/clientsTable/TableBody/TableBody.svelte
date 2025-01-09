@@ -1,6 +1,6 @@
 <script lang="ts">
   import { applyUserFilters } from "../../../../stores/actions";
-  import type { Filters, UserData } from "../../../../types";
+  import type { Filters, Client } from "../../../../types";
   import { parsePocketbaseUserData } from "../../../../utils/buyers";
   import { removeEmptyValuesFromFilters } from "../../../../utils/filter";
   import Popup from "../../../common/Popup.svelte";
@@ -12,9 +12,9 @@
 
   // Props
   export let checkboxes: Record<string, boolean>;
-  export let userData: UserData[];
+  export let userData: Client[];
   export let columns: (keyof ParsedUserData)[];
-  export let updateCheckboxes: (newCheckboxes: Record<UserData["id"], boolean>) => void;
+  export let updateCheckboxes: (newCheckboxes: Record<Client["id"], boolean>) => void;
 
   // Reactive parsed user data (transforms the dates from string to Date objects)
   $: parsedUserData = parsePocketbaseUserData(userData);
@@ -44,7 +44,7 @@
   let popupContent: string = "";
 
   // Show filters popup
-  const showFiltersPopup = (userId: UserData["id"], event: MouseEvent) => {
+  const showFiltersPopup = (userId: Client["id"], event: MouseEvent) => {
     const target = event.currentTarget as HTMLElement;
 
     if (!target || !(target instanceof HTMLElement)) {

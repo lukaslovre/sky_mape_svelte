@@ -25,15 +25,19 @@
 
   // Table value parsing
   function parsePrice(property: Property): string {
-    if (property.action === "Rent") {
-      return `€ ${formatWithCommas(property.price)} / month`;
+    if (property.price) {
+      if (property.action === "Rent") {
+        return `€ ${formatWithCommas(property.price)} / month`;
+      } else {
+        return `€ ${formatWithCommas(property.price)}`;
+      }
     } else {
-      return `€ ${formatWithCommas(property.price)}`;
+      return "";
     }
   }
 
   function parseSurfaceArea(property: Property): string {
-    return `${formatWithCommas(property.surfaceArea)} m²`;
+    return property.surfaceArea ? `${formatWithCommas(property.surfaceArea)} m²` : "";
   }
 
   function parseVisibility(property: Property): string {

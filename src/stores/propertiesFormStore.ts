@@ -1,10 +1,57 @@
+import { get, writable } from "svelte/store";
 import { getCurrentUser } from "../auth";
-import type { FormFieldType, Property, Client } from "../types";
+import type { FormFieldType, Property, Client, InputValidator } from "../types";
 import { createFormStore } from "./formStoreCreator";
 import { agents, users } from "./store";
+import { number, z } from "zod";
+import { parseValueWithSuffix } from "../utils/numbers";
+import { parse } from "svelte/compiler";
 
 // Call the createFormStore function with the appropriate type parameter
-export const propertyFormStore = createFormStore<Property>();
+// export const propertyFormStore = createFormStore<Property>();
+
+// type FormFieldType<T> = {
+//   label: string;
+//   inputElement: InputElement;
+//   databaseFieldName: keyof T; // Should I define this if not every field/input is directly mapped to the database? For example, the "latLngMapInput" inputElement is not directly mapped to the database. It is 1 form item for 2 database fields. What would be the best way to handle this?
+//   value: any;
+//   parsingFunction: InputParsingFunction;
+//   validators: InputValidator[];
+
+//   options?: { value: string; label: string }[];
+//   placeholder?: string;
+//   helperText?: string;
+//   required?: boolean;
+//   disabled?: boolean;
+//   hidden?: boolean;
+//   defaultValue?: any;
+//   error?: string;
+// };
+
+const validators: Record<string, InputValidator> = {
+  imageSizeValidator: (value: File | undefined) => {
+    const maxSizeMb = 10;
+
+    if (value && value.size > maxSizeMb * 1024 * 1024) {
+      return `Image size must be less than ${maxSizeMb}MB (current size: ${
+        value.size / 1024 / 1024
+      }MB)`;
+    }
+    return null;
+  },
+  numberValidator: (value: string) => {
+    if (!z.number().safeParse(value).success) {
+      return "Value must be a number";
+    }
+    return null;
+  },
+  urlValidator: (value: string) => {
+    if (!z.string().url().safeParse(value).success) {
+      return "Value must be a valid URL";
+    }
+    return null;
+  },
+};
 
 export const propertyFormFields: FormFieldType<Property>[] = [
   {
@@ -12,21 +59,20 @@ export const propertyFormFields: FormFieldType<Property>[] = [
     inputElement: "input",
     databaseFieldName: "id",
     value: "",
-    required: false,
+    defaultValue: "",
+    parsingFunction: (value: string) => value.trim(),
+    validators: [],
     disabled: true,
-    parsingFunction: (value: string) => value,
-    error: null,
   },
   {
     label: "Agent",
     inputElement: "select",
     databaseFieldName: "agent_id",
     value: [],
-    required: true,
+    defaultValue: [],
+    validators: [],
     options: [],
-    disabled: false,
-    parsingFunction: (value: string[]) => value[0],
-    error: null,
+    required: true,
   },
   {
     label: "Lat & Lng",
@@ -36,198 +82,230 @@ export const propertyFormFields: FormFieldType<Property>[] = [
       lat: 45.815011,
       lng: 15.981919,
     },
+    defaultValue: {
+      lat: 45.815011,
+      lng: 15.981919,
+    },
+    validators: [],
     required: true,
-    parsingFunction: (value: { lat: number; lng: number }) => value,
-    error: null,
   },
   {
     label: "Property Type",
     inputElement: "select",
     databaseFieldName: "type",
     value: ["House"],
-    required: true,
+    defaultValue: ["House"],
     options: [
       { value: "House", label: "House" },
       { value: "Apartment", label: "Apartment" },
       { value: "Land", label: "Land" },
       { value: "Commercial", label: "Commercial" },
     ],
-    parsingFunction: (value: string[]) => value[0],
-    error: null,
+    validators: [],
+    required: true,
   },
   {
     label: "Action",
     inputElement: "select",
     databaseFieldName: "action",
     value: [],
-    required: true,
+    defaultValue: [],
     options: [
       { value: "Sale", label: "Sale" },
       { value: "Rent", label: "Rent" },
     ],
-    parsingFunction: (value: string[]) => value[0],
-    error: null,
+
+    validators: [],
+    required: true,
   },
   {
     label: "Image (max 10MB)",
     inputElement: "imageInput",
     databaseFieldName: "imgUrl",
     value: "",
-    required: false,
-    parsingFunction: (value: File) => {
-      console.log("Original value:", value);
-      const parsedValue = value || undefined;
-      console.log("Parsed value:", parsedValue);
-      return parsedValue;
-    },
-    error: null,
+    defaultValue: "",
+    // parsingFunction: (value: File) => {
+    //   // TODO: check flow
+    //   // console.log("Original value:", value);
+    //   // const parsedValue = value || undefined;
+    //   // console.log("Parsed value:", parsedValue);
+    //   // return parsedValue;
+    // },
+    validators: [validators.imageSizeValidator],
   },
   {
     label: "Price (€) (može se koristiti slovo 'k' ili 'm')",
     inputElement: "input",
     databaseFieldName: "price",
     value: "",
-    required: false,
-    parsingFunction: (value: string) => {
-      const parsedValue = parseFloat(value);
-      return isNaN(parsedValue) ? undefined : parsedValue;
-    },
-    error: null,
+    defaultValue: "",
+    parsingFunction: (value: string) => parseFloat(parseValueWithSuffix(value)),
+    validators: [validators.numberValidator],
   },
   {
     label: "Surface Area (m²) (može se koristiti slovo 'k' ili 'm')",
     inputElement: "input",
     databaseFieldName: "surfaceArea",
     value: "",
-    required: false,
-    parsingFunction: (value: string) => {
-      const parsedValue = parseFloat(value);
-      return isNaN(parsedValue) ? undefined : parsedValue;
-    },
-    error: null,
+    defaultValue: "",
+    parsingFunction: (value: string) => parseFloat(parseValueWithSuffix(value)),
+    validators: [validators.numberValidator],
   },
   {
     label: "Website URL",
     inputElement: "input",
     databaseFieldName: "websiteUrl",
     value: "",
-    required: false,
-    parsingFunction: (value: string) => (value ? value : undefined),
-    error: null,
+    defaultValue: "",
+    parsingFunction: (value: string) => value.trim(),
+    validators: [validators.urlValidator],
   },
   {
     label: "Hidden on Website",
     inputElement: "checkbox",
     databaseFieldName: "hiddenOnWebsite",
     value: false,
-    required: false,
+    defaultValue: false,
     parsingFunction: (value: boolean) => !!value,
-    error: null,
+    validators: [],
   },
   {
     label: "Bedrooms",
     inputElement: "input",
     databaseFieldName: "bedrooms",
     value: "",
-    required: false,
-    parsingFunction: (value: string) => {
-      const parsedValue = parseInt(value);
-      return isNaN(parsedValue) ? undefined : parsedValue;
-    },
-    error: null,
+    defaultValue: "",
+    parsingFunction: (value: string) => parseInt(value),
+    validators: [validators.numberValidator],
   },
   {
     label: "Bathrooms",
     inputElement: "input",
     databaseFieldName: "bathrooms",
     value: "",
-    required: false,
-    parsingFunction: (value: string) => {
-      const parsedValue = parseInt(value);
-      return isNaN(parsedValue) ? undefined : parsedValue;
-    },
-    error: null,
+    defaultValue: "",
+    parsingFunction: (value: string) => parseInt(value),
+    validators: [validators.numberValidator],
   },
   {
     label: "Owner",
     inputElement: "select",
     databaseFieldName: "ownerId",
     value: [],
-    required: false,
+    defaultValue: [],
     options: [],
-    disabled: false,
-    parsingFunction: (value: string[]) => value[0],
-    error: null,
+    validators: [],
   },
   {
     label: "Property Notes",
     inputElement: "textarea",
     databaseFieldName: "propertyNotes",
     value: "",
-    required: false,
+    defaultValue: "",
+    placeholder: "# Naslov\nInformacije o nekretnini",
     parsingFunction: (value: string) => value.trim(),
-    error: null,
+    validators: [],
   },
   {
     label: "Seller Notes",
     inputElement: "textarea",
     databaseFieldName: "sellerNotes",
     value: "",
-    required: false,
+    defaultValue: "",
+    placeholder: "# Naslov\nInformacije o prodavaču",
     parsingFunction: (value: string) => value.trim(),
-    error: null,
+    validators: [],
   },
   {
     label: "Status",
     inputElement: "select",
     databaseFieldName: "status",
     value: ["available"],
-    required: true,
+    defaultValue: ["available"],
     options: [
       { value: "available", label: "Available" },
       { value: "processing", label: "Processing" },
       { value: "sold", label: "Sold" },
     ],
-    parsingFunction: (value: string[]) => value[0],
-    error: null,
+    validators: [],
+    required: true,
   },
 ];
 
-propertyFormStore.initializeFields(propertyFormFields);
+// PLAN: I am creating a propertyFormStore manually (not from the creatFormStore<Property> function) because I want to add some custom logic to it.
+const createPropertyFormStore = () => {
+  const { set, update, subscribe } =
+    writable<FormFieldType<Property>[]>(propertyFormFields);
 
-// Subscribe to the agents and users stores and update the options of the select fields
-agents.subscribe((agents) => {
-  if (Array.isArray(agents)) {
-    // Set the options of the "agent_id" field to the agents
-    propertyFormStore.updateFieldOptions(
-      "agent_id",
-      agents.map((agent) => ({
-        value: agent.id,
-        label: agent.name,
-      }))
+  const print = () => {
+    const fields = get({ subscribe });
+    console.log(
+      "Fields:",
+      fields.map((field) => {
+        return {
+          id: field.databaseFieldName,
+          value: field.value,
+        };
+      })
     );
-  }
+  };
 
-  // Set the value of the "agent_id" field to the current user
-  const currentUser = getCurrentUser()?.id;
-  if (currentUser) {
-    propertyFormStore.updateFieldValue("agent_id", [currentUser]);
-  }
-});
+  const resetForm = () => {
+    update((fields) => {
+      fields.forEach((field) => {
+        field.value = field.defaultValue;
+      });
 
-users.subscribe((users) => {
-  if (Array.isArray(users)) {
-    propertyFormStore.updateFieldOptions(
-      "ownerId",
-      users
-        .filter((user) => user.userType === "seller")
-        .map((user) => ({
-          value: user.id,
-          label: user.name,
-        }))
-    );
-  }
-});
+      return fields;
+    });
+  };
+
+  return {
+    set,
+    update,
+    subscribe,
+    print,
+    resetForm,
+  };
+};
+
+export const propertyFormStore = createPropertyFormStore();
+
+// propertyFormStore.initializeFields(propertyFormFields);
+
+// // Subscribe to the agents and users stores and update the options of the select fields
+// agents.subscribe((agents) => {
+//   if (Array.isArray(agents)) {
+//     // Set the options of the "agent_id" field to the agents
+//     propertyFormStore.updateFieldOptions(
+//       "agent_id",
+//       agents.map((agent) => ({
+//         value: agent.id,
+//         label: agent.name,
+//       }))
+//     );
+//   }
+
+//   // Set the value of the "agent_id" field to the current user
+//   const currentUser = getCurrentUser()?.id;
+//   if (currentUser) {
+//     propertyFormStore.updateFieldValue("agent_id", [currentUser]);
+//   }
+// });
+
+// users.subscribe((users) => {
+//   if (Array.isArray(users)) {
+//     propertyFormStore.updateFieldOptions(
+//       "ownerId",
+//       users
+//         .filter((user) => user.userType === "seller")
+//         .map((user) => ({
+//           value: user.id,
+//           label: user.name,
+//         }))
+//     );
+//   }
+// });
 
 // TODO:
 

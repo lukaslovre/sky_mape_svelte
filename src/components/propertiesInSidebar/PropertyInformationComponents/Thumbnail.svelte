@@ -1,8 +1,7 @@
 <script lang="ts">
   import { removeThumbFromUrl } from "../../../models/Properties";
 
-  export let imageUrl: string =
-    "https://www.njuskalo.hr/image-w920x690/auti/fiat-stilo-1.9-jtd-05-god-full-oprema-navi-ime-kupca-reg-slika-35796873.jpg";
+  export let imageUrl: string;
 
   $: fullSizeImageUrl = removeThumbFromUrl(imageUrl);
 </script>

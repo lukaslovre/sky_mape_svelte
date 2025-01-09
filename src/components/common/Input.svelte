@@ -1,40 +1,60 @@
 <script lang="ts">
-  import { parseValueWithSuffix } from "../../utils/numbers";
+  import type { FormFieldType } from "../../types";
   import Label from "./Label.svelte";
 
-  export let label: string;
-  export let id: string;
-  export let value: any;
-  export let required: boolean = false;
-  export let disabled: boolean = false;
-  export let error: string | null = null;
-  export let placeholder: string = "";
+  export let formField: FormFieldType<any>;
 
-  function handleInput() {
-    // If the `databaseFieldName` is 'price' | 'surfaceArea', check if there is a 'k' | 'm' at the end of the value
-    // If it is, replace the character with '000' | '000000' respectively
-    if (id === "price" || id === "surfaceArea") {
-      value = parseValueWithSuffix(value);
+  function handleInput(e: Event) {
+    const rawValue = (e.target as HTMLInputElement).value;
+
+    console.log(`${formField.databaseFieldName} input raw:`, rawValue);
+
+    // If empty and not required
+    if (rawValue === "" && !formField.required) {
+      formField.value = "";
+      formField.error = undefined;
+      return;
     }
+
+    // Parse
+    const parsedValue = formField.parsingFunction
+      ? formField.parsingFunction(rawValue)
+      : rawValue;
+
+    // Validate
+    const error = formField.validators
+      .map((validator) => validator(parsedValue))
+      .filter((error) => error !== null)
+      .join(" AND ");
+
+    // Update field
+    formField.error = error || undefined;
+    formField.value = error ? rawValue : parsedValue;
+
+    console.log(`${formField.databaseFieldName} input parsed:`, formField.value);
   }
 </script>
 
 <div class="input">
-  <Label forId={id} text={`${required ? "*" : ""} ${label}`} />
-  {#if error}
-    <p class="error">{error}</p>
+  <Label
+    forId={formField.databaseFieldName}
+    text={`${formField.label} ${formField.required ? "(required)" : ""} `}
+  />
+  {#if formField.error}
+    <p class="error">{formField.error}</p>
   {/if}
 
+  <!-- TOOD: disabled može se čitat s elementa [disabled] -->
   <input
     type="text"
-    name={id}
-    {id}
-    bind:value
-    {disabled}
-    class:disabled
-    autocomplete="off"
-    {placeholder}
+    name={formField.databaseFieldName}
+    id={formField.databaseFieldName}
+    value={formField.value}
+    placeholder={formField.placeholder}
+    disabled={formField.disabled}
+    class:disabled={formField.disabled}
     on:input={handleInput}
+    autocomplete="off"
   />
 </div>
 

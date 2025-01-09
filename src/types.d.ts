@@ -115,8 +115,18 @@ type Filters = {
 
 type Tabs = "Map" | "Properties" | "Buyers" | "Owners"; // | "Interactions" | "Admin";
 type DialogType = "saveBuyer" | "saveProperty";
+type MenuItem = {
+  label: string;
+  href?: string;
+  icon?: ComponentType;
+  disabled?: boolean;
+};
 
-type inputElement =
+//////////////
+// Form Types
+//////////////
+
+type InputElement =
   | "input"
   | "textarea"
   | "select"
@@ -124,29 +134,23 @@ type inputElement =
   | "imageInput"
   | "latLngMapInput";
 
+type InputParsingFunction = (value: any) => any | undefined;
+type InputValidator = (value: any) => string | null; // String is the error message. Null means OK.
+
 type FormFieldType<T> = {
   label: string;
-  inputElement: inputElement;
-  databaseFieldName: keyof T;
+  inputElement: InputElement;
+  databaseFieldName: keyof T & string; // Should I define this if not every field/input is directly mapped to the database? For example, the "latLngMapInput" inputElement is not directly mapped to the database. It is 1 form item for 2 database fields. What would be the best way to handle this?
   value: any;
-  required: boolean;
+  parsingFunction?: InputParsingFunction;
+  validators: InputValidator[];
+
   options?: { value: string; label: string }[];
+  placeholder?: string;
+  helperText?: string;
+  required?: boolean;
   disabled?: boolean;
-  // The parsing function is used to transform the value before it is saved to the database.
-  // It should also return undefined if the value should not be saved.
-  parsingFunction: (value: any) => any | undefined;
   hidden?: boolean;
-  default?: any;
-  error: string | null;
+  defaultValue?: any;
+  error?: string;
 };
-
-type ClientFormFieldType = FormFieldType<UserData>;
-type PropertyFormFieldType = FormFieldType<Property>;
-
-// Component types
-interface MenuItem {
-  label: string;
-  href?: string;
-  icon?: ComponentType;
-  disabled?: boolean;
-}

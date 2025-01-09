@@ -31,20 +31,19 @@ export async function getProperties(): Promise<Property[]> {
 
     return data.map(parsePropertyData);
   } catch (err) {
-    console.error("Error fetching properties:", err);
     throw handlePocketbaseError(err);
   }
 }
 
 // Adds absolute URLs to the image URLs
-function parsePropertyData(property: Property): Property {
+const parsePropertyData = (property: Property): Property => {
   return {
     ...property,
     imgUrl: property.imgUrl.map((url) =>
-      pb.files.getUrl(property, url, { thumb: "256x256" })
+      pb.files.getURL(property, url, { thumb: "256x256" })
     ),
   };
-}
+};
 
 export function removeThumbFromUrl(url: string): string {
   const index = url.indexOf("?thumb");

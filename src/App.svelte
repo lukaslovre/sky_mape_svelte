@@ -5,7 +5,6 @@
   import PropertyPage from "./components/properties/PropertyPage.svelte";
   import ClientsPage from "./components/clients/ClientsPage.svelte";
   import OwnersPage from "./components/owners/OwnersPage.svelte";
-  import InteractionsPage from "./components/interactions/InteractionsPage.svelte";
   import { onMount } from "svelte";
   import { propertyFormStore } from "./stores/propertiesFormStore";
   import TabMenu from "./components/header/TabMenu.svelte";
@@ -22,7 +21,8 @@
   }
 
   onMount(() => {
-    console.log(propertyFormStore.getAndTransformFields());
+    // console.log(propertyFormStore.getAndTransformFields());
+    propertyFormStore.print();
   });
 
   // TODO: Check if it's better to do this here or in the .ts file of the store.
@@ -54,18 +54,14 @@
         }}
       />
     {:else if $activeTab === "Properties"}
-      <PropertyPage
-        on:openSideNote={(e) => {
-          setSideNote(e.detail);
-        }}
-      />
+      <PropertyPage />
     {:else if $activeTab === "Buyers"}
       <ClientsPage />
     {:else if $activeTab === "Owners"}
       <OwnersPage />
-    {:else if $activeTab === "Interactions"}
-      <InteractionsPage />
     {/if}
+    <!-- {:else if $activeTab === "Interactions"}
+      <InteractionsPage /> -->
   </div>
 </main>
 

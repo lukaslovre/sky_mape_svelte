@@ -9,16 +9,14 @@
   import CoordinateSelectionMap from "./CoordinateSelectionMap.svelte";
   import { getIconForProperty } from "../../utils/propertyIcons";
 
-  export let onSubmit: (transformedFields: Record<string, any>) => Promise<void>;
-  export let onDelete: ((id: string) => Promise<void>) | null = null;
+  export let onSubmit: () => Promise<void>;
   export let close: () => void;
   export let submitButtonText = "Submit";
-  export let deleteButtonText = "Delete";
 
   $: fields = $propertyFormStore;
 
   function handleClear() {
-    propertyFormStore.clearFields();
+    propertyFormStore.resetForm();
   }
 
   //
@@ -37,52 +35,19 @@
 
 <Close on:close={close} />
 
-<form on:submit|preventDefault={onSubmit}>
+<form on:submit|preventDefault={() => onSubmit()}>
   {#each fields as field (field.databaseFieldName)}
     {#if field.inputElement === "input"}
-      <Input
-        label={field.label}
-        id={field.databaseFieldName}
-        required={field.required}
-        disabled={field.disabled}
-        error={field.error}
-        bind:value={field.value}
-      />
+      <Input formField={field} />
     {:else if field.inputElement === "textarea"}
-      <Textarea
-        label={field.label}
-        id={field.databaseFieldName}
-        required={field.required}
-        error={field.error}
-        bind:value={field.value}
-      />
+      <Textarea formField={field} />
     {:else if field.inputElement === "select" && field.options}
-      <Dropdown
-        label={field.label}
-        id={field.databaseFieldName}
-        options={field.options}
-        disabled={field.disabled}
-        required={field.required}
-        bind:values={field.value}
-        error={field.error}
-        multipleValues={false}
-      />
+      <!-- <Dropdown formField={field} multipleValues={false} /> -->
+      <p>Wait...</p>
     {:else if field.inputElement === "checkbox"}
-      <Checkbox
-        label={field.label}
-        id={field.databaseFieldName}
-        required={field.required}
-        error={field.error}
-        bind:checked={field.value}
-      />
+      <Checkbox formField={field} />
     {:else if field.inputElement === "imageInput"}
-      <ImageInput
-        label={field.label}
-        id={field.databaseFieldName}
-        required={field.required}
-        error={field.error}
-        bind:value={field.value}
-      />
+      <ImageInput formField={field} />
     {:else if field.inputElement === "latLngMapInput"}
       <div class="latLngMapInputContainer">
         <CoordinateSelectionMap
@@ -100,20 +65,6 @@
 
   <button type="submit">{submitButtonText}</button>
   <button type="button" class="clear-button" on:click={handleClear}>Reset form</button>
-  <!-- {#if onDelete && fields.find((field) => field.databaseFieldName === "id")?.value}
-    <button
-      type="button"
-      class="delete-button"
-      on:click={() => {
-        const id = fields.find((field) => field.databaseFieldName === "id")?.value;
-        if (id && onDelete) {
-          onDelete(id);
-        }
-      }}
-    >
-      {deleteButtonText}
-    </button>
-  {/if} -->
 </form>
 
 <style>
@@ -137,11 +88,6 @@
 
   button[type="submit"] {
     background-color: #007bff;
-    color: #fff;
-  }
-
-  .delete-button {
-    background-color: #ff0000;
     color: #fff;
   }
 
