@@ -6,15 +6,16 @@
   import TrashIcon from "../../assets/icons/TrashIcon.svelte";
   import type { MenuItem, Property } from "../../types";
   import Menubar from "../common/Menubar.svelte";
-  import { createEventDispatcher } from "svelte";
 
-  const dispatch = createEventDispatcher();
+  interface Props {
+    selectedPropertiesLength?: number;
+    onSortClick: (sortOption: keyof Property) => void;
+    onMenuItemClick: (item: MenuItem) => void;
+  }
 
-  export let selectedPropertiesLength: number = 0;
-  export let handleItemClick: (event: CustomEvent<MenuItem>) => void;
+  let { selectedPropertiesLength = 0, onSortClick, onMenuItemClick }: Props = $props();
 
   // Property sorting
-  let selectedSortOptionIndex: number = 0;
   const sortOptions: (keyof Property)[] = [
     "surfaceArea",
     "price",
@@ -22,10 +23,10 @@
     "bathrooms",
     "bedrooms",
   ];
+  let selectedSortOptionIndex: number = 0;
 
-  function changeSortOption() {
+  function cycleSortOption() {
     selectedSortOptionIndex = (selectedSortOptionIndex + 1) % sortOptions.length;
-    updateSortLabel(selectedSortOptionIndex);
   }
 
   function updateSortLabel(index: number) {
@@ -37,63 +38,52 @@
     });
   }
 
-  //   Handle sort option click in-component, otherwise forward the event to the parent component
-  function handleItemClickLocal(event: CustomEvent<MenuItem>) {
-    const buttonLabel = event.detail.label;
-
-    console.log(`${buttonLabel} label clicked.`);
+  function handleItemClickLocal(item: MenuItem) {
+    const buttonLabel = item.label;
 
     // Handle sorting in-component because of changing the label
     if (buttonLabel.startsWith("Sortiraj")) {
-      changeSortOption();
-      dispatch("sortProperties", sortOptions[selectedSortOptionIndex]);
+      cycleSortOption();
+      updateSortLabel(selectedSortOptionIndex);
+      onSortClick(sortOptions[selectedSortOptionIndex]);
     } else {
       // Forward the event to the parent component
-      handleItemClick(event);
+      onMenuItemClick(item);
     }
   }
 
   // Menubar disabled items
-  let menubarItems: MenuItem[] = [
-    { label: "Dodaj", icon: SaveIcon, disabled: false },
-    { label: "Uredi", icon: EditIcon, disabled: true },
-    { label: "Obriši", icon: TrashIcon, disabled: true },
-    { label: "Sortiraj", icon: SortIcon, disabled: false },
-    { label: "Spremi kao tablicu", icon: SpreadsheetIcon, disabled: false },
-  ];
-
-  //   When the number of selected properties changes, update the menubar items disabled state
-  $: updateMenubarItems(selectedPropertiesLength);
-
-  function updateMenubarItems(rowsSelected: number) {
-    console.log("updateMenubarItems", rowsSelected);
-    // Set all to enabled
-    menubarItems.map((item) => {
-      item.disabled = false;
-      return item;
-    });
-
-    // Now apply rules based on the number of rows selected
-    if (rowsSelected === 0) {
-      setItemWithLabelToDisabled("Uredi");
-      setItemWithLabelToDisabled("Obriši");
-    }
-    if (rowsSelected > 1) {
-      setItemWithLabelToDisabled("Uredi");
-    }
-
-    // trigger re-render
-    menubarItems = menubarItems;
-  }
-
-  function setItemWithLabelToDisabled(label: string) {
-    menubarItems.map((item) => {
-      if (item.label === label) {
-        item.disabled = true;
-      }
-      return item;
-    });
-  }
+  let menubarItems: MenuItem[] = $state([
+    {
+      label: "Dodaj",
+      icon: SaveIcon,
+      disabledIfCount: (count: number) => count > 0,
+    },
+    {
+      label: "Uredi",
+      icon: EditIcon,
+      disabledIfCount: (count: number) => count !== 1,
+    },
+    {
+      label: "Obriši",
+      icon: TrashIcon,
+      disabledIfCount: (count: number) => count === 0,
+    },
+    {
+      label: "Sortiraj",
+      icon: SortIcon,
+      disabledIfCount: (count: number) => false,
+    },
+    {
+      label: "Spremi kao tablicu",
+      icon: SpreadsheetIcon,
+      disabledIfCount: (count: number) => false,
+    },
+  ]);
 </script>
 
-<Menubar items={menubarItems} on:itemClick={handleItemClickLocal} />
+<Menubar
+  items={menubarItems}
+  propertiesCount={selectedPropertiesLength}
+  onMenuItemClick={handleItemClickLocal}
+/>

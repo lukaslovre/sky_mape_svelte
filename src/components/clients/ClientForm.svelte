@@ -5,7 +5,11 @@
   import { filters, favoriteProperties } from "../../stores/store";
   import { parseFilterValues } from "../../utils/filter";
 
-  export let close: () => void;
+  interface Props {
+    close: () => void;
+  }
+
+  let { close }: Props = $props();
 
   async function handleSubmit() {
     const transformedFields = clientFormStore.getAndTransformFields();

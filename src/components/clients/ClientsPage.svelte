@@ -8,8 +8,8 @@
   import { deleteUser } from "../../models/Clients";
   import ClientsMenubar from "./ClientsMenubar.svelte";
 
-  let showForm = false;
-  let selectedClientIds: string[] = [];
+  let showForm = $state(false);
+  let selectedClientIds: string[] = $state([]);
 
   function toggleForm() {
     showForm = !showForm;

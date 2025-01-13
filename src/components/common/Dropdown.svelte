@@ -4,21 +4,31 @@
   import DropdownTriangleIcon from "../../assets/icons/DropdownTriangleIcon.svelte";
   import Label from "./Label.svelte";
 
-  // Napravit da je ovo generički dropdown, dakle ne samo za formField. A onda se može napravit wrapper za formField
-  export let multipleValues: boolean = true;
-  export let options: { label: string; value: string }[] = [];
-  export let selectedValues: string[];
-  export let onValueChange: (newValues: string[]) => void;
-  export let label: string;
-  export let id: string;
-  export let error: string | undefined;
-  export let disabled: boolean = false;
+  interface Props {
+    multipleValues?: boolean;
+    options?: { label: string; value: string }[];
+    selectedValues: string[];
+    onValueChange: (newValues: string[]) => void;
+    label: string;
+    id: string;
+    error?: string;
+    disabled?: boolean;
+  }
 
-  let isOpen: boolean = false;
-  let focusedOptionIndex: number = -1;
-  let dropdownElement: HTMLDivElement;
+  let {
+    multipleValues = true,
+    options = [],
+    selectedValues,
+    onValueChange,
+    label,
+    id,
+    error,
+    disabled = false,
+  }: Props = $props();
 
-  $: selectedValuesLabel = getLabelsFromValues(selectedValues);
+  let isOpen: boolean = $state(false);
+  let focusedOptionIndex: number = $state(-1);
+  let dropdownElement: HTMLDivElement | undefined = $state();
 
   function getLabelsFromValues(values: string[], separator: string = ", ") {
     if (!Array.isArray(values)) return "Values nije array";
@@ -109,6 +119,7 @@
       isOpen = false;
     }
   }
+  let selectedValuesLabel = $derived(getLabelsFromValues(selectedValues));
 </script>
 
 <div
@@ -132,8 +143,8 @@
     type="button"
     class="dropdown-input-current"
     {disabled}
-    on:click={toggleDropdownOptionsVisibility}
-    on:keydown={handleKeyDown}
+    onclick={toggleDropdownOptionsVisibility}
+    onkeydown={handleKeyDown}
     aria-label={label}
   >
     {selectedValuesLabel}
@@ -154,7 +165,7 @@
         class:focused={focusedOptionIndex === i}
         role="option"
         aria-selected={selectedValues.includes(value)}
-        on:click={() => handleOptionClick(value)}
+        onclick={() => handleOptionClick(value)}
       >
         <div class="checkbox-square">
           {#if selectedValues.includes(value)}
@@ -182,7 +193,7 @@
     pointer-events: none;
   }
   .dropdown-input.none-selected .dropdown-input-current {
-    color: #808080;
+    color: hsl(0, 0%, 50%);
   }
 
   .error {

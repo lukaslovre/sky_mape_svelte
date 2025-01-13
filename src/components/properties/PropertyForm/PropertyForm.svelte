@@ -1,9 +1,13 @@
 <script lang="ts">
   import { addProperty, deleteProperty } from "../../../models/Properties";
-  import { propertyFormStore } from "../../../stores/propertiesFormStore";
+  import { propertyFormStore } from "../../../stores/propertiesFormStore.svelte";
   import Form from "../../common/Form.svelte";
 
-  export let close: () => void;
+  interface Props {
+    close: () => void;
+  }
+
+  let { close }: Props = $props();
 
   async function handleSubmit() {
     propertyFormStore.print();

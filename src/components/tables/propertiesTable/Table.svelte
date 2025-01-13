@@ -3,16 +3,25 @@
   import TableBody from "./TableBody/TableBody.svelte";
   import TableHeader from "./TableHeader/TableHeader.svelte";
 
-  export let showHeader: boolean = true;
-  export let data: Property[] = [];
-  export let selectedPropertyIds: Property["id"][] = [];
-  export let handleCheckboxClick: (propertyId: Property["id"], newState: boolean) => void;
+  interface Props {
+    showHeader?: boolean;
+    data?: Property[];
+    selectedPropertyIds?: Property["id"][];
+    handleCheckboxClick: (propertyId: Property["id"], newState: boolean) => void;
+  }
+
+  let {
+    showHeader = true,
+    data = [],
+    selectedPropertyIds = [],
+    handleCheckboxClick
+  }: Props = $props();
 
   // Type Definitions
   type ColumnKey = keyof Property;
 
   // State Variables
-  $: isSelectAll = selectedPropertyIds.length === data.length;
+  let isSelectAll = $derived(selectedPropertyIds.length === data.length);
 
   // All possible columns and their labels
   const columnNames: Record<ColumnKey, string> = {

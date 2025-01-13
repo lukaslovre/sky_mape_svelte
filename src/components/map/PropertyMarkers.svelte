@@ -15,15 +15,7 @@
   import { toggleSelectedProperty } from "../../stores/actions";
 
   // Marker instances for binding and event handling
-  let markerInstances: { [key: Property["id"]]: L.Marker } = {};
-
-  // When the properties change, update the marker instances
-  $: if (Object.keys(markerInstances).length > 0) {
-    setAppropriateMarkerIcons();
-    setEventListeners();
-  }
-  // When the favorite properties change, update the marker icons
-  $: if ($favoriteProperties) setAppropriateMarkerIcons();
+  let markerInstances: Record<Property["id"], L.Marker | undefined> = $state({});
 
   // Handler for marker click events
   function handleMarkerClick(propertyId: string, event: L.LeafletMouseEvent) {
@@ -39,6 +31,7 @@
 
   function setEventListeners() {
     Object.entries(markerInstances).forEach(([propertyId, marker]) => {
+      if (!marker) return;
       marker.on("click", (event) => handleMarkerClick(propertyId, event));
     });
   }
@@ -46,7 +39,7 @@
   function setAppropriateMarkerIcons() {
     Object.entries(markerInstances).forEach(([propertyId, marker]) => {
       const property = $properties.find((p) => p.id === propertyId);
-      if (!property) return;
+      if (!property || !marker) return;
 
       marker.setIcon(
         new L.Icon({
@@ -70,6 +63,19 @@
   //     }
   //   });
   // }
+  // When the properties change, update the marker instances
+
+  $effect(() => {
+    if (Object.keys(markerInstances).length > 0) {
+      setAppropriateMarkerIcons();
+      setEventListeners();
+    }
+  });
+
+  // When the favorite properties change, update the marker icons
+  $effect(() => {
+    if ($favoriteProperties) setAppropriateMarkerIcons();
+  });
 </script>
 
 <!-- Iterate over each property and render a Marker -->
@@ -94,7 +100,7 @@
       }}
       data-property-id={property.id}
     >
-      <PropertyCard {property} on:openSideNote />
+      <PropertyCard {property} />
     </Popup>
   </Marker>
 {/each}

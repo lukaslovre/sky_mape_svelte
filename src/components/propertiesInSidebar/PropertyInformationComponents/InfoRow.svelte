@@ -1,7 +1,11 @@
 <script lang="ts">
-  export let label: string;
-  export let value: any;
-  export let isUndefined: boolean = false;
+  interface Props {
+    label: string;
+    value: any;
+    isUndefined?: boolean;
+  }
+
+  let { label, value, isUndefined = false }: Props = $props();
 </script>
 
 <div class="info-row" class:is-undefined={isUndefined}>

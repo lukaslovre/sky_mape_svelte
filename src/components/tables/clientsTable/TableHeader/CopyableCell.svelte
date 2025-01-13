@@ -1,11 +1,17 @@
 <script lang="ts">
+  import { stopPropagation } from 'svelte/legacy';
+
   import CheckmarkIcon from "../../../../assets/icons/CheckmarkIcon.svelte";
   import CopyIcon from "../../../../assets/icons/CopyIcon.svelte";
 
-  export let label: string;
-  export let getSelectedAttributes: (columnName: string) => string[];
+  interface Props {
+    label: string;
+    getSelectedAttributes: (columnName: string) => string[];
+  }
 
-  let copySuccess = false;
+  let { label, getSelectedAttributes }: Props = $props();
+
+  let copySuccess = $state(false);
 
   async function copyToClipboard() {
     try {
@@ -25,7 +31,7 @@
   }
 </script>
 
-<th class="copyable" on:click|stopPropagation={copyToClipboard}>
+<th class="copyable" onclick={stopPropagation(copyToClipboard)}>
   {label}
 
   <div class="copyIcon">

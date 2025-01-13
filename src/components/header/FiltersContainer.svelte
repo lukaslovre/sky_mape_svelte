@@ -7,59 +7,55 @@
   import { emptyFavorites, resetFilters } from "../../stores/actions";
   import { parseFilterValues, removeEmptyValuesFromFilters } from "../../utils/filter";
   import Dropdown from "../common/Dropdown.svelte";
+  import { filtersStore } from "../../stores/filtersStore.svelte";
+  import { parseValueWithSuffix } from "../../utils/numbers";
+  import { onDestroy } from "svelte";
+
+  $inspect(filtersStore.filters);
+
+  type InputType =
+    | {
+        type: "dropdown";
+        label: string;
+        id: keyof Filters;
+        options: { label: string; value: string }[];
+      }
+    | {
+        type: "min-max";
+        label: string;
+        idMax: keyof Filters;
+        idMin: keyof Filters;
+      }
+    | {
+        type: "divider";
+      };
 
   function resetValues() {
     resetFilters();
+    filtersStore.resetFilters();
   }
 
   function emptyFavoriteProperties() {
     emptyFavorites();
   }
 
-  let agentsOptions: { label: string; value: string }[] = [];
+  let agentsOptions: { label: string; value: string }[] = $state([]);
 
-  $: if ($agents.length > 0) {
-    agentsOptions = $agents.map((agent) => {
-      return { label: agent.name, value: agent.id };
-    });
+  const unsubscribe = agents.subscribe((value) => {
+    if (value.length > 0) {
+      agentsOptions.push(
+        ...value.map((agent) => {
+          return { label: agent.name, value: agent.id };
+        })
+      );
+    }
+  });
 
-    // Delete the current array element with id "agentIds"
-    inputs = inputs.filter(
-      (input) => input.type === "divider" || input.id !== "agentIds"
-    );
+  onDestroy(() => {
+    unsubscribe();
+  });
 
-    inputs = [
-      ...inputs,
-      {
-        type: "dropdown",
-        label: "Agent",
-        id: "agentIds",
-        options: agentsOptions,
-        filtersBind: "agentIds",
-      },
-    ];
-  }
-
-  type InputType =
-    | {
-        type: "dropdown";
-        label: string;
-        id: string;
-        filtersBind: keyof Filters;
-        options: { label: string; value: string }[];
-      }
-    | {
-        type: "min-max";
-        label: string;
-        id: string;
-        filtersBindMin: keyof Filters;
-        filtersBindMax: keyof Filters;
-      }
-    | {
-        type: "divider";
-      };
-
-  let inputs: InputType[] = [
+  let inputs: InputType[] = $state([
     {
       type: "dropdown",
       label: "Tip nekretnine",
@@ -70,7 +66,6 @@
         { label: "Poslovni prostor", value: "Commercial" },
         { label: "Zemljište", value: "Land" },
       ],
-      filtersBind: "type",
     },
     {
       type: "dropdown",
@@ -80,21 +75,18 @@
         { label: "Prodaja", value: "Sale" },
         { label: "Najam", value: "Rent" },
       ],
-      filtersBind: "action",
     },
     {
       type: "min-max",
       label: "Cijena (€)",
-      id: "price",
-      filtersBindMin: "minPrice",
-      filtersBindMax: "maxPrice",
+      idMax: "maxPrice",
+      idMin: "minPrice",
     },
     {
       type: "min-max",
       label: "Površina (m2)",
-      id: "area",
-      filtersBindMin: "minArea",
-      filtersBindMax: "maxArea",
+      idMax: "maxArea",
+      idMin: "minArea",
     },
     {
       type: "divider",
@@ -107,7 +99,6 @@
         { label: "Vidljivo", value: "Visible" },
         { label: "Sakriveno", value: "Hidden" },
       ],
-      filtersBind: "visibility",
     },
     {
       type: "dropdown",
@@ -121,16 +112,14 @@
         },
         { label: "Prodano", value: "sold" },
       ],
-      filtersBind: "status",
     },
     {
       type: "dropdown",
       label: "Agent",
       id: "agentIds",
       options: agentsOptions,
-      filtersBind: "agentIds",
     },
-  ];
+  ]);
 </script>
 
 <div class="filters-container">
@@ -138,20 +127,30 @@
     <LocationInput />
     {#each inputs as input}
       {#if input.type === "dropdown"}
-        <p>Wait...</p>
-        <!-- <Dropdown
+        <Dropdown
           label={input.label}
           id={input.id}
           options={input.options}
-          bind:values={$filters[input.filtersBind]}
+          selectedValues={filtersStore.filters[input.id] as string[]}
+          onValueChange={(newValues: string[]) => {
+            filtersStore.setField(input.id, newValues);
+          }}
           multipleValues={true}
-        /> -->
+        />
       {:else if input.type === "min-max"}
         <MinMaxInput
           label={input.label}
-          id={input.id}
-          bind:minValue={$filters[input.filtersBindMin]}
-          bind:maxValue={$filters[input.filtersBindMax]}
+          id={input.idMin}
+          minValue={filtersStore.filters[input.idMin] as any}
+          onMinValueChange={(newValue) => {
+            const transformed = parseValueWithSuffix(newValue);
+            filtersStore.setField(input.idMin, transformed);
+          }}
+          maxValue={filtersStore.filters[input.idMax] as any}
+          onMaxValueChange={(newValue) => {
+            const transformed = parseValueWithSuffix(newValue);
+            filtersStore.setField(input.idMax, transformed);
+          }}
         />
       {:else if input.type === "divider"}
         <hr class="filtersDivider" />
@@ -160,12 +159,12 @@
   </div>
 
   <div class="buttons-container">
-    <button type="reset" class="button" on:click={resetValues}>
+    <button type="reset" class="button" onclick={resetValues}>
       <ResetIcon /> Filtri ({Object.keys(
         removeEmptyValuesFromFilters(parseFilterValues($filters))
       ).length})
     </button>
-    <button type="reset" class="button" on:click={emptyFavoriteProperties}>
+    <button type="reset" class="button" onclick={emptyFavoriteProperties}>
       <!-- add star emoji -->
       <ResetIcon /> Favoriti ({$favoriteProperties.length})
     </button>

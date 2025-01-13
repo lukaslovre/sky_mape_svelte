@@ -1,14 +1,24 @@
 <!-- A button svelte component -->
 
 <script lang="ts">
-  export let text: string;
-  export let inlineCss: string = "";
 
-  export let onClick: (e: MouseEvent) => void = () => {};
+  interface Props {
+    text: string;
+    inlineCss?: string;
+    onClick?: (e: MouseEvent) => void;
+    children?: import('svelte').Snippet;
+  }
+
+  let {
+    text,
+    inlineCss = "",
+    onClick = () => {},
+    children
+  }: Props = $props();
 </script>
 
-<button class="secondary-button" on:click={onClick} style={inlineCss}>
-  <slot />
+<button class="secondary-button" onclick={onClick} style={inlineCss}>
+  {@render children?.()}
   {text}
 </button>
 

@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { stopPropagation } from 'svelte/legacy';
+
   import EditIcon from "../../assets/icons/EditIcon.svelte";
   import InternetIcon from "../../assets/icons/InternetIcon.svelte";
   import StarIcon from "../../assets/icons/StarIcon.svelte";
@@ -6,10 +8,14 @@
   import { favoriteProperties } from "../../stores/store";
   import type { Property } from "../../types";
 
-  export let property: Property;
+  interface Props {
+    property: Property;
+  }
+
+  let { property }: Props = $props();
 
   //   Temporary for development
-  $: isFavorite = $favoriteProperties.includes(property.id);
+  let isFavorite = $derived($favoriteProperties.includes(property.id));
 
   function handleEditClick() {
     console.log("Edit button clicked");
@@ -23,19 +29,19 @@
 </script>
 
 <div class="property-action-buttons">
-  <button type="button" on:click|stopPropagation={handleEditClick}>
+  <button type="button" onclick={stopPropagation(handleEditClick)}>
     <EditIcon size={20} color="#fff" />
   </button>
 
   <button
     type="button"
     style:background-color={isFavorite ? "#d98803" : undefined}
-    on:click|stopPropagation={handleFavoriteClick}
+    onclick={stopPropagation(handleFavoriteClick)}
   >
     <StarIcon size={20} color="#fff" />
   </button>
 
-  <button type="button" on:click|stopPropagation={handleWebsiteClick}>
+  <button type="button" onclick={stopPropagation(handleWebsiteClick)}>
     <InternetIcon size={20} color="#fff" />
   </button>
 </div>

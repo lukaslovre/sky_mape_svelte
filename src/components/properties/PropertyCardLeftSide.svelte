@@ -1,16 +1,22 @@
 <script lang="ts">
+  import { stopPropagation } from "svelte/legacy";
+
   import EditIcon from "../../assets/icons/EditIcon.svelte";
   import EyeOffIcon from "../../assets/icons/EyeOffIcon.svelte";
   import InternetIcon from "../../assets/icons/InternetIcon.svelte";
   import StarIcon from "../../assets/icons/StarIcon.svelte";
   import { pocketbaseUrl } from "../../PocketBaseInit";
-  import { propertyFormStore } from "../../stores/propertiesFormStore";
+  import { propertyFormStore } from "../../stores/propertiesFormStore.svelte";
   import { favoriteProperties } from "../../stores/store";
   import type { Property } from "../../types";
 
-  export let property: Property;
+  interface Props {
+    property: Property;
+  }
 
-  $: isFavorite = $favoriteProperties.includes(property.id);
+  let { property }: Props = $props();
+
+  let isFavorite = $derived($favoriteProperties.includes(property.id));
 
   function toggleFavorite() {
     if ($favoriteProperties.includes(property.id)) {
@@ -25,7 +31,7 @@
 
     console.log("openPropertyEditor", url);
 
-    propertyFormStore.setFieldValues(property);
+    // propertyFormStore.setFieldValues(property);
 
     // window.open(url, "_blank");
   }
@@ -56,23 +62,23 @@
 
   <!-- buttons over image -->
   <div class="buttons-over-image-container">
-    <button type="button" on:click|stopPropagation={openPropertyEditor}>
+    <button type="button" onclick={stopPropagation(openPropertyEditor)}>
       <EditIcon size={20} />
     </button>
 
     <button
       type="button"
       style:background-color={isFavorite ? "#d98803" : undefined}
-      on:click|stopPropagation={toggleFavorite}
+      onclick={stopPropagation(toggleFavorite)}
     >
       <StarIcon color="#fff" />
     </button>
 
     <button
       type="button"
-      on:click|stopPropagation={() => {
+      onclick={stopPropagation(() => {
         console.log("clicked on the internet button");
-      }}
+      })}
     >
       <InternetIcon size={20} />
     </button>

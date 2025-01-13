@@ -1,7 +1,11 @@
 <script lang="ts">
   import type { FormFieldType } from "../../types";
 
-  export let formField: FormFieldType<any>;
+  interface Props {
+    formField: FormFieldType<any>;
+  }
+
+  let { formField = $bindable() }: Props = $props();
 
   function handleInput(e: Event) {
     const rawValue = (e.target as HTMLInputElement).checked;
@@ -33,7 +37,7 @@
     name={formField.databaseFieldName}
     id={formField.databaseFieldName}
     checked={formField.value}
-    on:change={handleInput}
+    onchange={handleInput}
     disabled={formField.disabled}
   />
   <label for={formField.databaseFieldName}>

@@ -2,14 +2,18 @@
   import { fitViewToFilteredProperties } from "../../../stores/actions";
   import { propertiesBoundingBox } from "../../../stores/store";
 
-  export let mapInstance: L.Map | undefined;
+  interface Props {
+    mapInstance: L.Map | undefined;
+  }
+
+  let { mapInstance }: Props = $props();
 
   function fitBounds() {
     fitViewToFilteredProperties(mapInstance, $propertiesBoundingBox);
   }
 </script>
 
-<button class="fit-bounds-button" on:click={fitBounds}>
+<button class="fit-bounds-button" onclick={fitBounds}>
   Center <span class="fit-bounds-button-shortcut">[C]</span>
 </button>
 

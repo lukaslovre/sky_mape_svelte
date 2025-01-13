@@ -1,9 +1,13 @@
 <script lang="ts">
   import { removeThumbFromUrl } from "../../../models/Properties";
 
-  export let imageUrl: string;
+  interface Props {
+    imageUrl: string;
+  }
 
-  $: fullSizeImageUrl = removeThumbFromUrl(imageUrl);
+  let { imageUrl }: Props = $props();
+
+  let fullSizeImageUrl = $derived(removeThumbFromUrl(imageUrl));
 </script>
 
 <a href={fullSizeImageUrl}>

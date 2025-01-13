@@ -4,45 +4,52 @@
   import ImageInput from "./ImageInput.svelte";
   import Input from "./Input.svelte";
   import Textarea from "./Textarea.svelte";
-  import { propertyFormStore } from "../../stores/propertiesFormStore";
+  import { propertyFormStore } from "../../stores/propertiesFormStore.svelte";
   import CoordinateSelectionMap from "./CoordinateSelectionMap.svelte";
   import { getIconForProperty } from "../../utils/propertyIcons";
   import DropdownFormFieldWrapped from "./DropdownFormFieldWrapped.svelte";
 
-  export let onSubmit: () => Promise<void>;
-  export let close: () => void;
-  export let submitButtonText = "Submit";
+  interface Props {
+    onSubmit: () => Promise<void>;
+    close: () => void;
+    submitButtonText?: string;
+  }
+
+  let { onSubmit, close, submitButtonText = "Submit" }: Props = $props();
 
   function handleClear() {
     propertyFormStore.resetForm();
   }
 
   //
-  $: markerIconUrl = getIconForProperty(
-    {
-      hiddenOnWebsite:
-        $propertyFormStore.find((field) => field.databaseFieldName === "hiddenOnWebsite")
-          ?.value || false,
-      type:
-        $propertyFormStore
-          .find((field) => field.databaseFieldName === "type")
-          ?.value.at(0) || "House",
-    },
-    false
+  let markerIconUrl = $derived(
+    getIconForProperty(
+      {
+        hiddenOnWebsite:
+          propertyFormStore.fields.find(
+            (field) => field.databaseFieldName === "hiddenOnWebsite"
+          )?.value || false,
+        type:
+          propertyFormStore.fields
+            .find((field) => field.databaseFieldName === "type")
+            ?.value.at(0) || "House",
+      },
+      false
+    )
   );
 
-  $: console.log(markerIconUrl);
+  $inspect(markerIconUrl);
 </script>
 
 <Close on:close={close} />
 
 <form
-  on:submit={(e) => {
+  onsubmit={(e) => {
     e.preventDefault();
     onSubmit();
   }}
 >
-  {#each $propertyFormStore as field (field.databaseFieldName)}
+  {#each propertyFormStore.fields as field (field.databaseFieldName)}
     {#if field.inputElement === "input"}
       <Input formField={field} />
     {:else if field.inputElement === "textarea"}
@@ -69,7 +76,7 @@
   {/each}
 
   <button type="submit">{submitButtonText}</button>
-  <button type="button" class="clear-button" on:click={handleClear}>Reset form</button>
+  <button type="button" class="clear-button" onclick={handleClear}>Reset form</button>
 </form>
 
 <style>

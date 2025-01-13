@@ -2,10 +2,19 @@
   import CheckmarkIcon from "../../../../assets/icons/CheckmarkIcon.svelte";
   import CopyableCell from "./CopyableCell.svelte";
 
-  export let toggleSelectAll: () => void;
-  export let isSelectAll: boolean;
-  export let columns: string[];
-  export let getSelectedAttributes: (columnName: string) => string[];
+  interface Props {
+    toggleSelectAll: () => void;
+    isSelectAll: boolean;
+    columns: string[];
+    getSelectedAttributes: (columnName: string) => string[];
+  }
+
+  let {
+    toggleSelectAll,
+    isSelectAll,
+    columns,
+    getSelectedAttributes
+  }: Props = $props();
 </script>
 
 <thead>
@@ -16,7 +25,7 @@
         name="selectAll"
         id="selectAll"
         checked={isSelectAll}
-        on:change={toggleSelectAll}
+        onchange={toggleSelectAll}
       />
       <label for="selectAll">
         <CheckmarkIcon />

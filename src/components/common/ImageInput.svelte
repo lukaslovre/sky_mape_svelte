@@ -3,7 +3,11 @@
   import { bytesToHumanReadable } from "../../utils/numbers";
   import Label from "./Label.svelte";
 
-  export let formField: FormFieldType<any>;
+  interface Props {
+    formField: FormFieldType<any>;
+  }
+
+  let { formField = $bindable() }: Props = $props();
 
   function handleFileChange(event: Event) {
     const target = event.target as HTMLInputElement;
@@ -53,7 +57,7 @@
     accept="image/*"
     name={formField.databaseFieldName}
     id={formField.databaseFieldName}
-    on:change={handleFileChange}
+    onchange={handleFileChange}
     required={formField.required}
   />
 

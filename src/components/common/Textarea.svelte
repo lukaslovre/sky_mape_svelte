@@ -2,7 +2,11 @@
   import type { FormFieldType } from "../../types";
   import Label from "./Label.svelte";
 
-  export let formField: FormFieldType<any>;
+  interface Props {
+    formField: FormFieldType<any>;
+  }
+
+  let { formField = $bindable() }: Props = $props();
 
   function handleInput(e: Event) {
     const rawValue = (e.target as HTMLTextAreaElement).value;
@@ -51,7 +55,7 @@
     placeholder={formField.placeholder}
     disabled={formField.disabled}
     autocomplete="off"
-    on:input={handleInput}
+    oninput={handleInput}
   ></textarea>
 </div>
 
@@ -84,6 +88,10 @@
     transition:
       outline 75ms ease-out,
       border 75ms ease-out;
+  }
+
+  textarea::placeholder {
+    color: hsl(0, 0%, 66%);
   }
 
   textarea:hover {

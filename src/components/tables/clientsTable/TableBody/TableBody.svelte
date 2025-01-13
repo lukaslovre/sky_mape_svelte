@@ -10,14 +10,24 @@
   // Define the type for parsed user data
   type ParsedUserData = ReturnType<typeof parsePocketbaseUserData>[0];
 
-  // Props
-  export let checkboxes: Record<string, boolean>;
-  export let userData: Client[];
-  export let columns: (keyof ParsedUserData)[];
-  export let updateCheckboxes: (newCheckboxes: Record<Client["id"], boolean>) => void;
+  
+  interface Props {
+    // Props
+    checkboxes: Record<string, boolean>;
+    userData: Client[];
+    columns: (keyof ParsedUserData)[];
+    updateCheckboxes: (newCheckboxes: Record<Client["id"], boolean>) => void;
+  }
+
+  let {
+    checkboxes = $bindable(),
+    userData,
+    columns,
+    updateCheckboxes
+  }: Props = $props();
 
   // Reactive parsed user data (transforms the dates from string to Date objects)
-  $: parsedUserData = parsePocketbaseUserData(userData);
+  let parsedUserData = $derived(parsePocketbaseUserData(userData));
 
   // Helper Functions
   // Check if a value is an object
@@ -40,8 +50,8 @@
   */
 
   // Popup state
-  let popupLocation: [number, number] = [0, 0];
-  let popupContent: string = "";
+  let popupLocation: [number, number] = $state([0, 0]);
+  let popupContent: string = $state("");
 
   // Show filters popup
   const showFiltersPopup = (userId: Client["id"], event: MouseEvent) => {
@@ -131,9 +141,9 @@
               <!-- Non-array objects (assumed to be filters) -->
               <button
                 class="applyFiltersButton"
-                on:mouseenter={(e) => showFiltersPopup(user.id, e)}
-                on:mouseleave={hideFiltersPopup}
-                on:click={() => handleApplyFilters(user)}
+                onmouseenter={(e) => showFiltersPopup(user.id, e)}
+                onmouseleave={hideFiltersPopup}
+                onclick={() => handleApplyFilters(user)}
               >
                 Primjeni
               </button>

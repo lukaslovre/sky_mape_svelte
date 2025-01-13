@@ -1,10 +1,13 @@
 <script lang="ts">
-  import { createEventDispatcher, type ComponentType } from "svelte";
   import type { MenuItem } from "../../types";
 
-  const dispatch = createEventDispatcher();
+  interface Props {
+    items?: MenuItem[];
+    propertiesCount: number;
+    onMenuItemClick: (item: MenuItem) => void;
+  }
 
-  export let items: MenuItem[] = [];
+  let { items = [], propertiesCount, onMenuItemClick }: Props = $props();
 </script>
 
 <nav class="menubar">
@@ -14,24 +17,24 @@
         {#if item.href}
           <a
             href={item.href}
-            class:disabled={item.disabled}
-            tabindex={item.disabled ? -1 : undefined}
-            aria-disabled={item.disabled}
+            class:disabled={item.disabledIfCount(propertiesCount)}
+            tabindex={item.disabledIfCount(propertiesCount) ? -1 : undefined}
+            aria-disabled={item.disabledIfCount(propertiesCount)}
           >
             {#if item.icon}
-              <svelte:component this={item.icon} />
+              <item.icon />
             {/if}
             {item.label}
           </a>
         {:else}
           <button
-            on:click={() => dispatch("itemClick", item)}
-            class:disabled={item.disabled}
-            tabindex={item.disabled ? -1 : undefined}
-            aria-disabled={item.disabled}
+            onclick={() => onMenuItemClick(item)}
+            class:disabled={item.disabledIfCount(propertiesCount)}
+            tabindex={item.disabledIfCount(propertiesCount) ? -1 : undefined}
+            aria-disabled={item.disabledIfCount(propertiesCount)}
           >
             {#if item.icon}
-              <svelte:component this={item.icon} size={24} color={"#1a1a1a"} />
+              <item.icon size={24} color={"#1a1a1a"} />
             {/if}
             {item.label}
           </button>

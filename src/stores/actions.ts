@@ -9,6 +9,7 @@ import {
   users,
 } from "./store";
 import { emptyFiltersObject, parseFilterValues } from "../utils/filter";
+import { filtersStore } from "./filtersStore.svelte";
 
 // Save a polygon to filters without mutating the original state
 export function savePolygon(polygon: LatLng[]) {
@@ -16,6 +17,11 @@ export function savePolygon(polygon: LatLng[]) {
     ...currentFilters,
     polygons: [...currentFilters.polygons, polygon],
   }));
+
+  // new way
+  // Nastaviti tu sutra
+  // Možda funkcije za poligone ovdje prebaciti u filtersStore
+  filtersStore.setField("polygons", [...filtersStore.filters.polygons, polygon]);
 }
 
 // Remove a polygon from filters without mutating the original state

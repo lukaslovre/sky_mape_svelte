@@ -1,16 +1,14 @@
 <script lang="ts">
   import { authorizeWithUserAndPass } from "../../auth";
   import ButtonPrimary from "../common/ButtonPrimary.svelte";
-  import Input from "../common/Input.svelte";
 
-  let email = "";
-  let password = "";
-
-  let errorMessage: string = "";
+  let username: string = $state("");
+  let password: string = $state("");
+  let errorMessage: string = $state("");
 
   async function handleSubmit() {
     try {
-      await authorizeWithUserAndPass(email, password);
+      await authorizeWithUserAndPass(username, password);
 
       window.location.reload();
     } catch (err) {
@@ -19,13 +17,31 @@
   }
 </script>
 
-<form id="login-form" on:submit|preventDefault={handleSubmit}>
-  <Input label="email" id="loginEmail" bind:value={email} placeholder={"npr. lukaslov"} />
-  <Input
-    label="password"
-    id="loginPassword"
+<form
+  id="login-form"
+  onsubmit={(e) => {
+    e.preventDefault();
+    handleSubmit();
+  }}
+  oninput={() => {
+    errorMessage = "";
+  }}
+>
+  <input
+    type="text"
+    name="username"
+    id="username"
+    autocomplete="off"
+    placeholder="npr. lukaslov"
+    bind:value={username}
+  />
+  <input
+    type="password"
+    name="password"
+    id="password"
+    autocomplete="off"
+    placeholder="npr. testtest"
     bind:value={password}
-    placeholder={"npr. testtest"}
   />
 
   <p class="error-message">{errorMessage}</p>
@@ -49,6 +65,37 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
+  }
+
+  input {
+    position: relative;
+    width: 100%;
+    height: 2.5rem;
+    padding: 0 1rem;
+
+    outline: none;
+    border: 1px solid #cccccc;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 1px rgba(0, 0, 0, 0.05);
+    background-color: #ffffff;
+
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: #1a1a1a;
+
+    transition:
+      outline 75ms ease-out,
+      border 75ms ease-out;
+  }
+
+  input:hover {
+    border: 1px solid hsl(0, 0%, 50%);
+  }
+
+  input:focus {
+    box-shadow: 0 0 0 2px #0d65d9;
+    border: 1px solid transparent;
+    z-index: 1;
   }
 
   .error-message {

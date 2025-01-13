@@ -1,13 +1,18 @@
 <script lang="ts">
-  export let screenLocation: [number, number] = [100, 100];
+  interface Props {
+    screenLocation?: [number, number];
+    children?: import('svelte').Snippet;
+  }
+
+  let { screenLocation = [100, 100], children }: Props = $props();
 </script>
 
 <div class="popup" style="top: {screenLocation[1]}px; left: {screenLocation[0]}px;">
   <div class="popup-content">
-    <slot>
+    {#if children}{@render children()}{:else}
       <!-- Default content -->
       <p>Default content</p>
-    </slot>
+    {/if}
   </div>
 </div>
 

@@ -9,7 +9,7 @@
   }
 </script>
 
-<button class="close-button" on:click={close}>
+<button class="close-button" onclick={close}>
   <ChevronIcon size={32} color="#0B5EDA" rotation={180} />
   <span>Zatvori</span>
 </button>

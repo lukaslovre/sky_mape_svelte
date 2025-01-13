@@ -31,6 +31,8 @@ export function parseValueWithSuffix<T>(value: T): T | string {
   return (numericValue * MULTIPLIERS[suffix]).toString();
 }
 
+// Memory
+
 export function bytesToHumanReadable(bytes: number) {
   const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
 

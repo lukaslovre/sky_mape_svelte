@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import type { MenuItem } from "../../types";
   import EditIcon from "../../assets/icons/EditIcon.svelte";
   import SaveIcon from "../../assets/icons/SaveIcon.svelte";
@@ -6,18 +8,20 @@
   import TrashIcon from "../../assets/icons/TrashIcon.svelte";
   import Menubar from "../common/Menubar.svelte";
 
-  export let selectedClientsLength: number = 0;
-  export let handleItemClick: (event: CustomEvent<MenuItem>) => void;
+  interface Props {
+    selectedClientsLength?: number;
+    handleItemClick: (event: CustomEvent<MenuItem>) => void;
+  }
 
-  let menubarItems: MenuItem[] = [
+  let { selectedClientsLength = 0, handleItemClick }: Props = $props();
+
+  let menubarItems: MenuItem[] = $state([
     { label: "Dodaj", icon: SaveIcon, disabled: false },
     { label: "Uredi", icon: EditIcon, disabled: true },
     { label: "Obriši", icon: TrashIcon, disabled: true },
     { label: "Spremi kao tablicu", icon: SpreadsheetIcon, disabled: false },
-  ];
+  ]);
 
-  //   When the number of selected clients changes, update the menubar items disabled state
-  $: updateMenubarItems(selectedClientsLength);
 
   function updateMenubarItems(rowsSelected: number) {
     // Set all to enabled
@@ -47,6 +51,10 @@
       return item;
     });
   }
+  //   When the number of selected clients changes, update the menubar items disabled state
+  run(() => {
+    updateMenubarItems(selectedClientsLength);
+  });
 </script>
 
 <Menubar items={menubarItems} on:itemClick={handleItemClick} />

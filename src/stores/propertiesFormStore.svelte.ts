@@ -240,15 +240,16 @@ export const propertyFormFields: FormFieldType<Property>[] = [
 ];
 
 // PLAN: I am creating a propertyFormStore manually (not from the creatFormStore<Property> function) because I want to add some custom logic to it.
-const createPropertyFormStore = () => {
-  const { set, update, subscribe } =
-    writable<FormFieldType<Property>[]>(propertyFormFields);
+class PropertyFormStore {
+  // const { set, update, subscribe } =
+  //   writable<FormFieldType<Property>[]>(propertyFormFields);
 
-  const print = () => {
-    const fields = get({ subscribe });
+  fields = $state(propertyFormFields);
+
+  print = () => {
     console.log(
       "Fields:",
-      fields.map((field) => {
+      this.fields.map((field) => {
         return {
           id: field.databaseFieldName,
           value: field.value,
@@ -257,18 +258,29 @@ const createPropertyFormStore = () => {
     );
   };
 
-  const resetForm = () => {
-    update((fields) => {
-      fields.forEach((field) => {
-        // if the defaultValue is not primitive, then make a deep copy maybe? TODO
+  resetForm = () => {
+    this.fields.forEach((field) => {
+      // If it's an refence type, make a deep copy
+      if (Array.isArray(field.defaultValue)) {
+        field.value = [...field.defaultValue];
+      } else if (typeof field.defaultValue === "object") {
+        field.value = { ...field.defaultValue };
+      } else {
+        // Else, just set the value to the default value
         field.value = field.defaultValue;
-      });
+      }
 
-      return fields;
+      // If agent_id field, set it to the current user
+      if (field.databaseFieldName === "agent_id") {
+        const currentUser = getCurrentUser();
+        if (currentUser) {
+          field.value = [currentUser.id];
+        }
+      }
     });
   };
 
-  const setFieldOptions = (
+  setFieldOptions = (
     fieldName: keyof Property,
     newOptions: { value: string; label: string }[]
   ) => {
@@ -280,40 +292,24 @@ const createPropertyFormStore = () => {
     }
 
     // Update the options of the field with the given fieldName
-    update((fields) => {
-      const field = fields.find((field) => field.databaseFieldName === fieldName);
-      if (field) {
-        field.options = zodResponse.data;
-      }
 
-      return fields;
-    });
+    const field = this.fields.find((field) => field.databaseFieldName === fieldName);
+    if (field) {
+      field.options = zodResponse.data;
+    }
   };
 
-  const setFieldValue = (fieldName: keyof Property, value: any) => {
+  setFieldValue = (fieldName: keyof Property, value: any) => {
     console.log("Setting field value:", fieldName, value);
-    update((fields) => {
-      const field = fields.find((field) => field.databaseFieldName === fieldName);
-      if (field) {
-        field.value = value;
-      }
 
-      return fields;
-    });
+    const field = this.fields.find((field) => field.databaseFieldName === fieldName);
+    if (field) {
+      field.value = value;
+    }
   };
+}
 
-  return {
-    set,
-    update,
-    subscribe,
-    print,
-    resetForm,
-    setFieldOptions,
-    setFieldValue,
-  };
-};
-
-export const propertyFormStore = createPropertyFormStore();
+export const propertyFormStore = new PropertyFormStore();
 
 // propertyFormStore.initializeFields(propertyFormFields);
 
@@ -328,12 +324,6 @@ agents.subscribe((agents) => {
         label: agent.name,
       }))
     );
-
-    // Set the value of the "agent_id" field to the current user
-    const currentUser = getCurrentUser()?.id;
-    if (currentUser) {
-      propertyFormStore.setFieldValue("agent_id", [currentUser]);
-    }
   }
 });
 

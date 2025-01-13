@@ -2,10 +2,24 @@
   import { parseValueWithSuffix } from "../../utils/numbers";
   import Label from "../common/Label.svelte";
 
-  export let label: string;
-  export let id: string;
-  export let minValue: string;
-  export let maxValue: string;
+  interface Props {
+    label: string;
+    id: string;
+    minValue: string;
+    maxValue: string;
+    onMinValueChange: (newValue: string) => void;
+    onMaxValueChange: (newValue: string) => void;
+  }
+
+  let {
+    label,
+    id,
+    minValue,
+    maxValue,
+
+    onMinValueChange,
+    onMaxValueChange,
+  }: Props = $props();
 
   function handleInput() {
     minValue = parseValueWithSuffix(minValue);
@@ -14,11 +28,25 @@
 </script>
 
 <div class="min-max-input">
-  <Label forId={`${id}-min`} text={label} />
+  <Label forId={`${id}`} text={label} />
 
-  <div class="inputsContainer" on:input={handleInput}>
-    <input type="text" name={id + "-min"} id={id + "-min"} bind:value={minValue} />
-    <input type="text" name={id + "-max"} id={id + "-max"} bind:value={maxValue} />
+  <div class="inputsContainer" oninput={handleInput}>
+    <input
+      type="text"
+      name={id + "-min"}
+      id={id + "-min"}
+      value={minValue}
+      oninput={(e) => onMinValueChange((e.target as HTMLInputElement).value)}
+      class:empty={!minValue}
+    />
+    <input
+      type="text"
+      name={id + "-max"}
+      id={id + "-max"}
+      value={maxValue}
+      oninput={(e) => onMaxValueChange((e.target as HTMLInputElement).value)}
+      class:empty={!maxValue}
+    />
   </div>
 </div>
 
@@ -50,11 +78,15 @@
 
     font-size: 0.875rem;
     font-weight: 400;
-    color: #1a1a1a;
+    color: #1a1a1a; /* hsl(0, 0%, 10%); */
 
     transition:
       outline 75ms ease-out,
       border 75ms ease-out;
+  }
+
+  input.empty {
+    color: hsl(0, 0%, 50%);
   }
 
   .inputsContainer input:first-child {

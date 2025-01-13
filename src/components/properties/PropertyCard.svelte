@@ -8,11 +8,18 @@
   import PeopleIcon from "../../assets/icons/PeopleIcon.svelte";
   import HouseIcon from "../../assets/icons/HouseIcon.svelte";
 
-  import { createEventDispatcher } from "svelte";
+  interface Props {
+    property: Property;
+  }
 
-  const dispatch = createEventDispatcher();
+  let { property }: Props = $props();
 
-  export let property: Property;
+  // TODO:
+  // Implement this, I want to restructure how this work, sidenote will have a store so no need for callbacks or something
+  // until now it was event based, but Svelte 5 removes the event dispatcher.
+  function openSideNote() {
+    console.log("Open side note");
+  }
 </script>
 
 <div class="property-card">
@@ -47,11 +54,8 @@
 
     <button
       class="content-row"
-      on:click={() => {
-        dispatch("openSideNote", {
-          title: "Bilješke nekretnine",
-          value: property.propertyNotes,
-        });
+      onclick={() => {
+        openSideNote();
       }}
     >
       <HouseIcon size={16} color="#1A1A1A" />
@@ -60,11 +64,8 @@
 
     <button
       class="content-row"
-      on:click={() => {
-        dispatch("openSideNote", {
-          title: "Bilješke vlasnika",
-          value: property.sellerNotes,
-        });
+      onclick={() => {
+        openSideNote();
       }}
     >
       <PeopleIcon size={16} color="#1A1A1A" />

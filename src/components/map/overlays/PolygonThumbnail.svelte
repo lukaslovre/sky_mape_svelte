@@ -1,12 +1,18 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import type { LatLng } from "leaflet";
 
-  export let polygon: LatLng[] = [];
+  interface Props {
+    polygon?: LatLng[];
+  }
+
+  let { polygon = [] }: Props = $props();
 
   // Compute normalized SVG path
-  let path = "";
+  let path = $state("");
 
-  $: {
+  run(() => {
     if (polygon.length === 0) {
       path = "";
     } else {
@@ -43,12 +49,12 @@
           })
           .join(" ") + " Z";
     }
-  }
+  });
 </script>
 
 <button
   class="polygon-thumbnail"
-  on:click={() => {
+  onclick={() => {
     console.log("Clicked on polygon thumbnail");
   }}
 >

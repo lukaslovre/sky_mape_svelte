@@ -3,7 +3,7 @@
   import type { Interaction } from "../../types";
   import Header1 from "../common/Header1.svelte";
 
-  let interactions: Interaction[] = [];
+  let interactions: Interaction[] = $state([]);
 
   getInteractionsFromDb()
     .then((data) => {
@@ -14,7 +14,7 @@
     });
 
   // Group interactions by date
-  $: groupedInteractions = interactions.reduce(
+  let groupedInteractions = $derived(interactions.reduce(
     (acc, interaction) => {
       const date = new Date(interaction.date || interaction.created).toLocaleDateString();
 
@@ -25,12 +25,12 @@
       return acc;
     },
     {} as Record<string, Interaction[]>
-  );
+  ));
 
   // Sort dates in descending order
-  $: sortedDates = Object.keys(groupedInteractions).sort(
+  let sortedDates = $derived(Object.keys(groupedInteractions).sort(
     (a, b) => new Date(b).getTime() - new Date(a).getTime()
-  );
+  ));
 
   function daysAgo(date: Date): number {
     const today = new Date();

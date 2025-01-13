@@ -3,7 +3,11 @@
   import { filters } from "../../stores/store";
   import { Polygon } from "sveaflet";
 
-  export let drawingPolygonCoords: LatLng[];
+  interface Props {
+    drawingPolygonCoords: LatLng[];
+  }
+
+  let { drawingPolygonCoords }: Props = $props();
 </script>
 
 <!-- Draw the polygon that is currently being drawn -->

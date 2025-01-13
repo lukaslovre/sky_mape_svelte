@@ -1,13 +1,17 @@
 <script lang="ts">
-  export let userPolygonsVisibility: boolean;
-  export let toggleUserPolygonsVisibility: () => void;
+  interface Props {
+    userPolygonsVisibility: boolean;
+    toggleUserPolygonsVisibility: () => void;
+  }
+
+  let { userPolygonsVisibility, toggleUserPolygonsVisibility }: Props = $props();
 
   function onClick() {
     toggleUserPolygonsVisibility();
   }
 </script>
 
-<button on:click={onClick} class:active={userPolygonsVisibility}>Pokaži poligone</button>
+<button onclick={onClick} class:active={userPolygonsVisibility}>Pokaži poligone</button>
 
 <style>
   button {

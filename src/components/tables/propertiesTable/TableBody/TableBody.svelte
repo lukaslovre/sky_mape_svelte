@@ -6,11 +6,20 @@
   import Checkbox from "./Checkbox.svelte";
   import CopyableCell from "./CopyableCell.svelte";
 
-  // Props
-  export let selectedPropertyIds: Property["id"][] = [];
-  export let propertyData: Property[];
-  export let columns: (keyof Property)[];
-  export let handleCheckboxClick: (propertyId: Property["id"], newState: boolean) => void;
+  interface Props {
+    // Props
+    selectedPropertyIds?: Property["id"][];
+    propertyData: Property[];
+    columns: (keyof Property)[];
+    handleCheckboxClick: (propertyId: Property["id"], newState: boolean) => void;
+  }
+
+  let {
+    selectedPropertyIds = [],
+    propertyData,
+    columns,
+    handleCheckboxClick,
+  }: Props = $props();
 
   // Helper Functions
   // Check if a value is an object
@@ -68,6 +77,7 @@
         />
       </td>
 
+      <!-- TODO: First check all empty situations, than conditionally others -->
       <!-- Other, Dynamic Columns -->
       {#each columns as column}
         <td>

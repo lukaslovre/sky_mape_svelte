@@ -119,7 +119,7 @@ type MenuItem = {
   label: string;
   href?: string;
   icon?: ComponentType;
-  disabled?: boolean;
+  disabledIfCount: (count: number) => boolean;
 };
 
 //////////////

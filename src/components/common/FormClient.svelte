@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { preventDefault } from 'svelte/legacy';
+
   import Checkbox from "./Checkbox.svelte";
   import Close from "./Close.svelte";
   import Dropdown from "./Dropdown.svelte";
@@ -8,13 +10,23 @@
   import { clientFormStore } from "../../stores/clientFormStore";
   import type { Client } from "../../types";
 
-  export let onSubmit: (transformedFields: Record<string, any>) => Promise<void>;
-  export let onDelete: ((id: string) => Promise<void>) | null = null;
-  export let close: () => void;
-  export let submitButtonText = "Submit";
-  export let deleteButtonText = "Delete";
+  interface Props {
+    onSubmit: (transformedFields: Record<string, any>) => Promise<void>;
+    onDelete?: ((id: string) => Promise<void>) | null;
+    close: () => void;
+    submitButtonText?: string;
+    deleteButtonText?: string;
+  }
 
-  $: fields = $clientFormStore;
+  let {
+    onSubmit,
+    onDelete = null,
+    close,
+    submitButtonText = "Submit",
+    deleteButtonText = "Delete"
+  }: Props = $props();
+
+  let fields = $derived($clientFormStore);
 
   function handleClear() {
     clientFormStore.clearFields();
@@ -23,7 +35,7 @@
 
 <Close on:close={close} />
 
-<form on:submit|preventDefault={onSubmit}>
+<form onsubmit={preventDefault(onSubmit)}>
   {#each fields as field (field.databaseFieldName)}
     {#if field.inputElement === "input"}
       <Input
@@ -73,12 +85,12 @@
   {/each}
 
   <button type="submit">{submitButtonText}</button>
-  <button type="button" class="clear-button" on:click={handleClear}>Reset form</button>
+  <button type="button" class="clear-button" onclick={handleClear}>Reset form</button>
   {#if onDelete && fields.find((field) => field.databaseFieldName === "id")?.value}
     <button
       type="button"
       class="delete-button"
-      on:click={() => {
+      onclick={() => {
         const id = fields.find((field) => field.databaseFieldName === "id")?.value;
         if (id && onDelete) {
           onDelete(id);

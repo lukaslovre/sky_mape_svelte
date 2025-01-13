@@ -5,12 +5,15 @@
   import InfoRow from "./PropertyInformationComponents/InfoRow.svelte";
   import Thumbnail from "./PropertyInformationComponents/Thumbnail.svelte";
 
-  export let property: Property;
+  interface Props {
+    property: Property;
+  }
+
+  let { property }: Props = $props();
 
   const defaultImageUrl =
     "https://www.njuskalo.hr/image-w920x690/auti/fiat-stilo-1.9-jtd-05-god-full-oprema-navi-ime-kupca-reg-slika-35796873.jpg";
 
-  $: propertyForDisplay = parsePropertyForDisplay(property, $users, $agents);
 
   function parsePropertyForDisplay(property: Property, users: Client[], agents: Agent[]) {
     const parsedFields = {
@@ -56,6 +59,7 @@
       new Date(date).toLocaleTimeString("hr-HR")
     );
   }
+  let propertyForDisplay = $derived(parsePropertyForDisplay(property, $users, $agents));
 </script>
 
 <div class="property-information">

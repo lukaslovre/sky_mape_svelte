@@ -5,11 +5,9 @@
   import PropertyInformation from "./PropertyInformation.svelte";
   import PropertyListNavigator from "./PropertyListNavigator.svelte";
 
-  $: property = $properties.filter((property) =>
-    $selectedPropertyIds.includes(property.id)
-  )[0];
-
-  $: console.log(property);
+  let property = $derived(
+    $properties.filter((property) => $selectedPropertyIds.includes(property.id))[0]
+  );
 </script>
 
 <section>

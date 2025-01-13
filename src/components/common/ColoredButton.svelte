@@ -1,18 +1,28 @@
 <!-- A button svelte component -->
 
 <script lang="ts">
-  export let text: string;
-  export let color: string = "#1a1a1a";
 
-  export let onClick: (e: MouseEvent) => void = () => {};
+  interface Props {
+    text: string;
+    color?: string;
+    onClick?: (e: MouseEvent) => void;
+    children?: import('svelte').Snippet;
+  }
+
+  let {
+    text,
+    color = "#1a1a1a",
+    onClick = () => {},
+    children
+  }: Props = $props();
 </script>
 
 <button
   class="colored-button"
-  on:click={onClick}
+  onclick={onClick}
   style="--button-color: {color}; --button-color-ten-percent: {color}1a; --button-color-twenty-percent: {color}33;"
 >
-  <slot />
+  {@render children?.()}
   {text}
 </button>
 

@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import type { Tabs } from "../../types";
   import { filteredProperties, filteredUsers, filteredOwners } from "../../stores/store";
   import { userIsAuthenticated } from "../../auth";
@@ -18,7 +20,7 @@
   };
 
   // Configuration object for all tabs
-  const tabConfigurations: Record<Tabs, TabConfig> = {
+  const tabConfigurations: Record<Tabs, TabConfig> = $state({
     Map: {
       icon: MapIcon,
       label: "Karta",
@@ -39,17 +41,19 @@
       label: `Popis vlasnika - ${$filteredOwners.length}`,
       requiresAuth: true,
     },
-  };
+  });
 
   // Reactive store to update tab labels dynamically
-  $: tabsList.forEach((tab) => {
-    if (tab === "Properties") {
-      tabConfigurations[tab].label = `Popis nekretnina - ${$filteredProperties.length}`;
-    } else if (tab === "Buyers") {
-      tabConfigurations[tab].label = `Popis kupaca - ${$filteredUsers.length}`;
-    } else if (tab === "Owners") {
-      tabConfigurations[tab].label = `Popis vlasnika - ${$filteredOwners.length}`;
-    }
+  run(() => {
+    tabsList.forEach((tab) => {
+      if (tab === "Properties") {
+        tabConfigurations[tab].label = `Popis nekretnina - ${$filteredProperties.length}`;
+      } else if (tab === "Buyers") {
+        tabConfigurations[tab].label = `Popis kupaca - ${$filteredUsers.length}`;
+      } else if (tab === "Owners") {
+        tabConfigurations[tab].label = `Popis vlasnika - ${$filteredOwners.length}`;
+      }
+    });
   });
 
   function handleTabClick(tab: Tabs) {
@@ -64,14 +68,14 @@
 <nav>
   <ul class="tab-menu">
     {#each tabsList as tab}
+      {@const SvelteComponent = tabConfigurations[tab].icon}
       <li>
         <button
           class:active={tab === $activeTab}
-          on:click={() => handleTabClick(tab)}
+          onclick={() => handleTabClick(tab)}
           aria-label={tabConfigurations[tab].label}
         >
-          <svelte:component
-            this={tabConfigurations[tab].icon}
+          <SvelteComponent
             size={24}
             color={tab === $activeTab ? "#1A1A1A" : "#4D4D4D"}
           />

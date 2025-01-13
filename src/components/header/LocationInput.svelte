@@ -15,7 +15,7 @@
     class="button"
     class:isDrawing={$isDrawing}
     id="location"
-    on:click={handleDrawButtonClick}
+    onclick={handleDrawButtonClick}
   >
     <DrawIcon />
     {$isDrawing ? "Završi" : "Nacrtaj"}

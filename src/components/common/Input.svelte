@@ -2,7 +2,11 @@
   import type { FormFieldType } from "../../types";
   import Label from "./Label.svelte";
 
-  export let formField: FormFieldType<any>;
+  interface Props {
+    formField: FormFieldType<any>;
+  }
+
+  let { formField = $bindable() }: Props = $props();
 
   function handleInput(e: Event) {
     const rawValue = (e.target as HTMLInputElement).value;
@@ -53,7 +57,7 @@
     placeholder={formField.placeholder}
     disabled={formField.disabled}
     class:disabled={formField.disabled}
-    on:input={handleInput}
+    oninput={handleInput}
     autocomplete="off"
   />
 </div>

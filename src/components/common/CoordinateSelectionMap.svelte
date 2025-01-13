@@ -9,39 +9,55 @@
 -->
 
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import { Map, Marker, TileLayer } from "sveaflet";
   import { mapOptions, markerOptions } from "../../assets/mapConfigValues";
   import { onDestroy } from "svelte";
   import L from "leaflet";
 
-  export let lat: number;
-  export let lng: number;
-  export let onCoordinatesSelected: (lat: number, lng: number) => void;
-  export let zoom: number = 13;
-  export let iconUrl: string = "";
+  interface Props {
+    lat: number;
+    lng: number;
+    onCoordinatesSelected: (lat: number, lng: number) => void;
+    zoom?: number;
+    iconUrl?: string;
+  }
 
-  let map: L.Map | undefined = undefined;
-  let marker: L.Marker | undefined = undefined;
+  let {
+    lat,
+    lng,
+    onCoordinatesSelected,
+    zoom = 13,
+    iconUrl = ""
+  }: Props = $props();
+
+  let map: L.Map | undefined = $state(undefined);
+  let marker: L.Marker | undefined = $state(undefined);
 
   function clickHandler(e: L.LeafletMouseEvent) {
     const { lat, lng } = e.latlng;
     onCoordinatesSelected(lat, lng);
   }
 
-  $: if (map) {
-    map.on("click", clickHandler);
-  }
-
-  $: if (marker) {
-    if (iconUrl) {
-      marker.setIcon(
-        new L.Icon({
-          ...markerOptions,
-          iconUrl: iconUrl,
-        })
-      );
+  run(() => {
+    if (map) {
+      map.on("click", clickHandler);
     }
-  }
+  });
+
+  run(() => {
+    if (marker) {
+      if (iconUrl) {
+        marker.setIcon(
+          new L.Icon({
+            ...markerOptions,
+            iconUrl: iconUrl,
+          })
+        );
+      }
+    }
+  });
 
   onDestroy(() => {
     if (map) {

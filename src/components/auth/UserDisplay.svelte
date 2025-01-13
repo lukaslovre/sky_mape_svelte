@@ -1,7 +1,11 @@
 <script lang="ts">
   import type { Agent } from "../../types";
 
-  export let user: Agent;
+  interface Props {
+    user: Agent;
+  }
+
+  let { user }: Props = $props();
 </script>
 
 <div id="user-display">

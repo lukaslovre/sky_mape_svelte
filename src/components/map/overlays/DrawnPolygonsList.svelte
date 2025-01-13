@@ -4,7 +4,11 @@
   import type { Filters } from "../../../types";
   import PolygonThumbnail from "./PolygonThumbnail.svelte";
 
-  export let polygons: Filters["polygons"] = [];
+  interface Props {
+    polygons?: Filters["polygons"];
+  }
+
+  let { polygons = [] }: Props = $props();
 
   //   Event handlers
   function deletePolygon(polygon: Filters["polygons"][0]) {
@@ -12,7 +16,7 @@
     removePolygon(polygon);
   }
 
-  let isHovering = false;
+  let isHovering = $state(false);
 </script>
 
 {#if polygons.length !== 0}
@@ -28,11 +32,11 @@
 
           <!-- Delete Button -->
           <button
-            on:click={() => deletePolygon(polygon)}
-            on:mouseenter={() => {
+            onclick={() => deletePolygon(polygon)}
+            onmouseenter={() => {
               isHovering = true;
             }}
-            on:mouseleave={() => {
+            onmouseleave={() => {
               isHovering = false;
             }}
           >

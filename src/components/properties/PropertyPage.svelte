@@ -6,31 +6,41 @@
   import Header1 from "../common/Header1.svelte";
   import Table from "../tables/propertiesTable/Table.svelte";
   import PropertyMenubar from "./PropertyMenubar.svelte";
-  import { propertyFormStore } from "../../stores/propertiesFormStore";
+  import { propertyFormStore } from "../../stores/propertiesFormStore.svelte";
   import { deleteProperty } from "../../models/Properties";
 
   // Property sorting
-  let sortOption: keyof Property | null = null;
+  let showForm: boolean = $state(false);
+  let sortOption: keyof Property | null = $state(null);
 
-  $: sortedProperties = sortProperties($filteredProperties, sortOption);
-  $: removeUnfilteredPropertiesFromSelection($filteredProperties);
-
-  function handleChangeSortOption(event: CustomEvent<keyof Property>) {
-    sortOption = event.detail;
+  function handleSortPropertiesClick(newSortOption: keyof Property) {
+    sortOption = newSortOption;
+    sortedProperties = sortProperties($filteredProperties, sortOption); // TODO: Check why derived is not working, maybe it automatically gets fixed after refactoring other part of code
   }
 
+  let sortedProperties = $derived(sortProperties($filteredProperties, sortOption));
+
+  $effect(() => {
+    removeUnfilteredPropertiesFromSelection($filteredProperties);
+  });
+
   function removeUnfilteredPropertiesFromSelection(filteredProperties: Property[]) {
-    selectedPropertyIds = selectedPropertyIds.filter((id) => {
+    const newSelectedPropertyIds = selectedPropertyIds.filter((id) => {
       return filteredProperties.some((property) => property.id === id);
     });
+
+    // Check if actually changed
+    if (newSelectedPropertyIds.length !== selectedPropertyIds.length) {
+      selectedPropertyIds = newSelectedPropertyIds;
+    }
   }
 
   // Property filtering
-  let showForm: boolean = false;
 
-  function handleItemClick(event: CustomEvent<MenuItem>) {
-    const buttonLabel = event.detail.label; // Dodaj, Spremi kao tablicu, Uredi, Obriši
-    console.log(`${buttonLabel} label clicked.`);
+  // onMenuItemClick: (item: MenuItem) => void;
+  function handleItemClick(item: MenuItem) {
+    const buttonLabel = item.label;
+    console.log(`${buttonLabel} label clicked in PropertyPage.`);
 
     switch (buttonLabel) {
       case "Dodaj":
@@ -56,7 +66,6 @@
 
   // Shows the form for adding a new property
   function handleAdd() {
-    // propertyFormStore.clearFields();
     propertyFormStore.resetForm();
     showForm = true;
   }
@@ -73,7 +82,7 @@
     const selectedProperty = findSelectedProperty(selectedPropertyIds[0]);
 
     if (selectedProperty) {
-      propertyFormStore.setFieldValues(selectedProperty);
+      // propertyFormStore.setFieldValues(selectedProperty); TODO
       showForm = true;
     }
   }
@@ -106,7 +115,7 @@
   }
 
   // Table specific
-  let selectedPropertyIds: string[] = [];
+  let selectedPropertyIds: string[] = $state([]);
 
   function handleCheckboxClick(propertyId: Property["id"], newState: boolean): void {
     // True = ON, False = OFF
@@ -126,8 +135,8 @@
   {#if !showForm}
     <PropertyMenubar
       selectedPropertiesLength={selectedPropertyIds.length}
-      {handleItemClick}
-      on:sortProperties={handleChangeSortOption}
+      onMenuItemClick={handleItemClick}
+      onSortClick={handleSortPropertiesClick}
     />
 
     <Table

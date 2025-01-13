@@ -2,18 +2,22 @@
   import ChevronIcon from "../../assets/icons/ChevronIcon.svelte";
 
   type Direction = "left" | "up" | "right" | "down";
-  export let direction: Direction = "right";
-  export let onClick: () => void = () => {};
+  interface Props {
+    direction?: Direction;
+    onClick?: () => void;
+  }
 
-  $: directionInDegrees = {
+  let { direction = "right", onClick = () => {} }: Props = $props();
+
+  let directionInDegrees = $derived({
     left: 180,
     up: 270,
     right: 0,
     down: 90,
-  }[direction];
+  }[direction]);
 </script>
 
-<button type="button" on:click={onClick}>
+<button type="button" onclick={onClick}>
   <ChevronIcon size={32} rotation={directionInDegrees} color={"#0B5EDA"} />
 </button>
 

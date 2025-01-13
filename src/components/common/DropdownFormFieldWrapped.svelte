@@ -1,9 +1,11 @@
 <script lang="ts">
   import type { FormFieldType } from "../../types";
   import Dropdown from "./Dropdown.svelte";
-  export let formField: FormFieldType<any>;
+  interface Props {
+    formField: FormFieldType<any>;
+  }
 
-  // $: console.log(formField.value, formField.options);
+  let { formField = $bindable() }: Props = $props();
 </script>
 
 <Dropdown

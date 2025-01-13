@@ -3,10 +3,19 @@
   import Header1 from "./Header1.svelte";
   import Header2 from "./Header2.svelte";
 
-  export let title: string;
-  export let value: string;
-  export let isOpen: boolean;
-  export let close: () => void;
+  interface Props {
+    title: string;
+    value: string;
+    isOpen: boolean;
+    close: () => void;
+  }
+
+  let {
+    title,
+    value,
+    isOpen,
+    close
+  }: Props = $props();
 </script>
 
 {#if isOpen}

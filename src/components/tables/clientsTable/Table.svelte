@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import type { UserData } from "../../../types";
   import type { parsePocketbaseUserData } from "../../../utils/buyers";
   import TableBody from "./TableBody/TableBody.svelte";
@@ -7,16 +9,20 @@
 
   const dispatch = createEventDispatcher();
 
-  export let showHeader: boolean = true;
-  export let data: UserData[] = [];
+  interface Props {
+    showHeader?: boolean;
+    data?: UserData[];
+  }
+
+  let { showHeader = true, data = [] }: Props = $props();
 
   // Type Definitions
   type ParsedUserData = ReturnType<typeof parsePocketbaseUserData>[0];
   type ColumnKey = keyof ParsedUserData;
 
   // State Variables
-  let checkboxes: Record<UserData["id"], boolean> = {};
-  let isSelectAll: boolean = false;
+  let checkboxes: Record<UserData["id"], boolean> = $state({});
+  let isSelectAll: boolean = $state(false);
 
   // The order of the columns in the table.
   // Also toggle which ones are shown.
@@ -61,21 +67,25 @@
   }
 
   // When the selectAll checkbox is checked, toggle all checkboxes in the table
-  $: if (isSelectAll) {
-    setAllCheckboxesTo(true);
-  } else {
-    setAllCheckboxesTo(false);
-  }
+  run(() => {
+    if (isSelectAll) {
+      setAllCheckboxesTo(true);
+    } else {
+      setAllCheckboxesTo(false);
+    }
+  });
 
   // When checkboxes change, dispatch a custom event
-  $: if (checkboxes) {
-    // Filter out checkboxes with 'false' values
-    const onlyCheckedCheckboxIds = Object.entries(checkboxes)
-      .filter(([userId, isChecked]) => isChecked)
-      .map(([userId]) => userId);
+  run(() => {
+    if (checkboxes) {
+      // Filter out checkboxes with 'false' values
+      const onlyCheckedCheckboxIds = Object.entries(checkboxes)
+        .filter(([userId, isChecked]) => isChecked)
+        .map(([userId]) => userId);
 
-    dispatch("checkboxesChanged", onlyCheckedCheckboxIds);
-  }
+      dispatch("checkboxesChanged", onlyCheckedCheckboxIds);
+    }
+  });
 
   // TODO: When data changes, remove all checkboxes that are no longer in the data
 

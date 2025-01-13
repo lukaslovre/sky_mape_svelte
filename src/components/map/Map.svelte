@@ -24,10 +24,10 @@
   import DrawnPolygons from "./DrawnPolygons.svelte";
   import UserPolygons from "./UserPolygons.svelte";
 
-  let mapInstance: L.Map | undefined;
-  let drawingPolygonCoords: LatLng[] = [];
-  let userPolygonsVisibility: boolean = false;
-  let eventListenersSet: boolean = false;
+  let mapInstance: L.Map | undefined = $state();
+  let drawingPolygonCoords: LatLng[] = $state([]);
+  let userPolygonsVisibility: boolean = $state(false);
+  let eventListenersSet: boolean = $state(false);
 
   // Event Handlers
   function handleMapClick(e: L.LeafletMouseEvent) {
@@ -86,12 +86,19 @@
     mapInstance.on("keypress", handleKeyPress);
   }
 
-  $: if (mapInstance && !eventListenersSet) {
-    setEventListeners(mapInstance);
-    eventListenersSet = true;
-  }
+  $effect(() => {
+    if (mapInstance && !eventListenersSet) {
+      setEventListeners(mapInstance);
+      eventListenersSet = true;
+    }
+  });
 
   // Other
+  // Reactive statement to handle drawing state changes
+  $effect(() => {
+    if (!$isDrawing && drawingPolygonCoords.length > 0) handleFinishDrawing();
+  });
+
   function handleFinishDrawing() {
     if (!mapInstance) return;
 
@@ -104,11 +111,6 @@
 
     // Reset drawing coordinates
     drawingPolygonCoords = [];
-  }
-
-  // Reactive statement to handle drawing state changes
-  $: if (!$isDrawing) {
-    handleFinishDrawing();
   }
 
   function toggleUserPolygonsVisibility() {
@@ -130,7 +132,7 @@
     <TileLayer url={"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"} />
 
     <!-- Property Markers Component -->
-    <PropertyMarkers on:openSideNote />
+    <PropertyMarkers />
 
     <!-- Drawn Polygons Component -->
     <DrawnPolygons {drawingPolygonCoords} />

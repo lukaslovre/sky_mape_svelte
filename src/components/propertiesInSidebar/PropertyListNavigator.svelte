@@ -3,8 +3,6 @@
   import type { Property } from "../../types";
   import ArrowButton from "./ArrowButton.svelte";
 
-  $: filteredCount = $filteredProperties.length;
-  $: currentIndex = getCurrentIndex($filteredProperties, $selectedPropertyIds) + 1; // 1-based index
 
   function getCurrentIndex(
     filteredProperties: Property[],
@@ -45,6 +43,8 @@
     const newPropertyId = $filteredProperties[newIndex].id;
     selectedPropertyIds.set([newPropertyId]);
   }
+  let filteredCount = $derived($filteredProperties.length);
+  let currentIndex = $derived(getCurrentIndex($filteredProperties, $selectedPropertyIds) + 1); // 1-based index
 </script>
 
 <div class="property-list-navigator">

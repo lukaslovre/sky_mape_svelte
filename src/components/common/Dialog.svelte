@@ -1,10 +1,23 @@
 <script lang="ts">
+  import { createBubbler, stopPropagation } from 'svelte/legacy';
+
+  const bubble = createBubbler();
   import Header1 from "./Header1.svelte";
 
-  export let title: string = "Dialog Title";
-  export let beforeClose = () => {};
 
-  export let isOpen: boolean = true;
+  interface Props {
+    title?: string;
+    beforeClose?: any;
+    isOpen?: boolean;
+    children?: import('svelte').Snippet;
+  }
+
+  let {
+    title = "Dialog Title",
+    beforeClose = () => {},
+    isOpen = true,
+    children
+  }: Props = $props();
 
   function close() {
     beforeClose();
@@ -15,17 +28,17 @@
 </script>
 
 {#if isOpen}
-  <!-- svelte-ignore a11y-click-events-have-key-events -->
-  <!-- svelte-ignore a11y-no-static-element-interactions -->
-  <div class="backdrop" on:click={close} typeof="button">
-    <section class="dialog" on:click|stopPropagation>
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
+  <div class="backdrop" onclick={close} typeof="button">
+    <section class="dialog" onclick={stopPropagation(bubble('click'))}>
       <div class="dialog-header">
         <Header1>{title}</Header1>
-        <button on:click={close}>Close</button>
+        <button onclick={close}>Close</button>
       </div>
 
       <div class="dialog-content">
-        <slot />
+        {@render children?.()}
       </div>
     </section>
   </div>

@@ -6,7 +6,7 @@
   import ClientsPage from "./components/clients/ClientsPage.svelte";
   import OwnersPage from "./components/owners/OwnersPage.svelte";
   import { onMount } from "svelte";
-  import { propertyFormStore } from "./stores/propertiesFormStore";
+  import { propertyFormStore } from "./stores/propertiesFormStore.svelte";
   import TabMenu from "./components/header/TabMenu.svelte";
   import { activeTab } from "./stores/uiStateStore";
 
@@ -15,15 +15,14 @@
     title: string;
     value: string;
   };
-  let openSideNote: SideNoteParams | null = null;
+  let openSideNote: SideNoteParams | null = $state(null);
   function setSideNote(params: SideNoteParams) {
     openSideNote = params;
   }
 
-  onMount(() => {
-    // console.log(propertyFormStore.getAndTransformFields());
-    propertyFormStore.print();
-  });
+  // $effect(() => {
+  //   propertyFormStore.print();
+  // });
 
   // TODO: Check if it's better to do this here or in the .ts file of the store.
   // onMount(() => {
@@ -48,11 +47,7 @@
     <TabMenu />
 
     {#if $activeTab === "Map"}
-      <Map
-        on:openSideNote={(e) => {
-          setSideNote(e.detail);
-        }}
-      />
+      <Map />
     {:else if $activeTab === "Properties"}
       <PropertyPage />
     {:else if $activeTab === "Buyers"}

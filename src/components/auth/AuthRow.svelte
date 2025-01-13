@@ -5,7 +5,7 @@
 
   let isAuth = userIsAuthenticated();
   let user = getCurrentUser();
-  let showLoginPopup: boolean = false;
+  let showLoginPopup: boolean = $state(false);
 
   function handleLogOutClick() {
     logOut();
@@ -21,13 +21,13 @@
   {#if isAuth && user}
     <UserDisplay {user} />
 
-    <button on:click={handleLogOutClick}>Log out</button>
+    <button onclick={handleLogOutClick}>Log out</button>
   {:else}
     {#if showLoginPopup}
       <LoginPopup />
     {/if}
 
-    <button on:click={toggleLoginPopupVisibility}>Prijavi se</button>
+    <button onclick={toggleLoginPopupVisibility}>Prijavi se</button>
   {/if}
 </div>
 
