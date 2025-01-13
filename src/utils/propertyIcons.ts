@@ -10,7 +10,7 @@ export function getIconForProperty(
   property: OnlyNeededPropertyAttributes,
   isFavorite: boolean
 ): string {
-  console.log(property);
+  // console.log(property);
   const propertyType = property.type.toLowerCase();
 
   if (property.id?.startsWith("temporary")) {

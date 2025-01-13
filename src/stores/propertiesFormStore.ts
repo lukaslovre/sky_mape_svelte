@@ -28,6 +28,13 @@ import { parse } from "svelte/compiler";
 //   error?: string;
 // };
 
+const optionsShape = z.array(
+  z.object({
+    value: z.string(),
+    label: z.string(),
+  })
+);
+
 const validators: Record<string, InputValidator> = {
   imageSizeValidator: (value: File | undefined) => {
     const maxSizeMb = 10;
@@ -65,16 +72,6 @@ export const propertyFormFields: FormFieldType<Property>[] = [
     disabled: true,
   },
   {
-    label: "Agent",
-    inputElement: "select",
-    databaseFieldName: "agent_id",
-    value: [],
-    defaultValue: [],
-    validators: [],
-    options: [],
-    required: true,
-  },
-  {
     label: "Lat & Lng",
     inputElement: "latLngMapInput",
     databaseFieldName: "lat",
@@ -87,6 +84,16 @@ export const propertyFormFields: FormFieldType<Property>[] = [
       lng: 15.981919,
     },
     validators: [],
+    required: true,
+  },
+  {
+    label: "Agent",
+    inputElement: "select",
+    databaseFieldName: "agent_id",
+    value: [],
+    defaultValue: [],
+    validators: [],
+    options: [],
     required: true,
   },
   {
@@ -253,8 +260,43 @@ const createPropertyFormStore = () => {
   const resetForm = () => {
     update((fields) => {
       fields.forEach((field) => {
+        // if the defaultValue is not primitive, then make a deep copy maybe? TODO
         field.value = field.defaultValue;
       });
+
+      return fields;
+    });
+  };
+
+  const setFieldOptions = (
+    fieldName: keyof Property,
+    newOptions: { value: string; label: string }[]
+  ) => {
+    // Confirm newOptions shape
+    const zodResponse = optionsShape.safeParse(newOptions);
+    if (!zodResponse.success) {
+      console.error(zodResponse.error);
+      return;
+    }
+
+    // Update the options of the field with the given fieldName
+    update((fields) => {
+      const field = fields.find((field) => field.databaseFieldName === fieldName);
+      if (field) {
+        field.options = zodResponse.data;
+      }
+
+      return fields;
+    });
+  };
+
+  const setFieldValue = (fieldName: keyof Property, value: any) => {
+    console.log("Setting field value:", fieldName, value);
+    update((fields) => {
+      const field = fields.find((field) => field.databaseFieldName === fieldName);
+      if (field) {
+        field.value = value;
+      }
 
       return fields;
     });
@@ -266,6 +308,8 @@ const createPropertyFormStore = () => {
     subscribe,
     print,
     resetForm,
+    setFieldOptions,
+    setFieldValue,
   };
 };
 
@@ -273,39 +317,39 @@ export const propertyFormStore = createPropertyFormStore();
 
 // propertyFormStore.initializeFields(propertyFormFields);
 
-// // Subscribe to the agents and users stores and update the options of the select fields
-// agents.subscribe((agents) => {
-//   if (Array.isArray(agents)) {
-//     // Set the options of the "agent_id" field to the agents
-//     propertyFormStore.updateFieldOptions(
-//       "agent_id",
-//       agents.map((agent) => ({
-//         value: agent.id,
-//         label: agent.name,
-//       }))
-//     );
-//   }
+// Subscribe to the agents and users stores and update the options of the select fields
+agents.subscribe((agents) => {
+  if (Array.isArray(agents)) {
+    // Set the options of the "agent_id" field to the agents
+    propertyFormStore.setFieldOptions(
+      "agent_id",
+      agents.map((agent) => ({
+        value: agent.id,
+        label: agent.name,
+      }))
+    );
 
-//   // Set the value of the "agent_id" field to the current user
-//   const currentUser = getCurrentUser()?.id;
-//   if (currentUser) {
-//     propertyFormStore.updateFieldValue("agent_id", [currentUser]);
-//   }
-// });
+    // Set the value of the "agent_id" field to the current user
+    const currentUser = getCurrentUser()?.id;
+    if (currentUser) {
+      propertyFormStore.setFieldValue("agent_id", [currentUser]);
+    }
+  }
+});
 
-// users.subscribe((users) => {
-//   if (Array.isArray(users)) {
-//     propertyFormStore.updateFieldOptions(
-//       "ownerId",
-//       users
-//         .filter((user) => user.userType === "seller")
-//         .map((user) => ({
-//           value: user.id,
-//           label: user.name,
-//         }))
-//     );
-//   }
-// });
+users.subscribe((users) => {
+  if (Array.isArray(users)) {
+    propertyFormStore.setFieldOptions(
+      "ownerId",
+      users
+        .filter((user) => user.userType === "seller")
+        .map((user) => ({
+          value: user.id,
+          label: user.name,
+        }))
+    );
+  }
+});
 
 // TODO:
 

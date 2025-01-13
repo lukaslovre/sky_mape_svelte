@@ -1,19 +1,17 @@
 <script lang="ts">
   import Checkbox from "./Checkbox.svelte";
   import Close from "./Close.svelte";
-  import Dropdown from "./Dropdown.svelte";
   import ImageInput from "./ImageInput.svelte";
   import Input from "./Input.svelte";
   import Textarea from "./Textarea.svelte";
   import { propertyFormStore } from "../../stores/propertiesFormStore";
   import CoordinateSelectionMap from "./CoordinateSelectionMap.svelte";
   import { getIconForProperty } from "../../utils/propertyIcons";
+  import DropdownFormFieldWrapped from "./DropdownFormFieldWrapped.svelte";
 
   export let onSubmit: () => Promise<void>;
   export let close: () => void;
   export let submitButtonText = "Submit";
-
-  $: fields = $propertyFormStore;
 
   function handleClear() {
     propertyFormStore.resetForm();
@@ -23,27 +21,34 @@
   $: markerIconUrl = getIconForProperty(
     {
       hiddenOnWebsite:
-        fields.find((field) => field.databaseFieldName === "hiddenOnWebsite")?.value ||
-        false,
+        $propertyFormStore.find((field) => field.databaseFieldName === "hiddenOnWebsite")
+          ?.value || false,
       type:
-        fields.find((field) => field.databaseFieldName === "type")?.value.at(0) ||
-        "House",
+        $propertyFormStore
+          .find((field) => field.databaseFieldName === "type")
+          ?.value.at(0) || "House",
     },
     false
   );
+
+  $: console.log(markerIconUrl);
 </script>
 
 <Close on:close={close} />
 
-<form on:submit|preventDefault={() => onSubmit()}>
-  {#each fields as field (field.databaseFieldName)}
+<form
+  on:submit={(e) => {
+    e.preventDefault();
+    onSubmit();
+  }}
+>
+  {#each $propertyFormStore as field (field.databaseFieldName)}
     {#if field.inputElement === "input"}
       <Input formField={field} />
     {:else if field.inputElement === "textarea"}
       <Textarea formField={field} />
     {:else if field.inputElement === "select" && field.options}
-      <!-- <Dropdown formField={field} multipleValues={false} /> -->
-      <p>Wait...</p>
+      <DropdownFormFieldWrapped formField={field} />
     {:else if field.inputElement === "checkbox"}
       <Checkbox formField={field} />
     {:else if field.inputElement === "imageInput"}

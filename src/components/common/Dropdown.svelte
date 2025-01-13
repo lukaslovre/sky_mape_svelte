@@ -3,18 +3,22 @@
   import { onMount } from "svelte";
   import DropdownTriangleIcon from "../../assets/icons/DropdownTriangleIcon.svelte";
   import Label from "./Label.svelte";
-  import type { FormFieldType } from "../../types";
 
-  // TODO: možda napravit da je ovo generički dropdown, dakle ne samo za formField. A onda se može napravit wrapper za formField
-  // Okay, that's a good idea. What props should a generic dropdown have? Options, values, multipleValues, disabled, label, required, error, id, onValueChange
+  // Napravit da je ovo generički dropdown, dakle ne samo za formField. A onda se može napravit wrapper za formField
   export let multipleValues: boolean = true;
-  export let 
+  export let options: { label: string; value: string }[] = [];
+  export let selectedValues: string[];
+  export let onValueChange: (newValues: string[]) => void;
+  export let label: string;
+  export let id: string;
+  export let error: string | undefined;
+  export let disabled: boolean = false;
 
   let isOpen: boolean = false;
   let focusedOptionIndex: number = -1;
   let dropdownElement: HTMLDivElement;
 
-  $: selectedValuesLabel = getLabelsFromValues(values);
+  $: selectedValuesLabel = getLabelsFromValues(selectedValues);
 
   function getLabelsFromValues(values: string[], separator: string = ", ") {
     if (!Array.isArray(values)) return "Values nije array";
@@ -31,15 +35,20 @@
   }
 
   function handleOptionClick(value: string) {
+    const isSelected = selectedValues.includes(value);
+    let newValues: string[] = [];
+
     if (!multipleValues) {
       // Single select mode
-      const isSelected = values.includes(value);
-      values = isSelected ? [] : [value];
+      newValues = isSelected ? [] : [value];
     } else {
       // Multi select mode
-      const isSelected = values.includes(value);
-      values = isSelected ? values.filter((v) => v !== value) : [...values, value];
+      newValues = isSelected
+        ? selectedValues.filter((v) => v !== value)
+        : [...selectedValues, value];
     }
+
+    onValueChange(newValues);
   }
 
   function handleKeyDown(event: KeyboardEvent) {
@@ -48,8 +57,8 @@
         event.preventDefault();
         isOpen = true;
         focusedOptionIndex =
-          values.length > 0
-            ? options.findIndex((option) => option.value === values[0])
+          selectedValues.length > 0
+            ? options.findIndex((option) => option.value === selectedValues[0])
             : 0;
       }
       return;
@@ -80,10 +89,6 @@
     }
   }
 
-  function resetValue() {
-    values = [];
-  }
-
   function toggleDropdownOptionsVisibility() {
     if (disabled) return;
     isOpen = !isOpen;
@@ -109,14 +114,14 @@
 <div
   class="dropdown-input"
   class:disabled
-  class:none-selected={!values?.length}
+  class:none-selected={selectedValues.length === 0}
   bind:this={dropdownElement}
   role="combobox"
   aria-expanded={isOpen}
   aria-haspopup="listbox"
   aria-controls="dropdown-options"
 >
-  <Label forId={id} text={`${required ? "*" : ""} ${label}`} />
+  <Label forId={id} text={label} />
 
   {#if error}
     <p class="error">{error}</p>
@@ -145,14 +150,14 @@
       <button
         type="button"
         class="dropdown-input-option"
-        class:selected={values.includes(value)}
+        class:selected={selectedValues.includes(value)}
         class:focused={focusedOptionIndex === i}
         role="option"
-        aria-selected={values.includes(value)}
+        aria-selected={selectedValues.includes(value)}
         on:click={() => handleOptionClick(value)}
       >
         <div class="checkbox-square">
-          {#if values.includes(value)}
+          {#if selectedValues.includes(value)}
             <CheckmarkIcon />
           {/if}
         </div>
