@@ -1,19 +1,18 @@
 <script lang="ts">
   import TrashIcon from "../../../assets/icons/TrashIcon.svelte";
-  import { removePolygon } from "../../../stores/actions";
-  import type { Filters } from "../../../types";
+  import { filtersStore, type Filter } from "../../../stores/filtersStore.svelte";
   import PolygonThumbnail from "./PolygonThumbnail.svelte";
 
   interface Props {
-    polygons?: Filters["polygons"];
+    polygons?: Filter["polygons"];
   }
 
   let { polygons = [] }: Props = $props();
 
   //   Event handlers
-  function deletePolygon(polygon: Filters["polygons"][0]) {
+  function deletePolygon(polygon: Filter["polygons"][0]) {
     console.log("Deleting polygon", polygon);
-    removePolygon(polygon);
+    filtersStore.removePolygon(polygon);
   }
 
   let isHovering = $state(false);

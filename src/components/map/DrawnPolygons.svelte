@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { LatLng } from "leaflet";
-  import { filters } from "../../stores/store";
   import { Polygon } from "sveaflet";
+  import { filtersStore } from "../../stores/filtersStore.svelte";
 
   interface Props {
     drawingPolygonCoords: LatLng[];
@@ -14,6 +14,6 @@
 <Polygon latLngs={drawingPolygonCoords} />
 
 <!-- Draw all polygons -->
-{#each $filters.polygons as poligon}
-  <Polygon latLngs={poligon} />
+{#each filtersStore.filters.polygons as polygon}
+  <Polygon latLngs={polygon} />
 {/each}

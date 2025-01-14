@@ -1,10 +1,8 @@
 <script lang="ts">
-  import { run } from 'svelte/legacy';
-
-  import type { LatLng } from "leaflet";
+  import type { Filter } from "../../../stores/filtersStore.svelte";
 
   interface Props {
-    polygon?: LatLng[];
+    polygon?: Filter["polygons"][0];
   }
 
   let { polygon = [] }: Props = $props();
@@ -12,7 +10,7 @@
   // Compute normalized SVG path
   let path = $state("");
 
-  run(() => {
+  $effect(() => {
     if (polygon.length === 0) {
       path = "";
     } else {

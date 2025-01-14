@@ -9,7 +9,6 @@
     isClickNearStart,
   } from "./utils/mapUtils";
   import {
-    filters,
     isDrawing,
     propertiesBoundingBox,
     selectedPropertyIds,
@@ -17,12 +16,13 @@
   import DrawnPolygonsList from "./overlays/DrawnPolygonsList.svelte";
   import { Map, TileLayer } from "sveaflet";
   import { mapOptions } from "../../assets/mapConfigValues";
-  import { fitViewToFilteredProperties, savePolygon } from "../../stores/actions";
+  import { fitViewToFilteredProperties } from "../../stores/actions";
   import FitBoundsButton from "./overlays/FitBoundsButton.svelte";
   import ShowUserPolygonsButton from "./overlays/ShowUserPolygonsButton.svelte";
   import PropertyMarkers from "./PropertyMarkers.svelte";
   import DrawnPolygons from "./DrawnPolygons.svelte";
   import UserPolygons from "./UserPolygons.svelte";
+  import { filtersStore } from "../../stores/filtersStore.svelte";
 
   let mapInstance: L.Map | undefined = $state();
   let drawingPolygonCoords: LatLng[] = $state([]);
@@ -104,9 +104,8 @@
 
     // Must have at least 4 coordinates because 1 will be removed before saving
     if (drawingPolygonCoords.length > 3) {
-      // Remove the last temporary coordinate before saving
-      drawingPolygonCoords.pop();
-      savePolygon(drawingPolygonCoords);
+      drawingPolygonCoords.pop(); // Remove the last temporary coordinate before saving
+      filtersStore.addPolygon(drawingPolygonCoords);
     }
 
     // Reset drawing coordinates
@@ -124,7 +123,7 @@
     <ShowUserPolygonsButton {userPolygonsVisibility} {toggleUserPolygonsVisibility} />
   </div>
   <!-- List of drawn polygons -->
-  <DrawnPolygonsList polygons={$filters.polygons} />
+  <DrawnPolygonsList polygons={filtersStore.filters.polygons} />
 
   <!-- Leaflet Map Component -->
   <Map options={mapOptions} bind:instance={mapInstance}>

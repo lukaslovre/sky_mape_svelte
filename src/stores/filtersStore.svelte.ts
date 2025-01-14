@@ -1,9 +1,5 @@
 import { z } from "zod";
 
-// 1. Make a zod schema for the Filters type and infer the type from zod
-// 2. Create a store for the Filters type, which will have validations and methods for handling filters
-// 3. Replace the current Filter implementations with the new store
-
 const FiltersSchema = z.object({
   maxArea: z.coerce.number(),
   minArea: z.coerce.number(),
@@ -24,7 +20,7 @@ const FiltersSchema = z.object({
   ),
 });
 
-type Filter = z.infer<typeof FiltersSchema>;
+export type Filter = z.infer<typeof FiltersSchema>;
 
 // TODO: maybe make this a function that returns a new object
 const emptyFilters: Filter = {
@@ -43,7 +39,10 @@ const emptyFilters: Filter = {
 class FiltersStore {
   filters = $state<Filter>(emptyFilters);
 
-  // method for resetting filters
+  ////////
+  // General methods
+  ////////
+
   resetFilters = () => {
     this.filters = emptyFilters;
   };
@@ -57,6 +56,30 @@ class FiltersStore {
     } else {
       console.log(zodResult.error);
     }
+  };
+
+  removeEmptyFilterFields: () => Partial<Filter> = () => {
+    // The values are either number or array, so we have to check for falsy values and empty arrays
+
+    const nonEmptyFields = Object.entries(this.filters).filter(
+      ([key, value]) => value && (!Array.isArray(value) || value.length > 0)
+    );
+
+    return Object.fromEntries(nonEmptyFields);
+  };
+
+  ////////
+  // Polygon methods
+  ////////
+
+  addPolygon = (newPolygon: Filter["polygons"][0]) => {
+    this.setField("polygons", [...this.filters.polygons, newPolygon]);
+  };
+
+  removePolygon = (polygon: Filter["polygons"][0]) => {
+    this.filters.polygons = this.filters.polygons.filter(
+      (currentPolygon) => currentPolygon !== polygon
+    );
   };
 }
 

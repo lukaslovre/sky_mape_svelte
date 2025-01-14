@@ -11,34 +11,6 @@ import {
 import { emptyFiltersObject, parseFilterValues } from "../utils/filter";
 import { filtersStore } from "./filtersStore.svelte";
 
-// Save a polygon to filters without mutating the original state
-export function savePolygon(polygon: LatLng[]) {
-  filters.update((currentFilters) => ({
-    ...currentFilters,
-    polygons: [...currentFilters.polygons, polygon],
-  }));
-
-  // new way
-  // Nastaviti tu sutra
-  // Možda funkcije za poligone ovdje prebaciti u filtersStore
-  filtersStore.setField("polygons", [...filtersStore.filters.polygons, polygon]);
-}
-
-// Remove a polygon from filters without mutating the original state
-export function removePolygon(polygon: LatLng[]) {
-  filters.update((currentFilters) => ({
-    ...currentFilters,
-    polygons: currentFilters.polygons.filter(
-      (currentPolygon) => currentPolygon !== polygon
-    ),
-  }));
-}
-
-// Reset filters to their initial empty state
-export function resetFilters() {
-  filters.set(emptyFiltersObject());
-}
-
 // Toggle the selection of a property ID
 export function toggleSelectedProperty(propertyId: Property["id"]) {
   selectedPropertyIds.update((currentSelectedPropertyIds) =>

@@ -30,6 +30,7 @@ export const isDrawing: Writable<boolean> = writable(false);
 
 // Derived store for filtered properties
 export const filteredProperties: Readable<Property[]> = derived(
+  // [properties, filters, selectedPropertyIds],
   [properties, filters, selectedPropertyIds],
   ([$properties, $filters, $selectedPropertyIds]) => {
     if ($selectedPropertyIds.length > 1) {

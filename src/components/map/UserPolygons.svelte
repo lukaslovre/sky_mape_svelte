@@ -5,9 +5,9 @@
 </script>
 
 {#each $users as user}
-  {#each user.filters?.polygons || [] as poligon}
+  {#each user.filters?.polygons || [] as polygon}
     <Polygon
-      latLngs={poligon}
+      latLngs={polygon}
       options={{
         color: getColorForUser(user),
       }}

@@ -4,8 +4,7 @@
   import LocationInput from "./LocationInput.svelte";
   import { filters, agents, favoriteProperties } from "../../stores/store";
   import type { Filters } from "../../types";
-  import { emptyFavorites, resetFilters } from "../../stores/actions";
-  import { parseFilterValues, removeEmptyValuesFromFilters } from "../../utils/filter";
+  import { emptyFavorites } from "../../stores/actions";
   import Dropdown from "../common/Dropdown.svelte";
   import { filtersStore } from "../../stores/filtersStore.svelte";
   import { parseValueWithSuffix } from "../../utils/numbers";
@@ -31,7 +30,6 @@
       };
 
   function resetValues() {
-    resetFilters();
     filtersStore.resetFilters();
   }
 
@@ -160,9 +158,7 @@
 
   <div class="buttons-container">
     <button type="reset" class="button" onclick={resetValues}>
-      <ResetIcon /> Filtri ({Object.keys(
-        removeEmptyValuesFromFilters(parseFilterValues($filters))
-      ).length})
+      <ResetIcon /> Filtri ({Object.keys(filtersStore.removeEmptyFilterFields()).length})
     </button>
     <button type="reset" class="button" onclick={emptyFavoriteProperties}>
       <!-- add star emoji -->
