@@ -1,12 +1,7 @@
 <script lang="ts">
   import { Marker, Icon, Popup } from "sveaflet";
   import L from "leaflet";
-  import {
-    favoriteProperties,
-    filteredProperties,
-    properties,
-    selectedPropertyIds,
-  } from "../../stores/store";
+  import { dataStore } from "../../stores/store.svelte";
   import { markerOptions } from "../../assets/mapConfigValues";
   import { getIconForProperty } from "../../utils/propertyIcons";
   import type { Property } from "../../types";
@@ -25,7 +20,7 @@
       toggleSelectedProperty(propertyId);
     } else {
       // Single select
-      selectedPropertyIds.set([propertyId]);
+      dataStore.selectedPropertyIds = [propertyId];
     }
   }
 
@@ -38,7 +33,7 @@
 
   function setAppropriateMarkerIcons() {
     Object.entries(markerInstances).forEach(([propertyId, marker]) => {
-      const property = $properties.find((p) => p.id === propertyId);
+      const property = dataStore.properties.find((p) => p.id === propertyId);
       if (!property || !marker) return;
 
       marker.setIcon(
@@ -46,7 +41,7 @@
           ...markerOptions,
           iconUrl: getIconForProperty(
             property,
-            $favoriteProperties.includes(property.id)
+            dataStore.favoriteProperties.includes(property.id)
           ),
         })
       );
@@ -74,18 +69,18 @@
 
   // When the favorite properties change, update the marker icons
   $effect(() => {
-    if ($favoriteProperties) setAppropriateMarkerIcons();
+    if (dataStore.favoriteProperties) setAppropriateMarkerIcons();
   });
 </script>
 
 <!-- Iterate over each property and render a Marker -->
-{#each $properties as property (property.id)}
+{#each dataStore.properties as property (property.id)}
   <Marker
     latLng={new LatLng(property.lat, property.lng)}
     options={{
-      opacity: $filteredProperties.includes(property)
+      opacity: dataStore.filteredProperties.includes(property)
         ? // ? 1  // THIS IS A TEMPORARY SOLUTION TO DISPLAY THE SELECTED PROPERTY
-          $selectedPropertyIds.includes(property.id)
+          dataStore.selectedPropertyIds.includes(property.id)
           ? 0.5
           : 1
         : 0.25,

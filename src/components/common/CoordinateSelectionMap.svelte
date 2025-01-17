@@ -9,8 +9,6 @@
 -->
 
 <script lang="ts">
-  import { run } from 'svelte/legacy';
-
   import { Map, Marker, TileLayer } from "sveaflet";
   import { mapOptions, markerOptions } from "../../assets/mapConfigValues";
   import { onDestroy } from "svelte";
@@ -24,29 +22,30 @@
     iconUrl?: string;
   }
 
-  let {
-    lat,
-    lng,
-    onCoordinatesSelected,
-    zoom = 13,
-    iconUrl = ""
-  }: Props = $props();
+  let { lat, lng, onCoordinatesSelected, zoom = 13, iconUrl = "" }: Props = $props();
 
   let map: L.Map | undefined = $state(undefined);
   let marker: L.Marker | undefined = $state(undefined);
 
-  function clickHandler(e: L.LeafletMouseEvent) {
-    const { lat, lng } = e.latlng;
-    onCoordinatesSelected(lat, lng);
-  }
+  // TODO: While refactoring I put the function and the return inside the effect (before it was outside effect and in the onDestroy), I don't know if this is the same.
+  $effect(() => {
+    function clickHandler(e: L.LeafletMouseEvent) {
+      const { lat, lng } = e.latlng;
+      onCoordinatesSelected(lat, lng);
+    }
 
-  run(() => {
     if (map) {
       map.on("click", clickHandler);
     }
+
+    return () => {
+      if (map) {
+        map.off("click", clickHandler);
+      }
+    };
   });
 
-  run(() => {
+  $effect(() => {
     if (marker) {
       if (iconUrl) {
         marker.setIcon(
@@ -59,11 +58,11 @@
     }
   });
 
-  onDestroy(() => {
-    if (map) {
-      map.off("click", clickHandler);
-    }
-  });
+  // onDestroy(() => {
+  //   if (map) {
+  //     map.off("click", clickHandler);
+  //   }
+  // });
 </script>
 
 <Map

@@ -2,7 +2,7 @@ import { get, writable } from "svelte/store";
 import { getCurrentUser } from "../auth";
 import type { FormFieldType, Property, Client, InputValidator } from "../types";
 import { createFormStore } from "./formStoreCreator";
-import { agents, users } from "./store";
+import { dataStore } from "./store.svelte";
 import { number, z } from "zod";
 import { parseValueWithSuffix } from "../utils/numbers";
 import { parse } from "svelte/compiler";
@@ -115,13 +115,12 @@ export const propertyFormFields: FormFieldType<Property>[] = [
     label: "Action",
     inputElement: "select",
     databaseFieldName: "action",
-    value: [],
-    defaultValue: [],
+    value: ["Sale"],
+    defaultValue: ["Sale"],
     options: [
       { value: "Sale", label: "Sale" },
       { value: "Rent", label: "Rent" },
     ],
-
     validators: [],
     required: true,
   },
@@ -131,13 +130,6 @@ export const propertyFormFields: FormFieldType<Property>[] = [
     databaseFieldName: "imgUrl",
     value: "",
     defaultValue: "",
-    // parsingFunction: (value: File) => {
-    //   // TODO: check flow
-    //   // console.log("Original value:", value);
-    //   // const parsedValue = value || undefined;
-    //   // console.log("Parsed value:", parsedValue);
-    //   // return parsedValue;
-    // },
     validators: [validators.imageSizeValidator],
   },
   {
@@ -148,6 +140,7 @@ export const propertyFormFields: FormFieldType<Property>[] = [
     defaultValue: "",
     parsingFunction: (value: string) => parseFloat(parseValueWithSuffix(value)),
     validators: [validators.numberValidator],
+    placeholder: "123456",
   },
   {
     label: "Surface Area (m²) (može se koristiti slovo 'k' ili 'm')",
@@ -157,6 +150,7 @@ export const propertyFormFields: FormFieldType<Property>[] = [
     defaultValue: "",
     parsingFunction: (value: string) => parseFloat(parseValueWithSuffix(value)),
     validators: [validators.numberValidator],
+    placeholder: "123",
   },
   {
     label: "Website URL",
@@ -166,6 +160,7 @@ export const propertyFormFields: FormFieldType<Property>[] = [
     defaultValue: "",
     parsingFunction: (value: string) => value.trim(),
     validators: [validators.urlValidator],
+    placeholder: "https://example.com",
   },
   {
     label: "Hidden on Website",
@@ -184,6 +179,7 @@ export const propertyFormFields: FormFieldType<Property>[] = [
     defaultValue: "",
     parsingFunction: (value: string) => parseInt(value),
     validators: [validators.numberValidator],
+    placeholder: "3",
   },
   {
     label: "Bathrooms",
@@ -193,6 +189,7 @@ export const propertyFormFields: FormFieldType<Property>[] = [
     defaultValue: "",
     parsingFunction: (value: string) => parseInt(value),
     validators: [validators.numberValidator],
+    placeholder: "2",
   },
   {
     label: "Owner",
@@ -239,11 +236,7 @@ export const propertyFormFields: FormFieldType<Property>[] = [
   },
 ];
 
-// PLAN: I am creating a propertyFormStore manually (not from the creatFormStore<Property> function) because I want to add some custom logic to it.
 class PropertyFormStore {
-  // const { set, update, subscribe } =
-  //   writable<FormFieldType<Property>[]>(propertyFormFields);
-
   fields = $state(propertyFormFields);
 
   print = () => {
@@ -280,6 +273,28 @@ class PropertyFormStore {
     });
   };
 
+  formatForUploadingToDatabase = () => {
+    const formattedData = this.fields.reduce((acc, field) => {
+      // Handle special cases
+
+      // Lat & Lng - split the one field into 2 seperate (lat, lng) fields
+      if (field.databaseFieldName === "lat") {
+        return {
+          ...acc,
+          lat: field.value.lat,
+          lng: field.value.lng,
+        };
+      } else {
+        return {
+          ...acc,
+          [field.databaseFieldName]: field.value,
+        };
+      }
+    }, {} as Property);
+
+    return formattedData;
+  };
+
   setFieldOptions = (
     fieldName: keyof Property,
     newOptions: { value: string; label: string }[]
@@ -310,36 +325,6 @@ class PropertyFormStore {
 }
 
 export const propertyFormStore = new PropertyFormStore();
-
-// propertyFormStore.initializeFields(propertyFormFields);
-
-// Subscribe to the agents and users stores and update the options of the select fields
-agents.subscribe((agents) => {
-  if (Array.isArray(agents)) {
-    // Set the options of the "agent_id" field to the agents
-    propertyFormStore.setFieldOptions(
-      "agent_id",
-      agents.map((agent) => ({
-        value: agent.id,
-        label: agent.name,
-      }))
-    );
-  }
-});
-
-users.subscribe((users) => {
-  if (Array.isArray(users)) {
-    propertyFormStore.setFieldOptions(
-      "ownerId",
-      users
-        .filter((user) => user.userType === "seller")
-        .map((user) => ({
-          value: user.id,
-          label: user.name,
-        }))
-    );
-  }
-});
 
 // TODO:
 

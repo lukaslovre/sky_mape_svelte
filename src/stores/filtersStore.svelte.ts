@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const FiltersSchema = z.object({
+export const FiltersSchema = z.object({
   maxArea: z.coerce.number(),
   minArea: z.coerce.number(),
   maxPrice: z.coerce.number(),
@@ -19,6 +19,11 @@ const FiltersSchema = z.object({
     )
   ),
 });
+
+export const FiltersSchemaWithDefaults = FiltersSchema.partial().transform((data) => ({
+  ...emptyFilters,
+  ...data,
+}));
 
 export type Filter = z.infer<typeof FiltersSchema>;
 
@@ -66,6 +71,10 @@ class FiltersStore {
     );
 
     return Object.fromEntries(nonEmptyFields);
+  };
+
+  isEmpty = () => {
+    return Object.keys(this.removeEmptyFilterFields()).length === 0;
   };
 
   ////////

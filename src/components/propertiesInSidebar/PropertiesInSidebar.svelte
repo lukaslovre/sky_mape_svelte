@@ -1,12 +1,14 @@
 <script lang="ts">
-  import { properties, selectedPropertyIds } from "../../stores/store";
+  import { dataStore } from "../../stores/store.svelte";
   import type { Property } from "../../types";
   import PropertyActionButtons from "./PropertyActionButtons.svelte";
   import PropertyInformation from "./PropertyInformation.svelte";
   import PropertyListNavigator from "./PropertyListNavigator.svelte";
 
-  let property = $derived(
-    $properties.filter((property) => $selectedPropertyIds.includes(property.id))[0]
+  let property: Property = $derived(
+    dataStore.properties.filter((property) =>
+      dataStore.selectedPropertyIds.includes(property.id)
+    )[0]
   );
 </script>
 

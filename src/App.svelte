@@ -5,10 +5,8 @@
   import PropertyPage from "./components/properties/PropertyPage.svelte";
   import ClientsPage from "./components/clients/ClientsPage.svelte";
   import OwnersPage from "./components/owners/OwnersPage.svelte";
-  import { onMount } from "svelte";
-  import { propertyFormStore } from "./stores/propertiesFormStore.svelte";
   import TabMenu from "./components/header/TabMenu.svelte";
-  import { activeTab } from "./stores/uiStateStore";
+  import { activeTab } from "./stores/uiStateStore.svelte";
 
   // SideNote
   type SideNoteParams = {
@@ -19,16 +17,6 @@
   function setSideNote(params: SideNoteParams) {
     openSideNote = params;
   }
-
-  // $effect(() => {
-  //   propertyFormStore.print();
-  // });
-
-  // TODO: Check if it's better to do this here or in the .ts file of the store.
-  // onMount(() => {
-  //   propertyFormStore.initializeFields(propertyFormFields);
-  //   clientFormStore.initializeFields(clientFormFields);
-  // });
 </script>
 
 <main>
@@ -55,8 +43,6 @@
     {:else if $activeTab === "Owners"}
       <OwnersPage />
     {/if}
-    <!-- {:else if $activeTab === "Interactions"}
-      <InteractionsPage /> -->
   </div>
 </main>
 

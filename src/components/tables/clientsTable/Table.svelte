@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { run } from 'svelte/legacy';
+  import { run } from "svelte/legacy";
+  // TODO: mislim da ovaj table nije refaktoran, pogledat Table.svelte od propertiesTable
 
-  import type { UserData } from "../../../types";
+  import type { Client } from "../../../types";
   import type { parsePocketbaseUserData } from "../../../utils/buyers";
   import TableBody from "./TableBody/TableBody.svelte";
   import TableHeader from "./TableHeader/TableHeader.svelte";
@@ -11,7 +12,7 @@
 
   interface Props {
     showHeader?: boolean;
-    data?: UserData[];
+    data?: Client[];
   }
 
   let { showHeader = true, data = [] }: Props = $props();
@@ -21,7 +22,7 @@
   type ColumnKey = keyof ParsedUserData;
 
   // State Variables
-  let checkboxes: Record<UserData["id"], boolean> = $state({});
+  let checkboxes: Record<Client["id"], boolean> = $state({});
   let isSelectAll: boolean = $state(false);
 
   // The order of the columns in the table.
@@ -105,7 +106,7 @@
       .filter(Boolean) as string[];
   }
 
-  function updateCheckboxes(newCheckboxes: Record<UserData["id"], boolean>) {
+  function updateCheckboxes(newCheckboxes: Record<Client["id"], boolean>) {
     checkboxes = newCheckboxes;
   }
 </script>

@@ -8,11 +8,7 @@
     saveLatLngToClipboard,
     isClickNearStart,
   } from "./utils/mapUtils";
-  import {
-    isDrawing,
-    propertiesBoundingBox,
-    selectedPropertyIds,
-  } from "../../stores/store";
+  import { dataStore } from "../../stores/store.svelte";
   import DrawnPolygonsList from "./overlays/DrawnPolygonsList.svelte";
   import { Map, TileLayer } from "sveaflet";
   import { mapOptions } from "../../assets/mapConfigValues";
@@ -35,7 +31,7 @@
 
     // Check if the click is near the start point
     if (isClickNearStart(mapInstance, e.latlng, drawingPolygonCoords)) {
-      isDrawing.set(false);
+      dataStore.isDrawing = false;
       return;
     }
 
@@ -58,7 +54,7 @@
   }
 
   function handleMouseMove(e: L.LeafletMouseEvent) {
-    if (!$isDrawing || drawingPolygonCoords.length === 0) return;
+    if (!dataStore.isDrawing || drawingPolygonCoords.length === 0) return;
 
     // Update the last coordinate with the current mouse position for dynamic drawing
     drawingPolygonCoords = [...drawingPolygonCoords.slice(0, -1), e.latlng];
@@ -68,13 +64,13 @@
     const key = e.originalEvent.key;
 
     if (key === "Enter") {
-      if ($isDrawing) {
-        isDrawing.set(false);
+      if (dataStore.isDrawing) {
+        dataStore.isDrawing = false;
       }
     } else if (key === "c") {
-      fitViewToFilteredProperties(mapInstance, $propertiesBoundingBox);
+      fitViewToFilteredProperties(mapInstance, dataStore.propertiesBoundingBox);
     } else if (key === "d") {
-      isDrawing.set(true);
+      dataStore.isDrawing = true;
     }
   }
 
@@ -96,7 +92,7 @@
   // Other
   // Reactive statement to handle drawing state changes
   $effect(() => {
-    if (!$isDrawing && drawingPolygonCoords.length > 0) handleFinishDrawing();
+    if (!dataStore.isDrawing && drawingPolygonCoords.length > 0) handleFinishDrawing();
   });
 
   function handleFinishDrawing() {

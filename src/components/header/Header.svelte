@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { selectedSidebarCategory } from "../../stores/uiStateStore";
+  import { uiStateStore } from "../../stores/uiStateStore.svelte";
   import AuthRow from "../auth/AuthRow.svelte";
   import PropertiesInSidebar from "../propertiesInSidebar/PropertiesInSidebar.svelte";
   import FiltersContainer from "./FiltersContainer.svelte";
@@ -21,9 +21,9 @@
     </div>
   </div>
 
-  {#if $selectedSidebarCategory === "filters"}
+  {#if uiStateStore.selectedSidebarCategory === "filters"}
     <FiltersContainer />
-  {:else if $selectedSidebarCategory === "selectedProperty"}
+  {:else if uiStateStore.selectedSidebarCategory === "selectedProperty"}
     <PropertiesInSidebar />
   {/if}
 </header>

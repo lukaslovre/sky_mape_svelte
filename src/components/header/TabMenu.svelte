@@ -1,16 +1,14 @@
 <script lang="ts">
-  import { run } from 'svelte/legacy';
-
   import type { Tabs } from "../../types";
-  import { filteredProperties, filteredUsers, filteredOwners } from "../../stores/store";
   import { userIsAuthenticated } from "../../auth";
-  import { activeTab, tabsList } from "../../stores/uiStateStore";
+  import { activeTab, tabsList } from "../../stores/uiStateStore.svelte";
 
   import MapIcon from "../../assets/icons/MapIcon.svelte";
   import HouseIcon from "../../assets/icons/HouseIcon.svelte";
   import PeopleIcon from "../../assets/icons/PeopleIcon.svelte";
   // import MessageIcon from "../../assets/icons/MessageIcon.svelte";
   import KeyIcon from "../../assets/icons/KeyIcon.svelte";
+  import { dataStore } from "../../stores/store.svelte";
 
   // Define the structure for each tab's configuration
   type TabConfig = {
@@ -28,30 +26,32 @@
     },
     Properties: {
       icon: HouseIcon,
-      label: `Popis nekretnina - ${$filteredProperties.length}`,
+      label: `Popis nekretnina - ${dataStore.filteredProperties.length}`,
       requiresAuth: true,
     },
     Buyers: {
       icon: PeopleIcon,
-      label: `Popis kupaca - ${$filteredUsers.length}`,
+      label: `Popis kupaca - ${dataStore.filteredUsers.length}`,
       requiresAuth: true,
     },
     Owners: {
       icon: KeyIcon,
-      label: `Popis vlasnika - ${$filteredOwners.length}`,
+      label: `Popis vlasnika - ${dataStore.filteredOwners.length}`,
       requiresAuth: true,
     },
   });
 
   // Reactive store to update tab labels dynamically
-  run(() => {
+  $effect(() => {
     tabsList.forEach((tab) => {
       if (tab === "Properties") {
-        tabConfigurations[tab].label = `Popis nekretnina - ${$filteredProperties.length}`;
+        tabConfigurations[tab].label =
+          `Popis nekretnina - ${dataStore.filteredProperties.length}`;
       } else if (tab === "Buyers") {
-        tabConfigurations[tab].label = `Popis kupaca - ${$filteredUsers.length}`;
+        tabConfigurations[tab].label = `Popis kupaca - ${dataStore.filteredUsers.length}`;
       } else if (tab === "Owners") {
-        tabConfigurations[tab].label = `Popis vlasnika - ${$filteredOwners.length}`;
+        tabConfigurations[tab].label =
+          `Popis vlasnika - ${dataStore.filteredOwners.length}`;
       }
     });
   });
@@ -75,10 +75,7 @@
           onclick={() => handleTabClick(tab)}
           aria-label={tabConfigurations[tab].label}
         >
-          <SvelteComponent
-            size={24}
-            color={tab === $activeTab ? "#1A1A1A" : "#4D4D4D"}
-          />
+          <SvelteComponent size={24} color={tab === $activeTab ? "#1A1A1A" : "#4D4D4D"} />
           {tabConfigurations[tab].label}
         </button>
       </li>

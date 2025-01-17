@@ -96,6 +96,10 @@
       border 75ms ease-out;
   }
 
+  input::placeholder {
+    color: hsl(0, 0%, 66%);
+  }
+
   input:hover {
     border: 1px solid hsl(0, 0%, 50%);
   }

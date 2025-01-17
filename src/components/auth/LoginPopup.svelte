@@ -11,8 +11,8 @@
       await authorizeWithUserAndPass(username, password);
 
       window.location.reload();
-    } catch (err) {
-      errorMessage = err instanceof Error ? err.message : "Nepoznata greška";
+    } catch (err: any) {
+      errorMessage = err.message || "Unknown error";
     }
   }
 </script>

@@ -1,5 +1,6 @@
 import type { LatLng } from "leaflet";
 import type { RecordModel } from "pocketbase";
+import type { Filter } from "./stores/filtersStore.svelte";
 
 //////////////
 // Pocketbase Collection Types/Schemas
@@ -33,7 +34,7 @@ type Client = {
   phone: string?;
   email: string?;
   note: string?;
-  filters: Filters?;
+  filters: Filter?;
   favoriteProperties: Property["id"][]; // Returns empty array if not set
   userType: "seller" | "buyer";
   payment_method: "credit" | "cash" | null;
@@ -75,45 +76,11 @@ type Filters = {
   polygons: LatLng[][];
 };
 
-// type InteractionType =
-//   | "Contacted"
-//   | "PropertyViewingScheduled"
-//   | "PropertyViewingCompleted"
-//   | "OfferMade"
-//   | "OfferReceived"
-//   | "Negotiation"
-//   | "ContractSigned"
-//   | "SaleClosed"
-//   | "FollowUp"
-//   | "InquiryReceived"
-//   | "EmailSent"
-//   | "PhoneCall"
-//   | "MeetingScheduled"
-//   | "DocumentSent"
-//   | "PaymentReceived"
-//   | "InspectionScheduled"
-//   | "AppraisalScheduled"
-//   | "Other";
-
-// type Interaction = {
-//   agent_id: Agent["id"];
-//   user_id?: UserData["id"];
-//   property_id?: Property["id"];
-//   type: InteractionType;
-//   note: string;
-//   date?: string;
-//   expand?: {
-//     agent_id: Agent;
-//     user_id?: UserData;
-//     property_id?: Property;
-//   };
-// } & PocketbaseAttributes;
-
 //////////////
 // UI Types
 //////////////
 
-type Tabs = "Map" | "Properties" | "Buyers" | "Owners"; // | "Interactions" | "Admin";
+type Tabs = "Map" | "Properties" | "Buyers" | "Owners";
 type DialogType = "saveBuyer" | "saveProperty";
 type MenuItem = {
   label: string;

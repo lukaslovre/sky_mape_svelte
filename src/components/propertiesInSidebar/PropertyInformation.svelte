@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { agents, users } from "../../stores/store";
+  import { dataStore } from "../../stores/store.svelte";
   import type { Agent, Property, Client } from "../../types";
   import { formatWithCommas } from "../../utils/numbers";
   import InfoRow from "./PropertyInformationComponents/InfoRow.svelte";
@@ -12,8 +12,7 @@
   let { property }: Props = $props();
 
   const defaultImageUrl =
-    "https://www.njuskalo.hr/image-w920x690/auti/fiat-stilo-1.9-jtd-05-god-full-oprema-navi-ime-kupca-reg-slika-35796873.jpg";
-
+    "https://coffective.com/wp-content/uploads/2018/06/default-featured-image.png.jpg";
 
   function parsePropertyForDisplay(property: Property, users: Client[], agents: Agent[]) {
     const parsedFields = {
@@ -59,7 +58,9 @@
       new Date(date).toLocaleTimeString("hr-HR")
     );
   }
-  let propertyForDisplay = $derived(parsePropertyForDisplay(property, $users, $agents));
+  let propertyForDisplay = $derived(
+    parsePropertyForDisplay(property, dataStore.users, dataStore.agents)
+  );
 </script>
 
 <div class="property-information">

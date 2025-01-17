@@ -1,10 +1,10 @@
 <script lang="ts">
   import DrawIcon from "../../assets/icons/DrawIcon.svelte";
   import Label from "../common/Label.svelte";
-  import { isDrawing } from "../../stores/store";
+  import { dataStore } from "../../stores/store.svelte";
 
   function handleDrawButtonClick() {
-    isDrawing.update((value) => !value);
+    dataStore.isDrawing = !dataStore.isDrawing;
   }
 </script>
 
@@ -13,13 +13,13 @@
   <button
     type="button"
     class="button"
-    class:isDrawing={$isDrawing}
+    class:isDrawing={dataStore.isDrawing}
     id="location"
     onclick={handleDrawButtonClick}
   >
     <DrawIcon />
-    {$isDrawing ? "Završi" : "Nacrtaj"}
-    {#if $isDrawing}
+    {dataStore.isDrawing ? "Završi" : "Nacrtaj"}
+    {#if dataStore.isDrawing}
       <span class="shortcut">[Enter]</span>
     {:else}
       <span class="shortcut">[D]</span>

@@ -9,43 +9,25 @@
 
   interface Props {
     selectedPropertiesLength?: number;
-    onSortClick: (sortOption: keyof Property) => void;
     onMenuItemClick: (item: MenuItem) => void;
+    cycleSortOption: () => void;
+    currentSortOptionLabel: string;
   }
 
-  let { selectedPropertiesLength = 0, onSortClick, onMenuItemClick }: Props = $props();
+  let {
+    selectedPropertiesLength = 0,
+    onMenuItemClick,
+    cycleSortOption,
+    currentSortOptionLabel,
+  }: Props = $props();
 
   // Property sorting
-  const sortOptions: (keyof Property)[] = [
-    "surfaceArea",
-    "price",
-    "created",
-    "bathrooms",
-    "bedrooms",
-  ];
-  let selectedSortOptionIndex: number = 0;
-
-  function cycleSortOption() {
-    selectedSortOptionIndex = (selectedSortOptionIndex + 1) % sortOptions.length;
-  }
-
-  function updateSortLabel(index: number) {
-    menubarItems = menubarItems.map((item) => {
-      if (item.label.startsWith("Sortiraj")) {
-        item.label = `Sortiraj (${sortOptions[index]})`;
-      }
-      return item;
-    });
-  }
 
   function handleItemClickLocal(item: MenuItem) {
     const buttonLabel = item.label;
 
-    // Handle sorting in-component because of changing the label
     if (buttonLabel.startsWith("Sortiraj")) {
       cycleSortOption();
-      updateSortLabel(selectedSortOptionIndex);
-      onSortClick(sortOptions[selectedSortOptionIndex]);
     } else {
       // Forward the event to the parent component
       onMenuItemClick(item);
@@ -53,7 +35,7 @@
   }
 
   // Menubar disabled items
-  let menubarItems: MenuItem[] = $state([
+  let menubarItems: MenuItem[] = $derived([
     {
       label: "Dodaj",
       icon: SaveIcon,
@@ -70,7 +52,7 @@
       disabledIfCount: (count: number) => count === 0,
     },
     {
-      label: "Sortiraj",
+      label: `Sortiraj (${currentSortOptionLabel})`,
       icon: SortIcon,
       disabledIfCount: (count: number) => false,
     },

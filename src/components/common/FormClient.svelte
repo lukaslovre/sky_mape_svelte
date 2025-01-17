@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { preventDefault } from 'svelte/legacy';
-
   import Checkbox from "./Checkbox.svelte";
   import Close from "./Close.svelte";
   import Dropdown from "./Dropdown.svelte";
@@ -23,7 +21,7 @@
     onDelete = null,
     close,
     submitButtonText = "Submit",
-    deleteButtonText = "Delete"
+    deleteButtonText = "Delete",
   }: Props = $props();
 
   let fields = $derived($clientFormStore);
@@ -33,9 +31,14 @@
   }
 </script>
 
-<Close on:close={close} />
+<Close onClose={close} />
 
-<form onsubmit={preventDefault(onSubmit)}>
+<form
+  onsubmit={(e) => {
+    e.preventDefault();
+    onSubmit(e);
+  }}
+>
   {#each fields as field (field.databaseFieldName)}
     {#if field.inputElement === "input"}
       <Input

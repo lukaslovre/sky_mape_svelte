@@ -1,7 +1,6 @@
 import type { Property } from "../types";
 
 import { pb } from "../PocketBaseInit";
-import { ClientResponseError } from "pocketbase";
 import { handlePocketbaseError } from "./errorHandling";
 import { addPropertyToStore, updatePropertyInStore } from "../stores/actions";
 
@@ -58,15 +57,14 @@ export async function addProperty(property: Partial<Property>): Promise<void> {
       // Update existing property
       const res = await collection.update(property.id, property);
       console.log("Property updated:", res);
-      updatePropertyInStore(res);
+      updatePropertyInStore(parsePropertyData(res));
     } else {
       // Create new property
       const res = await collection.create(property);
       console.log("Property created:", res);
-      addPropertyToStore(res);
+      addPropertyToStore(parsePropertyData(res));
     }
-  } catch (err) {
-    console.error("Error adding/updating property:", err);
+  } catch (err: unknown) {
     throw handlePocketbaseError(err);
   }
 }
@@ -81,7 +79,6 @@ export async function deleteProperty(id: string): Promise<void> {
     const res = await collection.delete(id);
     console.log("Property deleted:", res);
   } catch (err) {
-    console.log(err);
-    alert("Error deleting property");
+    throw handlePocketbaseError(err);
   }
 }

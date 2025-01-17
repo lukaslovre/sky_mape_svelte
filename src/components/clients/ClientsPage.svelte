@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { MenuItem } from "../../types";
   import Table from "../tables/clientsTable/Table.svelte";
-  import { filteredUsers } from "../../stores/store";
+  import { dataStore } from "../../stores/store.svelte";
   import Header1 from "../common/Header1.svelte";
   import ClientForm from "./ClientForm.svelte";
   import { clientFormStore } from "../../stores/clientFormStore";
@@ -58,7 +58,7 @@
   }
 
   function findSelectedClient(id: string) {
-    return $filteredUsers.find((user) => user.id === id);
+    return dataStore.filteredUsers.find((user) => user.id === id);
   }
 
   function handleCheckboxChange(event: CustomEvent<string[]>) {
@@ -79,7 +79,7 @@
   {:else}
     <Table
       showHeader={true}
-      data={$filteredUsers}
+      data={dataStore.filteredUsers}
       on:checkboxesChanged={handleCheckboxChange}
     />
   {/if}

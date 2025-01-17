@@ -1,8 +1,7 @@
 <script lang="ts">
-  import { filteredProperties, selectedPropertyIds } from "../../stores/store";
+  import { dataStore } from "../../stores/store.svelte";
   import type { Property } from "../../types";
   import ArrowButton from "./ArrowButton.svelte";
-
 
   function getCurrentIndex(
     filteredProperties: Property[],
@@ -21,30 +20,32 @@
   }
 
   function handleNavigation(direction: "next" | "previous") {
-    if ($filteredProperties.length === 0) return;
+    if (dataStore.filteredProperties.length === 0) return;
 
     console.log("Navigating", direction);
 
     const currentIndexZeroBased = getCurrentIndex(
-      $filteredProperties,
-      $selectedPropertyIds
+      dataStore.filteredProperties,
+      dataStore.selectedPropertyIds
     );
 
     let newIndex: number;
 
     if (direction === "next") {
-      newIndex = (currentIndexZeroBased + 1) % $filteredProperties.length;
+      newIndex = (currentIndexZeroBased + 1) % dataStore.filteredProperties.length;
     } else {
       newIndex =
-        (currentIndexZeroBased - 1 + $filteredProperties.length) %
-        $filteredProperties.length;
+        (currentIndexZeroBased - 1 + dataStore.filteredProperties.length) %
+        dataStore.filteredProperties.length;
     }
 
-    const newPropertyId = $filteredProperties[newIndex].id;
-    selectedPropertyIds.set([newPropertyId]);
+    const newPropertyId = dataStore.filteredProperties[newIndex].id;
+    dataStore.selectedPropertyIds = [newPropertyId];
   }
-  let filteredCount = $derived($filteredProperties.length);
-  let currentIndex = $derived(getCurrentIndex($filteredProperties, $selectedPropertyIds) + 1); // 1-based index
+  let filteredCount = $derived(dataStore.filteredProperties.length);
+  let currentIndex = $derived(
+    getCurrentIndex(dataStore.filteredProperties, dataStore.selectedPropertyIds) + 1
+  ); // 1-based index
 </script>
 
 <div class="property-list-navigator">

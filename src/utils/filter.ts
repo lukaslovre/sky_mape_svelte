@@ -1,6 +1,7 @@
 import { LatLng } from "leaflet";
 import type { Filters, Property, Client } from "../types";
 import { latLngIsInPolygon } from "./geo";
+import { FiltersSchema, type Filter } from "../stores/filtersStore.svelte";
 
 // TODO: napravit lijepo typescript da kad se promjeni u filters nešto da mi svugdje kaže gdje treba promjeniti
 
@@ -60,8 +61,9 @@ export function filtersIsEmpty(filters: Filters): boolean {
   );
 }
 
-export function propertyMatchesFilter(property: Property, filters: Filters): boolean {
-  const parsedFilters = parseFilterValues(filters);
+// TODO: Check more detailed this function after refactor
+export function propertyMatchesFilter(property: Property, filters: Filter): boolean {
+  // const parsedFilters = parseFilterValues(filters);
   // console.log("Parsed filters:", parsedFilters);
   // console.log("Property:", property);
 
@@ -76,16 +78,20 @@ export function propertyMatchesFilter(property: Property, filters: Filters): boo
     status,
     agentIds,
     polygons,
-  } = parsedFilters;
+  } = filters;
 
-  if (property.price < minPrice || property.price > maxPrice) {
-    // console.log("Failed price filter");
-    return false;
+  if (property.price) {
+    if (property.price < minPrice || property.price > (maxPrice || Infinity)) {
+      // console.log("Failed price filter");
+      return false;
+    }
   }
 
-  if (property.surfaceArea < minArea || property.surfaceArea > maxArea) {
-    // console.log("Failed area filter");
-    return false;
+  if (property.surfaceArea) {
+    if (property.surfaceArea < minArea || property.surfaceArea > (maxArea || Infinity)) {
+      // console.log("Failed area filter");
+      return false;
+    }
   }
 
   if (type.length > 0 && !type.includes(property.type)) {
@@ -163,7 +169,7 @@ export function usersMatchingProperties(
   const usersMatchingProperties = users.filter((user) => {
     if (!user.filters) return false;
 
-    return properties.some((property) => propertyMatchesFilter(property, user.filters!));
+    return properties.some((property) => propertyMatchesFilter(property, user.filters));
   });
 
   return usersMatchingProperties;

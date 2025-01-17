@@ -1,4 +1,6 @@
-import type { LatLng } from "leaflet";
+import type { Filter } from "../stores/filtersStore.svelte";
+
+type LatLng = Filter["polygons"][0][0];
 
 export function latLngIsInPolygon(latLng: LatLng, polygon: LatLng[]): boolean {
   if (polygon.length < 3) return false;

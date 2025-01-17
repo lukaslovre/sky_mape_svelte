@@ -2,8 +2,9 @@
   import { clientFormStore } from "../../stores/clientFormStore";
   import { createUser } from "../../models/Clients";
   import FormClient from "../common/FormClient.svelte";
-  import { filters, favoriteProperties } from "../../stores/store";
+  import { dataStore } from "../../stores/store.svelte";
   import { parseFilterValues } from "../../utils/filter";
+  import { filtersStore } from "../../stores/filtersStore.svelte";
 
   interface Props {
     close: () => void;
@@ -15,8 +16,8 @@
     const transformedFields = clientFormStore.getAndTransformFields();
 
     // Add favorites and filters to the transformedFields
-    transformedFields.favoriteProperties = $favoriteProperties;
-    transformedFields.filters = parseFilterValues($filters);
+    transformedFields.favoriteProperties = dataStore.favoriteProperties;
+    transformedFields.filters = filtersStore.filters;
 
     console.log(transformedFields);
 

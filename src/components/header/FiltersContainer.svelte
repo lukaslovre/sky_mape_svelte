@@ -2,7 +2,7 @@
   import MinMaxInput from "./MinMaxInput.svelte";
   import ResetIcon from "../../assets/icons/ResetIcon.svelte";
   import LocationInput from "./LocationInput.svelte";
-  import { filters, agents, favoriteProperties } from "../../stores/store";
+  import { dataStore } from "../../stores/store.svelte";
   import type { Filters } from "../../types";
   import { emptyFavorites } from "../../stores/actions";
   import Dropdown from "../common/Dropdown.svelte";
@@ -37,21 +37,23 @@
     emptyFavorites();
   }
 
-  let agentsOptions: { label: string; value: string }[] = $state([]);
+  // let agentsOptions: { label: string; value: string }[] = $state([]);
 
-  const unsubscribe = agents.subscribe((value) => {
-    if (value.length > 0) {
-      agentsOptions.push(
-        ...value.map((agent) => {
-          return { label: agent.name, value: agent.id };
-        })
-      );
-    }
-  });
+  let agentsOptions: { label: string; value: string }[] = $derived(
+    dataStore.agents.map((agent) => {
+      return { label: agent.name, value: agent.id };
+    })
+  );
 
-  onDestroy(() => {
-    unsubscribe();
-  });
+  // agents.subscribe((value) => {
+  //   if (value.length > 0) {
+  //     agentsOptions.push(
+  //       ...value.map((agent) => {
+  //         return { label: agent.name, value: agent.id };
+  //       })
+  //     );
+  //   }
+  // });
 
   let inputs: InputType[] = $state([
     {
@@ -162,7 +164,7 @@
     </button>
     <button type="reset" class="button" onclick={emptyFavoriteProperties}>
       <!-- add star emoji -->
-      <ResetIcon /> Favoriti ({$favoriteProperties.length})
+      <ResetIcon /> Favoriti ({dataStore.favoriteProperties.length})
     </button>
   </div>
 </div>

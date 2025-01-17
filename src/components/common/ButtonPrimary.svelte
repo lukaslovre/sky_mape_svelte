@@ -1,11 +1,10 @@
 <!-- A button svelte component -->
 
 <script lang="ts">
-
   interface Props {
     text: string;
     onClick?: (e: MouseEvent) => void;
-    children?: import('svelte').Snippet;
+    children?: import("svelte").Snippet;
   }
 
   let { text, onClick = () => {}, children }: Props = $props();

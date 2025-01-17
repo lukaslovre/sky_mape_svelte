@@ -10,18 +10,13 @@
     close: () => void;
   }
 
-  let {
-    title,
-    value,
-    isOpen,
-    close
-  }: Props = $props();
+  let { title, value, isOpen, close }: Props = $props();
 </script>
 
 {#if isOpen}
   <div id="side-note-container">
     <div id="side-note">
-      <Close on:close={close} />
+      <Close onClose={close} />
       <div class="title-and-value-container">
         <Header1>{title}</Header1>
         <div class="value">

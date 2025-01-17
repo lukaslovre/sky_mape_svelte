@@ -1,23 +1,32 @@
 // actions.js
 import type { LatLng, LatLngBounds } from "leaflet";
 import type { Property, Client } from "../types";
-import {
-  filters,
-  favoriteProperties,
-  selectedPropertyIds,
-  properties,
-  users,
-} from "./store";
+// import {
+//   filters,
+//   favoriteProperties,
+//   selectedPropertyIds,
+//   properties,
+//   users,
+//   dataStore,
+// } from "./store.svelte";
 import { emptyFiltersObject, parseFilterValues } from "../utils/filter";
 import { filtersStore } from "./filtersStore.svelte";
+import { dataStore } from "./store.svelte";
+
+// **Context for Copilot**:
+// I am refactoring this file to use the new `dataStore` instead of the old `store.svelte` store. I am also trying to make the code more idiomatic to Svelte 5.
 
 // Toggle the selection of a property ID
 export function toggleSelectedProperty(propertyId: Property["id"]) {
-  selectedPropertyIds.update((currentSelectedPropertyIds) =>
-    currentSelectedPropertyIds.includes(propertyId)
-      ? currentSelectedPropertyIds.filter((id) => id !== propertyId)
-      : [...currentSelectedPropertyIds, propertyId]
-  );
+  dataStore.selectedPropertyIds = dataStore.selectedPropertyIds.includes(propertyId)
+    ? dataStore.selectedPropertyIds.filter((id) => id !== propertyId)
+    : [...dataStore.selectedPropertyIds, propertyId];
+
+  // selectedPropertyIds.update((currentSelectedPropertyIds) =>
+  //   currentSelectedPropertyIds.includes(propertyId)
+  //     ? currentSelectedPropertyIds.filter((id) => id !== propertyId)
+  //     : [...currentSelectedPropertyIds, propertyId]
+  // );
 }
 
 // Apply user-specific filters and favorite properties
@@ -62,16 +71,12 @@ export function fitViewToFilteredProperties(
 
 // Property actions
 export function addPropertyToStore(property: Property) {
-  properties.update((currentProperties) => {
-    return [...currentProperties, property];
-  });
+  dataStore.properties.push(property);
 }
 export function updatePropertyInStore(property: Property) {
-  properties.update((currentProperties) => {
-    return currentProperties.map((currentProperty) =>
-      currentProperty.id === property.id ? property : currentProperty
-    );
-  });
+  dataStore.properties = dataStore.properties.map((currentProperty) =>
+    currentProperty.id === property.id ? property : currentProperty
+  );
 }
 
 // Client actions

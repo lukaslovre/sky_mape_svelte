@@ -1,11 +1,14 @@
-<script>
+<script lang="ts">
   import ChevronIcon from "../../assets/icons/ChevronIcon.svelte";
-  // event dispatcher
-  import { createEventDispatcher } from "svelte";
-  const dispatch = createEventDispatcher();
+
+  interface Props {
+    onClose: () => void;
+  }
+
+  let { onClose }: Props = $props();
 
   function close() {
-    dispatch("close");
+    onClose();
   }
 </script>
 

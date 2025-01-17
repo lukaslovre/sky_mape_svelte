@@ -6,8 +6,7 @@
   import InternetIcon from "../../assets/icons/InternetIcon.svelte";
   import StarIcon from "../../assets/icons/StarIcon.svelte";
   import { pocketbaseUrl } from "../../PocketBaseInit";
-  import { propertyFormStore } from "../../stores/propertiesFormStore.svelte";
-  import { favoriteProperties } from "../../stores/store";
+  import { dataStore } from "../../stores/store.svelte";
   import type { Property } from "../../types";
 
   interface Props {
@@ -16,14 +15,14 @@
 
   let { property }: Props = $props();
 
-  let isFavorite = $derived($favoriteProperties.includes(property.id));
+  let isFavorite = $derived(dataStore.favoriteProperties.includes(property.id));
 
   function toggleFavorite() {
-    if ($favoriteProperties.includes(property.id)) {
-      favoriteProperties.update((prev) => prev.filter((id) => id !== property.id));
-    } else {
-      favoriteProperties.update((prev) => [...prev, property.id]);
-    }
+    dataStore.favoriteProperties.includes(property.id)
+      ? (dataStore.favoriteProperties = dataStore.favoriteProperties.filter(
+          (id) => id !== property.id
+        ))
+      : dataStore.favoriteProperties.push(property.id);
   }
 
   function openPropertyEditor() {

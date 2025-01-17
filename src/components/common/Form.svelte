@@ -41,7 +41,7 @@
   $inspect(markerIconUrl);
 </script>
 
-<Close on:close={close} />
+<Close onClose={close} />
 
 <form
   onsubmit={(e) => {

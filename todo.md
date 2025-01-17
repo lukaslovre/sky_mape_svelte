@@ -1,10 +1,27 @@
-# App data flow:
-
-1. Load
-2. Check auth
-3. fetch allowed/agency data
-
 # TODO
+
+## Properties
+
+- properties tablica refactor
+  - sortiranje se označi stupac trenutni
+- dodavanje nekretnina errori
+- uređivanje nekretnina (set store fields from Property metoda)
+
+## Map
+
+- `selected` design ikona
+- tablica properties i mapa dijele `selected` properties, dakle ono sto je checkmarkano na tablici je i u store-u
+- maknit shift click za zumiranje (config)
+
+## Clients
+
+- refactorat tablicu da ima istu strukturu ko **Properties**
+- refactor clients store
+- refactor clients form
+  - prikazati trenutne filtere
+- apply filters from client (dodat u )
+
+## Other
 
 Zamjeniti sve fetch sa axios
 

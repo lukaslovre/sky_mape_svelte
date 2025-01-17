@@ -1,15 +1,16 @@
 import { derived, writable, type Readable, type Writable } from "svelte/store";
-import { selectedPropertyIds } from "./store";
 import type { Tabs } from "../types";
+import { dataStore } from "./store.svelte";
 
 type SidebarCategory = "filters" | "selectedProperty";
 
-// selectedSidebarCategory should actually be a derived value that depends on selectedPropertyIds
-export const selectedSidebarCategory: Readable<SidebarCategory> = derived(
-  selectedPropertyIds,
-  ($selectedPropertyIds) =>
-    $selectedPropertyIds.length > 0 ? "selectedProperty" : "filters"
-);
+class UiStateStore {
+  selectedSidebarCategory = $derived<SidebarCategory>(
+    dataStore.selectedPropertyIds.length > 0 ? "selectedProperty" : "filters"
+  );
+}
+
+export const uiStateStore = new UiStateStore();
 
 // Actions
 

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { fitViewToFilteredProperties } from "../../../stores/actions";
-  import { propertiesBoundingBox } from "../../../stores/store";
+  import { dataStore } from "../../../stores/store.svelte";
 
   interface Props {
     mapInstance: L.Map | undefined;
@@ -9,7 +9,7 @@
   let { mapInstance }: Props = $props();
 
   function fitBounds() {
-    fitViewToFilteredProperties(mapInstance, $propertiesBoundingBox);
+    fitViewToFilteredProperties(mapInstance, dataStore.propertiesBoundingBox);
   }
 </script>
 

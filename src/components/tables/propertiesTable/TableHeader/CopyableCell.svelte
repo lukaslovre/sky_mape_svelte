@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { stopPropagation } from 'svelte/legacy';
-
+  import { stopPropagation } from "svelte/legacy";
   import CheckmarkIcon from "../../../../assets/icons/CheckmarkIcon.svelte";
   import CopyIcon from "../../../../assets/icons/CopyIcon.svelte";
 
@@ -31,7 +30,13 @@
   }
 </script>
 
-<th class="copyable" onclick={stopPropagation(copyToClipboard)}>
+<th
+  class="copyable"
+  onclick={(e) => {
+    e.stopPropagation();
+    copyToClipboard();
+  }}
+>
   {label}
 
   <div class="copyIcon">

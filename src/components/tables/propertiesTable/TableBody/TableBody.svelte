@@ -1,6 +1,6 @@
 <script lang="ts">
   import { removeThumbFromUrl } from "../../../../models/Properties";
-  import { agents, favoriteProperties, users } from "../../../../stores/store";
+  import { dataStore } from "../../../../stores/store.svelte";
   import type { Property } from "../../../../types";
   import { formatWithCommas } from "../../../../utils/numbers";
   import Checkbox from "./Checkbox.svelte";
@@ -55,9 +55,11 @@
 
   function parseId(property: Property, column: keyof Property): string {
     if (column === "agent_id") {
-      return $agents.find((agent) => agent.id === property.agent_id)?.name ?? "N/A";
+      return (
+        dataStore.agents.find((agent) => agent.id === property.agent_id)?.name ?? "N/A"
+      );
     } else if (column === "ownerId") {
-      return $users.find((user) => user.id === property.ownerId)?.name ?? "N/A";
+      return dataStore.users.find((user) => user.id === property.ownerId)?.name ?? "N/A";
     } else {
       return "Couldn't match id to object";
     }
@@ -67,7 +69,7 @@
 <!-- Table Body -->
 <tbody>
   {#each propertyData as property (property.id)}
-    <tr class:favorited={$favoriteProperties.includes(property.id)}>
+    <tr class:favorited={dataStore.favoriteProperties.includes(property.id)}>
       <!-- Checkbox Cell. First Column -->
       <td>
         <Checkbox

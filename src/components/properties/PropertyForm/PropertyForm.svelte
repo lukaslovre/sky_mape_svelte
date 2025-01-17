@@ -15,29 +15,30 @@
 
     // console.log(transformedFields);
 
-    // try {
-    //   await addProperty(transformedFields);
-    //   alert("Uspješno dodano!");
-    //   close();
-    // } catch (err) {
-    //   handleSubmissionError(err);
-    // }
+    try {
+      await addProperty(propertyFormStore.formatForUploadingToDatabase());
+      alert("Uspješno dodano!");
+      close();
+    } catch (err) {
+      handleSubmissionError(err);
+    }
   }
 
   function handleSubmissionError(err: unknown) {
     console.log(err);
+    alert(JSON.stringify(err));
 
-    if (typeof err === "object" && err !== null) {
-      if ("error" in err) {
-        alert(err.error);
-      } else if (Object.keys(err).length > 0) {
-        propertyFormStore.setErrors(err as Record<string, string>);
-      } else {
-        alert("Unknown error");
-      }
-    } else {
-      alert("Unknown error");
-    }
+    // if (typeof err === "object" && err !== null) {
+    //   if ("error" in err) {
+    //     alert(err.error);
+    //   } else if (Object.keys(err).length > 0) {
+    //     propertyFormStore.setErrors(err as Record<string, string>);
+    //   } else {
+    //     alert("Unknown error");
+    //   }
+    // } else {
+    //   alert("Unknown error");
+    // }
   }
 </script>
 

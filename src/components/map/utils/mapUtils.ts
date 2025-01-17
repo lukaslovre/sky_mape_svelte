@@ -1,5 +1,5 @@
 import { LatLng, latLng, type LeafletMouseEvent } from "leaflet";
-import { isDrawing, properties, selectedPropertyIds } from "../../../stores/store";
+import { dataStore } from "../../../stores/store.svelte";
 import { get } from "svelte/store";
 
 /**
@@ -12,7 +12,7 @@ export function addClickToPolygons(
   e: LeafletMouseEvent,
   drawingPolygonCoords: LatLng[]
 ): LatLng[] {
-  const isDrawingValue = get(isDrawing);
+  const isDrawingValue = dataStore.isDrawing;
 
   if (!isDrawingValue) return drawingPolygonCoords;
 
@@ -52,34 +52,31 @@ export function saveLatLngToClipboard(e: LeafletMouseEvent): void {
 export function addTemporaryProperty(e: LeafletMouseEvent): void {
   if (e.originalEvent.ctrlKey) {
     console.log("Adding temporary property at", e.latlng);
-    properties.update((currentProperties) => [
-      ...currentProperties,
-      {
-        id: `temporary-${Math.random().toString(36).slice(2)}`,
-        lat: e.latlng.lat,
-        lng: e.latlng.lng,
-        type: "House",
-        price: 0,
-        // description: "",
-        action: "Sale",
-        imgUrl: [""],
-        // title: "Temporary Property",
-        surfaceArea: 0,
-        websiteUrl: "",
-        hiddenOnWebsite: false,
-        created: new Date().toISOString(),
-        updated: new Date().toISOString(),
-        collectionId: "",
-        collectionName: "",
-        bedrooms: 0,
-        bathrooms: 0,
-        ownerId: "",
-        propertyNotes: "",
-        sellerNotes: "",
-        agent_id: "",
-        status: "available",
-      },
-    ]);
+    dataStore.properties.push({
+      id: `temporary-${Math.random().toString(36).slice(2)}`,
+      lat: e.latlng.lat,
+      lng: e.latlng.lng,
+      type: "House",
+      price: 0,
+      // description: "",
+      action: "Sale",
+      imgUrl: [""],
+      // title: "Temporary Property",
+      surfaceArea: 0,
+      websiteUrl: "",
+      hiddenOnWebsite: false,
+      created: new Date().toISOString(),
+      updated: new Date().toISOString(),
+      collectionId: "",
+      collectionName: "",
+      bedrooms: 0,
+      bathrooms: 0,
+      ownerId: "",
+      propertyNotes: "",
+      sellerNotes: "",
+      agent_id: "",
+      status: "available",
+    });
   }
 }
 
@@ -87,7 +84,7 @@ export function addTemporaryProperty(e: LeafletMouseEvent): void {
  * Resets the selected property IDs.
  */
 export function resetSelectedProperty(): void {
-  selectedPropertyIds.set([]);
+  dataStore.selectedPropertyIds = [];
 }
 
 /**
@@ -101,8 +98,7 @@ export function panToPropertyById(
 ): void {
   if (!id || !mapInstance) return;
 
-  const allProperties = get(properties);
-  const property = allProperties.find((p) => p.id === id);
+  const property = dataStore.properties.find((p) => p.id === id);
   if (property) {
     mapInstance.panTo(new LatLng(property.lat, property.lng));
   }
