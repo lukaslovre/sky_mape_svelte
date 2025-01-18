@@ -1,13 +1,13 @@
 <script lang="ts">
-  import Table from "../tables/clientsTable/Table.svelte";
   import { dataStore } from "../../stores/store.svelte";
   import Header1 from "../common/Header1.svelte";
+  import ClientsTable from "../tables/ClientsTable.svelte";
 </script>
 
 <div class="owners-container">
   <Header1>Popis vlasnika</Header1>
 
-  <Table showHeader={true} data={dataStore.filteredOwners} />
+  <ClientsTable showHeader={true} data={dataStore.filteredOwners} />
 </div>
 
 <style>

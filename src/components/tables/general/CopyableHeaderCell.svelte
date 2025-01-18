@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { stopPropagation } from "svelte/legacy";
-  import CheckmarkIcon from "../../../../assets/icons/CheckmarkIcon.svelte";
-  import CopyIcon from "../../../../assets/icons/CopyIcon.svelte";
+  import CheckmarkIcon from "../../../assets/icons/CheckmarkIcon.svelte";
+  import CopyIcon from "../../../assets/icons/CopyIcon.svelte";
 
   interface Props {
     label: string;
@@ -18,6 +17,7 @@
       console.log(values);
 
       await navigator.clipboard.writeText(values.join(", "));
+
       copySuccess = true;
 
       setTimeout(() => {

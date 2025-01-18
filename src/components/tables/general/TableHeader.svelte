@@ -1,19 +1,23 @@
 <script lang="ts">
-  import CheckmarkIcon from "../../../../assets/icons/CheckmarkIcon.svelte";
-  import CopyableCell from "./CopyableCell.svelte";
+  import CheckmarkIcon from "../../../assets/icons/CheckmarkIcon.svelte";
+  import CopyableHeaderCell from "./CopyableHeaderCell.svelte";
 
   interface Props {
     toggleSelectAll: () => void;
     isSelectAll: boolean;
-    columns: string[];
+    columnsLabels: string[];
     getSelectedAttributes: (columnName: string) => string[];
+    copyableColumnsLabels: string[];
+    sortOptionLabel?: string;
   }
 
   let {
     toggleSelectAll,
     isSelectAll,
-    columns,
-    getSelectedAttributes
+    columnsLabels,
+    getSelectedAttributes,
+    copyableColumnsLabels,
+    sortOptionLabel,
   }: Props = $props();
 </script>
 
@@ -31,11 +35,11 @@
         <CheckmarkIcon />
       </label>
     </th>
-    {#each columns as columnTitle (columnTitle)}
-      {#if columnTitle === "Web URL"}
-        <CopyableCell label={columnTitle} {getSelectedAttributes} />
+    {#each columnsLabels as columnLable (columnLable)}
+      {#if copyableColumnsLabels.includes(columnLable)}
+        <CopyableHeaderCell label={columnLable} {getSelectedAttributes} />
       {:else}
-        <th>{columnTitle}</th>
+        <th class:isSorting={sortOptionLabel === columnLable}>{columnLable}</th>
       {/if}
     {/each}
   </tr>
@@ -55,6 +59,11 @@
 
   th {
     background-color: #fff;
+  }
+
+  th.isSorting {
+    border-left: 1px solid hsl(0, 0%, 75%);
+    border-right: 1px solid hsl(0, 0%, 75%);
   }
 
   tr th:first-child {

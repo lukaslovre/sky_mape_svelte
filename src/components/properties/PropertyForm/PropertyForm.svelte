@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { addProperty, deleteProperty } from "../../../models/Properties";
+  import type { ParsedError } from "../../../models/errorHandling";
+  import { addProperty } from "../../../models/Properties";
   import { propertyFormStore } from "../../../stores/propertiesFormStore.svelte";
   import Form from "../../common/Form.svelte";
 
@@ -9,37 +10,43 @@
 
   let { close }: Props = $props();
 
+  let formErrorString: string | undefined = $state();
+
   async function handleSubmit() {
     propertyFormStore.print();
-    // const transformedFields = propertyFormStore.getAndTransformFields();
-
-    // console.log(transformedFields);
 
     try {
       await addProperty(propertyFormStore.formatForUploadingToDatabase());
-      alert("Uspješno dodano!");
-      close();
+      return true;
     } catch (err) {
-      handleSubmissionError(err);
+      handleSubmissionError(err as ParsedError);
+      return false;
     }
   }
 
-  function handleSubmissionError(err: unknown) {
+  function handleSubmissionError(err: ParsedError) {
     console.log(err);
-    alert(JSON.stringify(err));
 
-    // if (typeof err === "object" && err !== null) {
-    //   if ("error" in err) {
-    //     alert(err.error);
-    //   } else if (Object.keys(err).length > 0) {
-    //     propertyFormStore.setErrors(err as Record<string, string>);
-    //   } else {
-    //     alert("Unknown error");
-    //   }
-    // } else {
-    //   alert("Unknown error");
-    // }
+    if (typeof err === "object") {
+      if ("error" in err) {
+        formErrorString = err.error;
+      } else if ("message" in err) {
+        formErrorString = err.message;
+      } else if (Object.keys(err).length > 0) {
+        const formatedMsg = Object.entries(err)
+          .map(([key, value]) => `Polje: "${key}" -> ${value}`)
+          .join("\n");
+        formErrorString = formatedMsg;
+        Object.entries(err).forEach(([key, value]) => {
+          propertyFormStore.setError(key, value);
+        });
+      } else {
+        formErrorString = JSON.stringify(err);
+      }
+    } else {
+      formErrorString = "Unknown error (error object is not typeof 'object').";
+    }
   }
 </script>
 
-<Form onSubmit={handleSubmit} {close} />
+<Form onSubmit={handleSubmit} {close} {formErrorString} />

@@ -1,25 +1,26 @@
 <script lang="ts">
-  import { stopPropagation } from 'svelte/legacy';
-
-  import CheckmarkIcon from "../../../../assets/icons/CheckmarkIcon.svelte";
+  import CheckmarkIcon from "../../../assets/icons/CheckmarkIcon.svelte";
 
   interface Props {
-    value: string;
+    fieldId: string;
     checked: boolean;
-    updateState: (userId: string, checked: boolean) => void;
+    updateState: (fieldId: string, checked: boolean) => void;
   }
 
-  let { value, checked, updateState }: Props = $props();
+  let { fieldId, checked, updateState }: Props = $props();
 </script>
 
 <input
   type="checkbox"
-  name={`selected-${value}`}
-  id={`selected-${value}`}
+  name={`selected-${fieldId}`}
+  id={`selected-${fieldId}`}
   {checked}
-  onchange={stopPropagation(() => updateState(value, !checked))}
+  onchange={(e) => {
+    e.stopPropagation();
+    updateState(fieldId, !checked);
+  }}
 />
-<label for={`selected-${value}`}>
+<label for={`selected-${fieldId}`}>
   {#if checked}
     <CheckmarkIcon />
   {/if}

@@ -45,6 +45,7 @@ const parsePropertyData = (property: Property): Property => {
 };
 
 export function removeThumbFromUrl(url: string): string {
+  if (!url) return url;
   const index = url.indexOf("?thumb");
   if (index === -1) return url;
   return url.slice(0, index);

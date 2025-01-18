@@ -5,17 +5,35 @@
   import PropertyInformation from "./PropertyInformation.svelte";
   import PropertyListNavigator from "./PropertyListNavigator.svelte";
 
-  let property: Property = $derived(
-    dataStore.properties.filter((property) =>
-      dataStore.selectedPropertyIds.includes(property.id)
-    )[0]
+  let propertyList = $derived<Property[]>(
+    dataStore.selectedPropertyIds.length > 1
+      ? (dataStore.selectedPropertyIds.map((id) =>
+          dataStore.properties.find((property) => property.id === id)
+        ) as Property[])
+      : dataStore.filteredProperties
   );
+  let selectedPropertyIndex = $state<number>(0);
+  let property = $derived(propertyList[selectedPropertyIndex]);
+
+  function cycleThruPropertiesBy(steps: number) {
+    if (steps === 0) return;
+
+    selectedPropertyIndex =
+      (selectedPropertyIndex + steps + propertyList.length + propertyList.length * 5) %
+      propertyList.length;
+  }
 </script>
 
 <section>
-  <PropertyListNavigator />
+  <PropertyListNavigator
+    currentIndex={selectedPropertyIndex}
+    totalPropertiesCount={propertyList.length}
+    {cycleThruPropertiesBy}
+  />
+
   {#if property}
     <PropertyActionButtons {property} />
+
     <PropertyInformation {property} />
   {/if}
 </section>

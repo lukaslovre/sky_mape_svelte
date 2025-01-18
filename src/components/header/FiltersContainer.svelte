@@ -12,6 +12,11 @@
 
   $inspect(filtersStore.filters);
 
+  let activeFiltersCount = $derived(
+    Object.keys(filtersStore.removeEmptyFilterFields()).length
+  );
+  let activeFavoritesCount = $derived(dataStore.favoriteProperties.length);
+
   type InputType =
     | {
         type: "dropdown";
@@ -159,12 +164,22 @@
   </div>
 
   <div class="buttons-container">
-    <button type="reset" class="button" onclick={resetValues}>
-      <ResetIcon /> Filtri ({Object.keys(filtersStore.removeEmptyFilterFields()).length})
+    <button
+      type="reset"
+      class="button"
+      onclick={resetValues}
+      disabled={activeFiltersCount === 0}
+    >
+      <ResetIcon /> Filtri ({activeFiltersCount})
     </button>
-    <button type="reset" class="button" onclick={emptyFavoriteProperties}>
-      <!-- add star emoji -->
-      <ResetIcon /> Favoriti ({dataStore.favoriteProperties.length})
+    <button
+      type="reset"
+      class="button"
+      onclick={emptyFavoriteProperties}
+      disabled={activeFavoritesCount === 0}
+    >
+      <!-- TODO: add star emoji -->
+      <ResetIcon /> Favoriti ({activeFavoritesCount})
     </button>
   </div>
 </div>
@@ -220,5 +235,10 @@
   .button:focus {
     outline: 2px solid #0d65d9;
     z-index: 1;
+  }
+
+  .button[disabled] {
+    opacity: 0.25;
+    cursor: not-allowed;
   }
 </style>

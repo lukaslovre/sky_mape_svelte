@@ -47,16 +47,14 @@ export function applyUserFilters(
 
 // Clear all favorite properties
 export function emptyFavorites() {
-  favoriteProperties.set([]);
+  dataStore.favoriteProperties = [];
 }
 
 // Toggle favorite
 export function toggleFavorite(propertyId: Property["id"]) {
-  favoriteProperties.update((currentFavorites) =>
-    currentFavorites.includes(propertyId)
-      ? currentFavorites.filter((id) => id !== propertyId)
-      : [...currentFavorites, propertyId]
-  );
+  dataStore.favoriteProperties = dataStore.favoriteProperties.includes(propertyId)
+    ? dataStore.favoriteProperties.filter((id) => id !== propertyId)
+    : [...dataStore.favoriteProperties, propertyId];
 }
 
 // Fit the view to the bounds of the properties

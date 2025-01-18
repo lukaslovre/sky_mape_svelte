@@ -1,11 +1,8 @@
-import { get, writable } from "svelte/store";
 import { getCurrentUser } from "../auth";
 import type { FormFieldType, Property, Client, InputValidator } from "../types";
-import { createFormStore } from "./formStoreCreator";
 import { dataStore } from "./store.svelte";
 import { number, z } from "zod";
 import { parseValueWithSuffix } from "../utils/numbers";
-import { parse } from "svelte/compiler";
 
 // Call the createFormStore function with the appropriate type parameter
 // export const propertyFormStore = createFormStore<Property>();
@@ -140,7 +137,7 @@ export const propertyFormFields: FormFieldType<Property>[] = [
     defaultValue: "",
     parsingFunction: (value: string) => parseFloat(parseValueWithSuffix(value)),
     validators: [validators.numberValidator],
-    placeholder: "123456",
+    placeholder: "€ 123456",
   },
   {
     label: "Surface Area (m²) (može se koristiti slovo 'k' ili 'm')",
@@ -150,7 +147,7 @@ export const propertyFormFields: FormFieldType<Property>[] = [
     defaultValue: "",
     parsingFunction: (value: string) => parseFloat(parseValueWithSuffix(value)),
     validators: [validators.numberValidator],
-    placeholder: "123",
+    placeholder: "123 m²",
   },
   {
     label: "Website URL",
@@ -179,7 +176,7 @@ export const propertyFormFields: FormFieldType<Property>[] = [
     defaultValue: "",
     parsingFunction: (value: string) => parseInt(value),
     validators: [validators.numberValidator],
-    placeholder: "3",
+    placeholder: "3 spavaće sobe",
   },
   {
     label: "Bathrooms",
@@ -189,7 +186,7 @@ export const propertyFormFields: FormFieldType<Property>[] = [
     defaultValue: "",
     parsingFunction: (value: string) => parseInt(value),
     validators: [validators.numberValidator],
-    placeholder: "2",
+    placeholder: "2 kupaonice",
   },
   {
     label: "Owner",
@@ -253,13 +250,14 @@ class PropertyFormStore {
 
   resetForm = () => {
     this.fields.forEach((field) => {
+      // 1. Set values to default values
+
       // If it's an refence type, make a deep copy
       if (Array.isArray(field.defaultValue)) {
         field.value = [...field.defaultValue];
       } else if (typeof field.defaultValue === "object") {
         field.value = { ...field.defaultValue };
       } else {
-        // Else, just set the value to the default value
         field.value = field.defaultValue;
       }
 
@@ -270,6 +268,9 @@ class PropertyFormStore {
           field.value = [currentUser.id];
         }
       }
+
+      // 2. Reset errors
+      field.error = undefined;
     });
   };
 
@@ -307,7 +308,6 @@ class PropertyFormStore {
     }
 
     // Update the options of the field with the given fieldName
-
     const field = this.fields.find((field) => field.databaseFieldName === fieldName);
     if (field) {
       field.options = zodResponse.data;
@@ -321,6 +321,42 @@ class PropertyFormStore {
     if (field) {
       field.value = value;
     }
+  };
+
+  setError = (fieldName: keyof Property, error: string) => {
+    // Validate that both fieldName and error are strings
+    if (typeof fieldName !== "string" || typeof error !== "string") {
+      console.error(
+        "fieldName and error must be strings when calling the setError method"
+      );
+      return;
+    }
+
+    const field = this.fields.find((field) => field.databaseFieldName === fieldName);
+    if (field) {
+      field.error = error;
+    }
+  };
+
+  setFieldValuesFromPropertyObject = (property: Property) => {
+    this.fields.forEach((field) => {
+      if (field.databaseFieldName === "lat") {
+        field.value = {
+          lat: property.lat,
+          lng: property.lng,
+        };
+      } else if (field.databaseFieldName === "imgUrl") {
+        field.value = "";
+      } else if (Array.isArray(field.value)) {
+        field.value =
+          property[field.databaseFieldName] === ""
+            ? []
+            : [property[field.databaseFieldName]];
+      } else {
+        field.value = property[field.databaseFieldName];
+      }
+    });
+    console.log("Fields after setting values from property object:", this.fields);
   };
 }
 

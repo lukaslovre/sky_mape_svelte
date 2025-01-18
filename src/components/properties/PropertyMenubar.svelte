@@ -21,19 +21,6 @@
     currentSortOptionLabel,
   }: Props = $props();
 
-  // Property sorting
-
-  function handleItemClickLocal(item: MenuItem) {
-    const buttonLabel = item.label;
-
-    if (buttonLabel.startsWith("Sortiraj")) {
-      cycleSortOption();
-    } else {
-      // Forward the event to the parent component
-      onMenuItemClick(item);
-    }
-  }
-
   // Menubar disabled items
   let menubarItems: MenuItem[] = $derived([
     {
@@ -62,6 +49,20 @@
       disabledIfCount: (count: number) => false,
     },
   ]);
+
+  function handleItemClickLocal(item: MenuItem) {
+    const buttonLabel = item.label;
+
+    // If it shouldn't be clickable (disabled function true), return
+    if (item.disabledIfCount(selectedPropertiesLength)) return;
+
+    if (buttonLabel.startsWith("Sortiraj")) {
+      cycleSortOption();
+    } else {
+      // Forward the event to the parent component
+      onMenuItemClick(item);
+    }
+  }
 </script>
 
 <Menubar

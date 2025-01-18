@@ -63,7 +63,7 @@
   button.disabled,
   a.disabled {
     opacity: 0.5;
-    pointer-events: none;
+    cursor: not-allowed;
   }
 
   .menubar ul li > * {

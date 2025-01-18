@@ -1,8 +1,6 @@
 <script lang="ts">
-  import { stopPropagation } from 'svelte/legacy';
-
-  import CheckmarkIcon from "../../../../assets/icons/CheckmarkIcon.svelte";
-  import CopyIcon from "../../../../assets/icons/CopyIcon.svelte";
+  import CheckmarkIcon from "../../../assets/icons/CheckmarkIcon.svelte";
+  import CopyIcon from "../../../assets/icons/CopyIcon.svelte";
 
   interface Props {
     value: string;
@@ -27,7 +25,13 @@
   }
 </script>
 
-<button class="copyable" onclick={stopPropagation(copyToClipboard)}>
+<button
+  class="copyable"
+  onclick={(e) => {
+    e.stopPropagation();
+    copyToClipboard();
+  }}
+>
   {value}
 
   <div class="copyIcon">

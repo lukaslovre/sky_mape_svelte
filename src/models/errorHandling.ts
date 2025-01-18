@@ -8,13 +8,17 @@ interface ErrorObject {
 
 type ErrorResponseData = Record<string, ErrorObject | string>;
 
+type GeneralError = { error: string };
+type FieldErrors = Record<string, string>;
+export type ParsedError = GeneralError | FieldErrors;
+
 /**
  * Handle errors that might come from a PocketBase client or a general JavaScript error.
  * Returns a record of error messages keyed by field or "error".
  * @param err - The caught error (unknown type).
  * @returns A record of parsed error messages.
  */
-export function handlePocketbaseError(err: unknown): Record<string, string> {
+export function handlePocketbaseError(err: unknown): ParsedError {
   if (err instanceof ClientResponseError) {
     console.log("type ClientResponseError:", err);
     const responseData = err.response?.data;

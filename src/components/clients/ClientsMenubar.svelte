@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { run } from 'svelte/legacy';
-
   import type { MenuItem } from "../../types";
   import EditIcon from "../../assets/icons/EditIcon.svelte";
   import SaveIcon from "../../assets/icons/SaveIcon.svelte";
@@ -10,51 +8,45 @@
 
   interface Props {
     selectedClientsLength?: number;
-    handleItemClick: (event: CustomEvent<MenuItem>) => void;
+    onMenuItemClick: (item: MenuItem) => void;
   }
 
-  let { selectedClientsLength = 0, handleItemClick }: Props = $props();
+  let { selectedClientsLength = 0, onMenuItemClick }: Props = $props();
 
-  let menubarItems: MenuItem[] = $state([
-    { label: "Dodaj", icon: SaveIcon, disabled: false },
-    { label: "Uredi", icon: EditIcon, disabled: true },
-    { label: "Obriši", icon: TrashIcon, disabled: true },
-    { label: "Spremi kao tablicu", icon: SpreadsheetIcon, disabled: false },
+  // TODO: See if this can be a const
+  let menubarItems: MenuItem[] = $derived([
+    {
+      label: "Dodaj",
+      icon: SaveIcon,
+      disabledIfCount: (count: number) => count > 0,
+    },
+    {
+      label: "Uredi",
+      icon: EditIcon,
+      disabledIfCount: (count: number) => count !== 1,
+    },
+    {
+      label: "Obriši",
+      icon: TrashIcon,
+      disabledIfCount: (count: number) => count === 0,
+    },
+    {
+      label: "Spremi kao tablicu",
+      icon: SpreadsheetIcon,
+      disabledIfCount: (count: number) => false,
+    },
   ]);
 
+  function handleItemClickLocal(item: MenuItem) {
+    // If it shouldn't be clickable (disabled function true), return
+    if (item.disabledIfCount(selectedClientsLength)) return;
 
-  function updateMenubarItems(rowsSelected: number) {
-    // Set all to enabled
-    menubarItems.map((item) => {
-      item.disabled = false;
-      return item;
-    });
-
-    // Now apply rules based on the number of rows selected
-    if (rowsSelected === 0) {
-      setItemWithLabelToDisabled("Uredi");
-      setItemWithLabelToDisabled("Obriši");
-    }
-    if (rowsSelected > 1) {
-      setItemWithLabelToDisabled("Uredi");
-    }
-
-    // trigger re-render
-    menubarItems = menubarItems;
+    onMenuItemClick(item);
   }
-
-  function setItemWithLabelToDisabled(label: string) {
-    menubarItems.map((item) => {
-      if (item.label === label) {
-        item.disabled = true;
-      }
-      return item;
-    });
-  }
-  //   When the number of selected clients changes, update the menubar items disabled state
-  run(() => {
-    updateMenubarItems(selectedClientsLength);
-  });
 </script>
 
-<Menubar items={menubarItems} on:itemClick={handleItemClick} />
+<Menubar
+  items={menubarItems}
+  propertiesCount={selectedClientsLength}
+  onMenuItemClick={handleItemClickLocal}
+/>

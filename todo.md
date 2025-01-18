@@ -1,17 +1,9 @@
 # TODO
 
+prevest sve na rhrvatski
+frekvencija plaćanja
+
 ## Properties
-
-- properties tablica refactor
-  - sortiranje se označi stupac trenutni
-- dodavanje nekretnina errori
-- uređivanje nekretnina (set store fields from Property metoda)
-
-## Map
-
-- `selected` design ikona
-- tablica properties i mapa dijele `selected` properties, dakle ono sto je checkmarkano na tablici je i u store-u
-- maknit shift click za zumiranje (config)
 
 ## Clients
 
@@ -19,11 +11,13 @@
 - refactor clients store
 - refactor clients form
   - prikazati trenutne filtere
-- apply filters from client (dodat u )
+- apply filters from client (dodat u store metodu)
 
-## Other
+## Map
 
-Zamjeniti sve fetch sa axios
+- `selected` design ikona
+- tablica properties i mapa dijele `selected` properties, dakle ono sto je checkmarkano na tablici je i u store-u
+- hendlanje selectanja/deselectanja
 
 ## Ostatak:
 

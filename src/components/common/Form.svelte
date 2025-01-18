@@ -10,12 +10,15 @@
   import DropdownFormFieldWrapped from "./DropdownFormFieldWrapped.svelte";
 
   interface Props {
-    onSubmit: () => Promise<void>;
+    onSubmit: () => Promise<boolean>;
     close: () => void;
+    formErrorString?: string;
     submitButtonText?: string;
   }
 
-  let { onSubmit, close, submitButtonText = "Submit" }: Props = $props();
+  let { onSubmit, close, formErrorString, submitButtonText = "Submit" }: Props = $props();
+
+  let successState: boolean = $state(false);
 
   function handleClear() {
     propertyFormStore.resetForm();
@@ -44,9 +47,16 @@
 <Close onClose={close} />
 
 <form
-  onsubmit={(e) => {
+  onsubmit={async (e) => {
     e.preventDefault();
-    onSubmit();
+    const success = await onSubmit();
+
+    if (success) {
+      successState = true;
+      setTimeout(() => {
+        close();
+      }, 2000);
+    }
   }}
 >
   {#each propertyFormStore.fields as field (field.databaseFieldName)}
@@ -75,7 +85,18 @@
     {/if}
   {/each}
 
-  <button type="submit">{submitButtonText}</button>
+  {#if formErrorString}
+    <div class="non-field-specific-error-container">
+      <p class="label">Error</p>
+      <p class="error-msg">
+        {formErrorString}
+      </p>
+    </div>
+  {/if}
+
+  <button type="submit" class:success={successState}>
+    {successState ? "Success!" : submitButtonText}
+  </button>
   <button type="button" class="clear-button" onclick={handleClear}>Reset form</button>
 </form>
 
@@ -93,17 +114,52 @@
     box-shadow: 0 2px 1px rgba(0, 0, 0, 0.125);
   }
 
+  .non-field-specific-error-container {
+    padding: 0.5rem 1rem;
+    background-color: hsla(0, 100%, 50%, 0.1);
+    border-radius: 0.5rem;
+    border: 1px solid hsla(0, 100%, 50%, 0.2);
+    color: hsl(0, 100%, 25%);
+    line-height: 150%;
+  }
+  .non-field-specific-error-container .label {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+  }
+
   button {
-    padding: 0.75rem 1rem;
+    height: 2.5rem;
+    width: 100%;
+    padding: 0 1.25rem;
     border-radius: 0.25rem;
+    border: 1px solid transparent;
+    box-shadow: 0 2px 1px rgba(0, 0, 0, 0.05);
+
+    font-size: 0.875rem;
+    font-weight: 700;
+
+    transition: background-color 75ms ease-out;
   }
 
   button[type="submit"] {
-    background-color: #007bff;
+    background-color: #0d65d9;
     color: #fff;
   }
 
+  button[type="submit"]:hover {
+    background-color: hsl(216, 90%, 35%);
+  }
+
+  button[type="submit"].success {
+    background-color: hsl(120, 100%, 35%);
+  }
+
   .clear-button {
-    background-color: #ccc;
+    background-color: hsl(0, 0%, 75%);
+    color: hsl(0, 0%, 25%);
+  }
+  .clear-button:hover {
+    background-color: hsl(0, 0%, 65%);
   }
 </style>

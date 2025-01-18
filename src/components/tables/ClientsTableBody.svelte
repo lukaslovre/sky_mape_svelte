@@ -1,52 +1,37 @@
 <script lang="ts">
-  import { applyUserFilters } from "../../../../stores/actions";
-  import type { Filters, Client } from "../../../../types";
-  import { parsePocketbaseUserData } from "../../../../utils/buyers";
-  import { removeEmptyValuesFromFilters } from "../../../../utils/filter";
-  import Popup from "../../../common/Popup.svelte";
-  import Checkbox from "./Checkbox.svelte";
-  import CopyableCell from "./CopyableCell.svelte";
+  import type { Filters, Client } from "../../types";
+  import { applyUserFilters } from "../../stores/actions";
+  import { formatDateAndAgo } from "../../utils/datetime";
+  import { removeEmptyValuesFromFilters } from "../../utils/filter";
+  import Popup from "../common/Popup.svelte";
+  import Checkbox from "./general/Checkbox.svelte";
+  import CopyableBodyCell from "./general/CopyableBodyCell.svelte";
 
-  // Define the type for parsed user data
-  type ParsedUserData = ReturnType<typeof parsePocketbaseUserData>[0];
-
-  
   interface Props {
-    // Props
-    checkboxes: Record<string, boolean>;
-    userData: Client[];
-    columns: (keyof ParsedUserData)[];
-    updateCheckboxes: (newCheckboxes: Record<Client["id"], boolean>) => void;
+    selectedIds?: Client["id"][];
+    data: Client[];
+    columns: (keyof Client)[];
+    handleCheckboxClick: (propertyId: Client["id"], newState: boolean) => void;
+    copyableColumnsKeys: (keyof Client)[];
   }
 
   let {
-    checkboxes = $bindable(),
-    userData,
+    selectedIds = [],
+    data,
     columns,
-    updateCheckboxes
+    handleCheckboxClick,
+    copyableColumnsKeys,
   }: Props = $props();
 
-  // Reactive parsed user data (transforms the dates from string to Date objects)
-  let parsedUserData = $derived(parsePocketbaseUserData(userData));
-
   // Helper Functions
-  // Check if a value is an object
   const isObject = (value: any): boolean => typeof value === "object" && value !== null;
 
-  // Check if a value has a length property
-  const hasLength = (value: any): boolean => typeof value.length === "number";
-
-  // Check if a column is copyable
-  const isCopyable = (column: keyof ParsedUserData): boolean =>
-    ["email", "phone"].includes(column as string);
-
-  const updateCheckboxState = (userId: string, checked: boolean) => {
-    checkboxes = { ...checkboxes, [userId]: checked };
-    updateCheckboxes(checkboxes);
-  };
+  const isCopyable = (column: keyof Client): boolean =>
+    copyableColumnsKeys.includes(column as string);
 
   /*
     divider
+    TODO: check this
   */
 
   // Popup state
@@ -67,7 +52,7 @@
     // Position the popup near the button
     popupLocation = [right, top - 8];
 
-    const userFilters = userData.find((user) => user.id === userId)?.filters || null;
+    const userFilters = data.find((user) => user.id === userId)?.filters || null;
 
     if (!userFilters) {
       popupContent = "Nema filtera";
@@ -95,7 +80,7 @@
   };
 
   // Handle applying filters
-  const handleApplyFilters = (user: ParsedUserData) => {
+  const handleApplyFilters = (user: Client) => {
     console.log("handleApplyFilters called with user:", user);
     console.log("Applying filters:", user.filters);
     console.log("Favorite properties:", user.favoriteProperties);
@@ -114,48 +99,43 @@
 
 <!-- Table Body -->
 <tbody>
-  {#each parsedUserData as user}
+  {#each data as user (user.id)}
     <tr>
       <!-- Checkbox Cell. First Column -->
       <td>
         <Checkbox
-          value={user.id ?? ""}
-          checked={checkboxes[user.id] ?? false}
-          updateState={updateCheckboxState}
+          fieldId={user.id ?? ""}
+          checked={selectedIds.includes(user.id)}
+          updateState={handleCheckboxClick}
         />
       </td>
 
       <!-- Other, Dynamic Columns -->
       {#each columns as column}
         <td>
-          {#if isObject(user[column])}
-            <!-- Handle object values -->
-            {#if hasLength(user[column])}
-              <!-- Array-like objects -->
-              {#if user[column].length > 0}
-                {user[column].join(", ")}
-              {:else}
-                <span class="empty">N/A</span>
-              {/if}
-            {:else}
-              <!-- Non-array objects (assumed to be filters) -->
-              <button
-                class="applyFiltersButton"
-                onmouseenter={(e) => showFiltersPopup(user.id, e)}
-                onmouseleave={hideFiltersPopup}
-                onclick={() => handleApplyFilters(user)}
-              >
-                Primjeni
-              </button>
-            {/if}
-          {:else if user[column] === ""}
-            <!-- Empty string values -->
+          {#if !user[column] && typeof user[column] !== "boolean"}
             <span class="empty">N/A</span>
+          {:else if ["updated", "created"].includes(column as string)}
+            {formatDateAndAgo(new Date(user[column]))}
+          {:else if column === "filters"}
+            <button
+              class="applyFiltersButton"
+              onmouseenter={(e) => showFiltersPopup(user.id, e)}
+              onmouseleave={hideFiltersPopup}
+              onclick={() => handleApplyFilters(user)}
+            >
+              Primjeni
+            </button>
           {:else if isCopyable(column)}
-            <!-- Copyable values (email, phone) -->
-            <CopyableCell value={user[column]} />
+            <CopyableBodyCell value={user[column]} />
+          {:else if isObject(user[column])}
+            <!-- Array-like objects -->
+            {#if user[column].length && user[column].length > 0}
+              {user[column].join(", ")}
+            {:else}
+              {"Riješiti objekt"} {user[column]}
+            {/if}
           {:else}
-            <!-- All other values -->
             {user[column]}
           {/if}
         </td>
@@ -165,7 +145,6 @@
 </tbody>
 
 <style>
-  th,
   td {
     /* border: 1px solid hsl(0, 0%, 90%); */
     border-bottom: 1px solid hsl(0, 0%, 90%);

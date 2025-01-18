@@ -4,10 +4,10 @@
   import { sortProperties } from "../../utils/properties";
   import PropertyForm from "./PropertyForm/PropertyForm.svelte";
   import Header1 from "../common/Header1.svelte";
-  import Table from "../tables/propertiesTable/Table.svelte";
   import PropertyMenubar from "./PropertyMenubar.svelte";
   import { propertyFormStore } from "../../stores/propertiesFormStore.svelte";
   import { deleteProperty } from "../../models/Properties";
+  import PropertiesTable from "../tables/PropertiesTable.svelte";
 
   // Property sorting
   let showForm: boolean = $state(false);
@@ -86,20 +86,17 @@
 
   // Handles editing of a selected property
   function handleEdit() {
-    if (dataStore.selectedPropertyIds.length !== 1) return;
-
     const selectedProperty = findSelectedProperty(dataStore.selectedPropertyIds[0]);
 
     if (selectedProperty) {
-      // propertyFormStore.setFieldValues(selectedProperty); TODO
+      propertyFormStore.resetForm();
+      propertyFormStore.setFieldValuesFromPropertyObject(selectedProperty);
       showForm = true;
     }
   }
 
   // Deletes selected properties
   function handleDelete() {
-    if (dataStore.selectedPropertyIds.length === 0) return;
-
     const confirmDeletion = window.confirm(
       `Are you sure you want to delete ${dataStore.selectedPropertyIds.length} selected properties?`
     );
@@ -123,7 +120,6 @@
   }
 
   // Table specific
-
   function handleCheckboxClick(propertyId: Property["id"], newState: boolean): void {
     // True = ON, False = OFF
     if (newState) {
@@ -149,11 +145,13 @@
       currentSortOptionLabel={sortOptions[sortOptionIndex] as string}
     />
 
-    <Table
+    <!-- TODO: mozda napravit generalnu table komponentu koja prima selectedFieldIds -->
+    <PropertiesTable
       showHeader={true}
       data={sortedProperties}
       {handleCheckboxClick}
       selectedPropertyIds={dataStore.selectedPropertyIds}
+      sortOptionField={sortOptions[sortOptionIndex]}
     />
   {:else}
     <PropertyForm close={() => (showForm = false)} />

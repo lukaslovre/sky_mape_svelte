@@ -16,6 +16,7 @@
   let isFavorite = $derived(dataStore.favoriteProperties.includes(property.id));
 
   function handleEditClick() {
+    // TODO:
     console.log("Edit button clicked");
     alert("Not implemented yet");
   }

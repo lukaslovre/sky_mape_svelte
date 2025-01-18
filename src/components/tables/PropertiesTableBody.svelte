@@ -1,36 +1,35 @@
 <script lang="ts">
-  import { removeThumbFromUrl } from "../../../../models/Properties";
-  import { dataStore } from "../../../../stores/store.svelte";
-  import type { Property } from "../../../../types";
-  import { formatWithCommas } from "../../../../utils/numbers";
-  import Checkbox from "./Checkbox.svelte";
-  import CopyableCell from "./CopyableCell.svelte";
+  import type { Property } from "../../types";
+  import { dataStore } from "../../stores/store.svelte";
+  import { removeThumbFromUrl } from "../../models/Properties";
+  import { formatDateAndAgo } from "../../utils/datetime";
+  import { formatWithCommas } from "../../utils/numbers";
+  import Checkbox from "./general/Checkbox.svelte";
+  import CopyableBodyCell from "./general/CopyableBodyCell.svelte";
 
   interface Props {
-    // Props
     selectedPropertyIds?: Property["id"][];
-    propertyData: Property[];
-    columns: (keyof Property)[];
+    data: Property[];
+    columnsKeys: (keyof Property)[];
     handleCheckboxClick: (propertyId: Property["id"], newState: boolean) => void;
+    copyableColumnsKeys: (keyof Property)[];
+    sortOptionField: keyof Property;
   }
 
   let {
     selectedPropertyIds = [],
-    propertyData,
-    columns,
+    data,
+    columnsKeys,
     handleCheckboxClick,
+    copyableColumnsKeys,
+    sortOptionField,
   }: Props = $props();
 
   // Helper Functions
-  // Check if a value is an object
   const isObject = (value: any): boolean => typeof value === "object" && value !== null;
 
-  // Check if a value has a length property
-  const hasLength = (value: any): boolean => typeof value.length === "number";
-
-  // Check if a column is copyable
   const isCopyable = (column: keyof Property): boolean =>
-    ["websiteUrl"].includes(column as string);
+    copyableColumnsKeys.includes(column as string);
 
   // Table value parsing
   function parsePrice(property: Property): string {
@@ -50,7 +49,7 @@
   }
 
   function parseVisibility(property: Property): string {
-    return property.hiddenOnWebsite ? "Off-market" : "Public";
+    return property.hiddenOnWebsite ? "Off-market" : "Javno";
   }
 
   function parseId(property: Property, column: keyof Property): string {
@@ -64,61 +63,62 @@
       return "Couldn't match id to object";
     }
   }
+
+  function parseDate(dateString: string): string {
+    return formatDateAndAgo(new Date(dateString));
+  }
 </script>
 
 <!-- Table Body -->
 <tbody>
-  {#each propertyData as property (property.id)}
+  {#each data as property (property.id)}
     <tr class:favorited={dataStore.favoriteProperties.includes(property.id)}>
       <!-- Checkbox Cell. First Column -->
       <td>
         <Checkbox
-          value={property.id ?? ""}
+          fieldId={property.id ?? ""}
           checked={selectedPropertyIds.includes(property.id)}
           updateState={handleCheckboxClick}
         />
       </td>
 
-      <!-- TODO: First check all empty situations, than conditionally others -->
       <!-- Other, Dynamic Columns -->
-      {#each columns as column}
-        <td>
-          {#if isObject(property[column])}
-            <!-- Handle object values -->
-            {#if hasLength(property[column])}
-              <!-- Array-like objects -->
-              {#if property[column].length > 0}
-                {#if column === "imgUrl"}
-                  <a
-                    href={removeThumbFromUrl(property[column][0])}
-                    target="_blank"
-                    class="img-link"
-                  >
-                    <img src={property[column][0]} alt={property.id} />
-                  </a>
-                {:else}
-                  {property[column].join(", ")}
-                {/if}
-              {:else}
-                <span class="empty">N/A</span>
-              {/if}
-            {/if}
-          {:else if property[column] === ""}
-            <!-- Empty string values -->
+      {#each columnsKeys as column}
+        <td class:isSorting={column === sortOptionField}>
+          {#if !property[column] && typeof property[column] !== "boolean"}
             <span class="empty">N/A</span>
-          {:else if isCopyable(column)}
-            <!-- Copyable values (email, phone) -->
-            <CopyableCell value={property[column]} />
           {:else if column === "price"}
             {parsePrice(property)}
           {:else if column === "surfaceArea"}
             {parseSurfaceArea(property)}
           {:else if column === "hiddenOnWebsite"}
             {parseVisibility(property)}
-          {:else if ["agent_id", "ownerId"].includes(column)}
+          {:else if ["agent_id", "ownerId"].includes(column as string)}
             {parseId(property, column)}
+          {:else if column === "created"}
+            {parseDate(property[column])}
+          {:else if column === "imgUrl"}
+            {#if property[column].length > 0}
+              <a
+                href={removeThumbFromUrl(property[column][0])}
+                target="_blank"
+                class="img-link"
+              >
+                <img src={property[column][0]} alt={property.id} />
+              </a>
+            {:else}
+              <span class="empty">N/A</span>
+            {/if}
+          {:else if isCopyable(column)}
+            <CopyableBodyCell value={property[column]} />
+          {:else if isObject(property[column])}
+            <!-- Array-like objects -->
+            {#if property[column].length && property[column].length > 0}
+              {property[column].join(", ")}
+            {:else}
+              {"riješiti objekt"} {property[column]}
+            {/if}
           {:else}
-            <!-- All other values -->
             {property[column]}
           {/if}
         </td>
@@ -128,7 +128,6 @@
 </tbody>
 
 <style>
-  th,
   td {
     /* border: 1px solid hsl(0, 0%, 90%); */
     border-bottom: 1px solid hsl(0, 0%, 90%);
@@ -140,6 +139,13 @@
   }
   td {
     background-color: hsla(0, 0%, 100%, 0.5);
+  }
+
+  td.isSorting {
+    border-left: 1px solid hsl(0, 0%, 75%);
+    border-right: 1px solid hsl(0, 0%, 75%);
+    background-color: hsla(0, 0%, 100%, 0.75);
+    font-weight: 500;
   }
 
   tr:hover {

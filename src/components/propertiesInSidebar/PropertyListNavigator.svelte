@@ -1,56 +1,28 @@
 <script lang="ts">
-  import { dataStore } from "../../stores/store.svelte";
-  import type { Property } from "../../types";
   import ArrowButton from "./ArrowButton.svelte";
 
-  function getCurrentIndex(
-    filteredProperties: Property[],
-    currentlySelectedPropertyIds: string[]
-  ) {
-    if (currentlySelectedPropertyIds.length === 0) {
-      return -1; // No property selected
-    }
-
-    const currentlySelectedPropertyId = currentlySelectedPropertyIds[0];
-    const index = filteredProperties.findIndex(
-      (property) => property.id === currentlySelectedPropertyId
-    );
-
-    return index;
+  interface Props {
+    currentIndex: number;
+    totalPropertiesCount: number;
+    cycleThruPropertiesBy: (steps: number) => void;
   }
+
+  let { currentIndex, totalPropertiesCount, cycleThruPropertiesBy }: Props = $props();
 
   function handleNavigation(direction: "next" | "previous") {
-    if (dataStore.filteredProperties.length === 0) return;
-
-    console.log("Navigating", direction);
-
-    const currentIndexZeroBased = getCurrentIndex(
-      dataStore.filteredProperties,
-      dataStore.selectedPropertyIds
-    );
-
-    let newIndex: number;
+    if (totalPropertiesCount === 0) return;
 
     if (direction === "next") {
-      newIndex = (currentIndexZeroBased + 1) % dataStore.filteredProperties.length;
+      cycleThruPropertiesBy(1);
     } else {
-      newIndex =
-        (currentIndexZeroBased - 1 + dataStore.filteredProperties.length) %
-        dataStore.filteredProperties.length;
+      cycleThruPropertiesBy(-1);
     }
-
-    const newPropertyId = dataStore.filteredProperties[newIndex].id;
-    dataStore.selectedPropertyIds = [newPropertyId];
   }
-  let filteredCount = $derived(dataStore.filteredProperties.length);
-  let currentIndex = $derived(
-    getCurrentIndex(dataStore.filteredProperties, dataStore.selectedPropertyIds) + 1
-  ); // 1-based index
 </script>
 
 <div class="property-list-navigator">
   <ArrowButton direction="left" onClick={() => handleNavigation("previous")} />
-  <p>{currentIndex}/{filteredCount}</p>
+  <p>{currentIndex + 1}/{totalPropertiesCount}</p>
   <ArrowButton direction="right" onClick={() => handleNavigation("next")} />
 </div>
 

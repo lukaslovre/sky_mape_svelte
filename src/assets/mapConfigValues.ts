@@ -4,6 +4,7 @@ export const mapOptions: MapOptions = {
   center: [45.81, 15.98] as LatLngExpression,
   zoom: 10,
   zoomSnap: 0.1,
+  boxZoom: false,
 };
 
 export const markerOptions: IconOptions = {

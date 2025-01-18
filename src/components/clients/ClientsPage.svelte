@@ -1,69 +1,110 @@
 <script lang="ts">
-  import type { MenuItem } from "../../types";
-  import Table from "../tables/clientsTable/Table.svelte";
+  import type { Client, MenuItem } from "../../types";
   import { dataStore } from "../../stores/store.svelte";
   import Header1 from "../common/Header1.svelte";
   import ClientForm from "./ClientForm.svelte";
   import { clientFormStore } from "../../stores/clientFormStore";
   import { deleteUser } from "../../models/Clients";
   import ClientsMenubar from "./ClientsMenubar.svelte";
+  import ClientsTable from "../tables/ClientsTable.svelte";
 
-  let showForm = $state(false);
+  let showForm: boolean = $state(false);
   let selectedClientIds: string[] = $state([]);
 
-  function toggleForm() {
-    showForm = !showForm;
+  $effect(() => {
+    removeUnfilteredClientsFromSelection(dataStore.filteredUsers);
+  });
+
+  function removeUnfilteredClientsFromSelection(filteredClients: Client[]) {
+    // Remove clients that are no longer in the filteredUsers store
+    const newSelectedClientIds = selectedClientIds.filter((id) => {
+      return filteredClients.some((client) => client.id === id);
+    });
+
+    // Check if actually changed
+    if (newSelectedClientIds.length !== selectedClientIds.length) {
+      selectedClientIds = newSelectedClientIds;
+    }
   }
 
-  function handleItemClick(event: CustomEvent<MenuItem>) {
-    const buttonLabel = event.detail.label;
-    console.log(`'${buttonLabel}' label clicked.`);
+  function handleMenuItemClick(item: MenuItem) {
+    const buttonLabel = item.label;
+    console.log(`${buttonLabel} label clicked in ClientsPage.`);
 
-    if (buttonLabel === "Dodaj") {
-      // Toggle form visibility
-      toggleForm();
-    } else if (buttonLabel === "Uredi") {
-      // Insert selected client values into form
-      if (selectedClientIds.length !== 1) return;
+    switch (buttonLabel) {
+      case "Dodaj":
+        handleAdd();
+        break;
 
-      const selectedClient = findSelectedClient(selectedClientIds[0]);
+      case "Spremi kao tablicu":
+        handleSaveAsTable();
+        break;
 
-      if (selectedClient) {
-        clientFormStore.setFieldValues(selectedClient);
-        toggleForm();
-      }
-    } else if (buttonLabel === "Obriši") {
-      // Delete selected clients
-      if (selectedClientIds.length > 0) {
-        // Create a new array of promises
-        const promises = selectedClientIds.map(async (id) => {
-          await deleteUser(id);
-        });
+      case "Uredi":
+        handleEdit();
+        break;
 
-        // Wait for all promises to resolve
-        Promise.all(promises)
-          .then(() => {
-            alert("Klijenti obrisani");
-          })
-          .catch((err) => {
-            console.error("Error deleting users:", err);
-          });
-      }
-    } else if (buttonLabel === "Spremi kao tablicu") {
-      // Save selected clients as a table
-    } else {
-      // Unknown button pressed in the ClientsPage menubar
-      console.log("Unknown button pressed in the ClientsPage menubar");
+      case "Obriši":
+        handleDelete();
+        break;
+
+      default:
+        console.log("Unknown button pressed in the ClientsPage menubar");
     }
+  }
+
+  function handleAdd() {
+    // propertyFormStore.resetForm();
+    showForm = true;
+  }
+
+  // Alerts that saving as table is not implemented
+  function handleSaveAsTable() {
+    alert(`"Spremi kao tablicu" još nije implementirano.`);
+  }
+
+  // Handles editing of a selected property
+  function handleEdit() {
+    // const selectedProperty = findSelectedProperty(dataStore.selectedPropertyIds[0]);
+    // if (selectedProperty) {
+    //   propertyFormStore.resetForm();
+    //   propertyFormStore.setFieldValuesFromPropertyObject(selectedProperty);
+    //   showForm = true;
+    // }
+  }
+
+  // Deletes selected properties
+  function handleDelete() {
+    const confirmDeletion = window.confirm(
+      `Are you sure you want to delete ${selectedClientIds.length} selected clients?`
+    );
+    if (!confirmDeletion) return;
+
+    // const promises = dataStore.selectedPropertyIds.map((id) => deleteProperty(id));
+
+    // Promise.all(promises)
+    //   .then(() => {
+    //     alert("Sve nekretnine uspješno obrisane!");
+    //   })
+    //   .catch((err) => {
+    //     console.error("Error deleting properties:", err);
+    //     alert("Barem jedna nekretnina nije uspješno obrisana.");
+    //   });
   }
 
   function findSelectedClient(id: string) {
     return dataStore.filteredUsers.find((user) => user.id === id);
   }
 
-  function handleCheckboxChange(event: CustomEvent<string[]>) {
-    selectedClientIds = event.detail;
-    console.log(selectedClientIds);
+  function handleCheckboxClick(clientId: Client["id"], newState: boolean): void {
+    // True = ON, False = OFF
+    if (newState) {
+      if (!selectedClientIds.includes(clientId)) {
+        selectedClientIds.push(clientId);
+      }
+    } else {
+      selectedClientIds = selectedClientIds.filter((id) => id !== clientId);
+    }
   }
 </script>
 
@@ -71,17 +112,19 @@
   <Header1>Popis kupaca</Header1>
 
   {#if !showForm}
-    <ClientsMenubar selectedClientsLength={selectedClientIds.length} {handleItemClick} />
-  {/if}
+    <ClientsMenubar
+      selectedClientsLength={selectedClientIds.length}
+      onMenuItemClick={handleMenuItemClick}
+    />
 
-  {#if showForm}
-    <ClientForm close={() => (showForm = false)} />
-  {:else}
-    <Table
+    <ClientsTable
       showHeader={true}
       data={dataStore.filteredUsers}
-      on:checkboxesChanged={handleCheckboxChange}
+      {handleCheckboxClick}
+      {selectedClientIds}
     />
+  {:else}
+    <ClientForm close={() => (showForm = false)} />
   {/if}
 </div>
 
