@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { Client } from "../types";
 
 export const FiltersSchema = z.object({
   maxArea: z.coerce.number(),
@@ -63,10 +64,12 @@ class FiltersStore {
     }
   };
 
-  removeEmptyFilterFields: () => Partial<Filter> = () => {
+  removeEmptyFilterFields: (data?: Filter) => Partial<Filter> = (data) => {
     // The values are either number or array, so we have to check for falsy values and empty arrays
 
-    const nonEmptyFields = Object.entries(this.filters).filter(
+    const targetData = data || this.filters; // It can use either the internal state or an external object
+
+    const nonEmptyFields = Object.entries(targetData).filter(
       ([key, value]) => value && (!Array.isArray(value) || value.length > 0)
     );
 
@@ -75,6 +78,16 @@ class FiltersStore {
 
   isEmpty = () => {
     return Object.keys(this.removeEmptyFilterFields()).length === 0;
+  };
+
+  loadFiltersFromClient = (client: Client) => {
+    const zodResult = FiltersSchema.safeParse(client.filters);
+    console.log(zodResult);
+    if (zodResult.success) {
+      this.filters = zodResult.data;
+    } else {
+      console.log(zodResult.error);
+    }
   };
 
   ////////
@@ -93,5 +106,3 @@ class FiltersStore {
 }
 
 export const filtersStore = new FiltersStore();
-
-// filtersStore.setField("maxArea", )

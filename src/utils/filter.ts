@@ -135,7 +135,7 @@ export function propertyMatchesFilter(property: Property, filters: Filter): bool
   return true;
 }
 
-export function removeEmptyValuesFromFilters(filters: Filters) {
+export function removeEmptyValuesFromFilters(filters: Filter) {
   console.log("Filters before removing empty values:", filters);
 
   const filteredFilters = Object.fromEntries(

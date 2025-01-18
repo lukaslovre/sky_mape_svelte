@@ -1,11 +1,11 @@
 <script lang="ts">
   import type { Filters, Client } from "../../types";
-  import { applyUserFilters } from "../../stores/actions";
   import { formatDateAndAgo } from "../../utils/datetime";
-  import { removeEmptyValuesFromFilters } from "../../utils/filter";
   import Popup from "../common/Popup.svelte";
   import Checkbox from "./general/Checkbox.svelte";
   import CopyableBodyCell from "./general/CopyableBodyCell.svelte";
+  import { filtersStore } from "../../stores/filtersStore.svelte";
+  import { dataStore } from "../../stores/store.svelte";
 
   interface Props {
     selectedIds?: Client["id"][];
@@ -29,17 +29,19 @@
   const isCopyable = (column: keyof Client): boolean =>
     copyableColumnsKeys.includes(column as string);
 
-  /*
-    divider
-    TODO: check this
-  */
+  /////////
+  // Popup logic
+  /////////
 
-  // Popup state
-  let popupLocation: [number, number] = $state([0, 0]);
-  let popupContent: string = $state("");
+  let popup = $state({
+    x: -1000,
+    y: -1000,
+    content: "",
+  });
 
   // Show filters popup
   const showFiltersPopup = (userId: Client["id"], event: MouseEvent) => {
+    // Get the target element
     const target = event.currentTarget as HTMLElement;
 
     if (!target || !(target instanceof HTMLElement)) {
@@ -47,53 +49,57 @@
       return;
     }
 
+    // Get the target position
     const { right, top } = target.getBoundingClientRect();
 
-    // Position the popup near the button
-    popupLocation = [right, top - 8];
+    popup.x = right;
+    popup.y = top - 8;
 
+    // Get the user filters
     const userFilters = data.find((user) => user.id === userId)?.filters || null;
 
     if (!userFilters) {
-      popupContent = "Nema filtera";
+      popup.content = "Nema filtera";
       return;
     }
 
     // remove keys with empty values
-    const filteredUserFilters = removeEmptyValuesFromFilters(userFilters);
+    const filteredUserFilters = filtersStore.removeEmptyFilterFields(userFilters);
 
-    if (filteredUserFilters?.polygons?.length) {
-      filteredUserFilters.polygons = filteredUserFilters.polygons.length;
+    // Show the number of polygons instead of the array
+    if (
+      Array.isArray(filteredUserFilters.polygons) &&
+      filteredUserFilters.polygons.length > 0
+    ) {
+      filteredUserFilters.polygons = filteredUserFilters.polygons.length as any;
     }
 
-    popupContent = JSON.stringify(filteredUserFilters, null, 2);
-    console.log("Popup content set to:", popupContent);
+    popup.content = JSON.stringify(filteredUserFilters, null, 2);
   };
 
   // Hide filters popup
   const hideFiltersPopup = () => {
-    console.log("hideFiltersPopup called");
-    popupLocation = [-1000, -1000]; // Move off-screen instead of [0, 0]
-    popupContent = "";
-    console.log("Popup location reset to:", popupLocation);
-    console.log("Popup content cleared");
+    popup = {
+      x: -1000,
+      y: -1000,
+      content: "",
+    };
   };
 
   // Handle applying filters
   const handleApplyFilters = (user: Client) => {
     console.log("handleApplyFilters called with user:", user);
-    console.log("Applying filters:", user.filters);
-    console.log("Favorite properties:", user.favoriteProperties);
-    if (user.filters || user.favoriteProperties) {
-      applyUserFilters(user.filters, user.favoriteProperties);
+    filtersStore.loadFiltersFromClient(user);
+    if (user.favoriteProperties.length > 0) {
+      dataStore.favoriteProperties = user.favoriteProperties;
     }
   };
 </script>
 
 <!-- Popup Component -->
-{#if popupContent}
-  <Popup screenLocation={popupLocation}>
-    {popupContent}
+{#if popup.content}
+  <Popup screenLocation={[popup.x, popup.y]}>
+    {popup.content}
   </Popup>
 {/if}
 
@@ -113,7 +119,7 @@
       <!-- Other, Dynamic Columns -->
       {#each columns as column}
         <td>
-          {#if !user[column] && typeof user[column] !== "boolean"}
+          {#if (!user[column] && typeof user[column] !== "boolean") || (Array.isArray(user[column]) && user[column].length === 0)}
             <span class="empty">N/A</span>
           {:else if ["updated", "created"].includes(column as string)}
             {formatDateAndAgo(new Date(user[column]))}
@@ -124,7 +130,7 @@
               onmouseleave={hideFiltersPopup}
               onclick={() => handleApplyFilters(user)}
             >
-              Primjeni
+              Postavi filtere
             </button>
           {:else if isCopyable(column)}
             <CopyableBodyCell value={user[column]} />

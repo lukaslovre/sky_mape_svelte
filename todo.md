@@ -7,11 +7,9 @@ frekvencija plaćanja
 
 ## Clients
 
-- refactorat tablicu da ima istu strukturu ko **Properties**
 - refactor clients store
 - refactor clients form
   - prikazati trenutne filtere
-- apply filters from client (dodat u store metodu)
 
 ## Map
 
