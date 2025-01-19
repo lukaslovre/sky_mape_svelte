@@ -24,7 +24,6 @@
     propertyFormStore.resetForm();
   }
 
-  //
   let markerIconUrl = $derived(
     getIconForProperty(
       {
@@ -40,8 +39,6 @@
       false
     )
   );
-
-  $inspect(markerIconUrl);
 </script>
 
 <Close onClose={close} />
@@ -60,7 +57,9 @@
   }}
 >
   {#each propertyFormStore.fields as field (field.databaseFieldName)}
-    {#if field.inputElement === "input"}
+    {#if field.disabled && !field.value}
+      <!-- Don't show -->
+    {:else if field.inputElement === "input"}
       <Input formField={field} />
     {:else if field.inputElement === "textarea"}
       <Textarea formField={field} />

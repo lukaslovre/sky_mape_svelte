@@ -1,14 +1,6 @@
 // actions.js
 import type { LatLng, LatLngBounds } from "leaflet";
 import type { Property, Client } from "../types";
-// import {
-//   filters,
-//   favoriteProperties,
-//   selectedPropertyIds,
-//   properties,
-//   users,
-//   dataStore,
-// } from "./store.svelte";
 import { emptyFiltersObject, parseFilterValues } from "../utils/filter";
 import { filtersStore } from "./filtersStore.svelte";
 import { dataStore } from "./store.svelte";
@@ -21,12 +13,6 @@ export function toggleSelectedProperty(propertyId: Property["id"]) {
   dataStore.selectedPropertyIds = dataStore.selectedPropertyIds.includes(propertyId)
     ? dataStore.selectedPropertyIds.filter((id) => id !== propertyId)
     : [...dataStore.selectedPropertyIds, propertyId];
-
-  // selectedPropertyIds.update((currentSelectedPropertyIds) =>
-  //   currentSelectedPropertyIds.includes(propertyId)
-  //     ? currentSelectedPropertyIds.filter((id) => id !== propertyId)
-  //     : [...currentSelectedPropertyIds, propertyId]
-  // );
 }
 
 // Apply user-specific filters and favorite properties
@@ -79,14 +65,10 @@ export function updatePropertyInStore(property: Property) {
 
 // Client actions
 export function addClientToStore(client: Client) {
-  users.update((user) => {
-    return [...user, client];
-  });
+  dataStore.users.push(client);
 }
 export function updateClientInStore(client: Client) {
-  users.update((user) => {
-    return user.map((currentUser) =>
-      currentUser.id === client.id ? client : currentUser
-    );
-  });
+  dataStore.users = dataStore.users.map((currentUser) =>
+    currentUser.id === client.id ? client : currentUser
+  );
 }

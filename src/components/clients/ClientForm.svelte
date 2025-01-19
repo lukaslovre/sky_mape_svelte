@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { clientFormStore } from "../../stores/clientFormStore";
   import { createUser } from "../../models/Clients";
   import FormClient from "../common/FormClient.svelte";
   import { dataStore } from "../../stores/store.svelte";
-  import { parseFilterValues } from "../../utils/filter";
   import { filtersStore } from "../../stores/filtersStore.svelte";
+  import { clientFormStore } from "../../stores/clientsFormStore.svelte";
+  import type { ParsedError } from "../../models/errorHandling";
 
   interface Props {
     close: () => void;
@@ -12,45 +12,45 @@
 
   let { close }: Props = $props();
 
+  let formErrorString: string | undefined = $state();
+
   async function handleSubmit() {
-    const transformedFields = clientFormStore.getAndTransformFields();
+    clientFormStore.print();
 
-    // Add favorites and filters to the transformedFields
-    transformedFields.favoriteProperties = dataStore.favoriteProperties;
-    transformedFields.filters = filtersStore.filters;
-
-    console.log(transformedFields);
+    // Do something with favorites and filters maybe here?
 
     try {
-      await createUser(transformedFields);
-      alert("Uspješno dodano!");
-      close();
+      await createUser(clientFormStore.formatForUploadingToDatabase());
+      return true;
     } catch (err) {
-      handleSubmissionError(err);
+      handleSubmissionError(err as ParsedError);
+      return false;
     }
   }
 
-  function handleSubmissionError(err: unknown) {
+  function handleSubmissionError(err: ParsedError) {
     console.log(err);
 
-    if (typeof err === "object" && err !== null) {
-      if (Object.keys(err).length > 0) {
-        clientFormStore.setErrors(err as Record<string, string>);
+    if (typeof err === "object") {
+      if ("error" in err) {
+        formErrorString = err.error;
+      } else if ("message" in err) {
+        formErrorString = err.message;
+      } else if (Object.keys(err).length > 0) {
+        const formatedMsg = Object.entries(err)
+          .map(([key, value]) => `Polje: "${key}" -> ${value}`)
+          .join("\n");
+        formErrorString = formatedMsg;
+        Object.entries(err).forEach(([key, value]) => {
+          clientFormStore.setError(key, value);
+        });
       } else {
-        if ("error" in err) {
-          alert(err.error);
-        } else {
-          alert("Unknown error");
-        }
+        formErrorString = JSON.stringify(err);
       }
+    } else {
+      formErrorString = "Unknown error (error object is not typeof 'object').";
     }
-  }
-
-  async function handleDelete(id: string) {
-    console.log("delete", id);
-    // await deleteUser(id);
-    // close();
   }
 </script>
 
-<FormClient onSubmit={handleSubmit} onDelete={handleDelete} {close} />
+<FormClient onSubmit={handleSubmit} {close} {formErrorString} />

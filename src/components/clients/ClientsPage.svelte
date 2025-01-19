@@ -3,10 +3,10 @@
   import { dataStore } from "../../stores/store.svelte";
   import Header1 from "../common/Header1.svelte";
   import ClientForm from "./ClientForm.svelte";
-  import { clientFormStore } from "../../stores/clientFormStore";
   import { deleteUser } from "../../models/Clients";
   import ClientsMenubar from "./ClientsMenubar.svelte";
   import ClientsTable from "../tables/ClientsTable.svelte";
+  import { clientFormStore } from "../../stores/clientsFormStore.svelte";
 
   let showForm: boolean = $state(false);
   let selectedClientIds: string[] = $state([]);
@@ -54,7 +54,7 @@
   }
 
   function handleAdd() {
-    // propertyFormStore.resetForm();
+    clientFormStore.resetForm();
     showForm = true;
   }
 
@@ -65,12 +65,12 @@
 
   // Handles editing of a selected property
   function handleEdit() {
-    // const selectedProperty = findSelectedProperty(dataStore.selectedPropertyIds[0]);
-    // if (selectedProperty) {
-    //   propertyFormStore.resetForm();
-    //   propertyFormStore.setFieldValuesFromPropertyObject(selectedProperty);
-    //   showForm = true;
-    // }
+    const selectedClient = findSelectedClient(selectedClientIds[0]);
+    if (selectedClient) {
+      clientFormStore.resetForm();
+      clientFormStore.setFieldValuesFromClientObject(selectedClient);
+      showForm = true;
+    }
   }
 
   // Deletes selected properties
@@ -80,16 +80,16 @@
     );
     if (!confirmDeletion) return;
 
-    // const promises = dataStore.selectedPropertyIds.map((id) => deleteProperty(id));
+    const promises = selectedClientIds.map((id) => deleteUser(id));
 
-    // Promise.all(promises)
-    //   .then(() => {
-    //     alert("Sve nekretnine uspješno obrisane!");
-    //   })
-    //   .catch((err) => {
-    //     console.error("Error deleting properties:", err);
-    //     alert("Barem jedna nekretnina nije uspješno obrisana.");
-    //   });
+    Promise.all(promises)
+      .then(() => {
+        alert("Svi odabrani kupci su uspješno obrisani.");
+      })
+      .catch((err) => {
+        console.error("Error deleting clients:", err);
+        alert("Barem jedan odabrani kupac nije obrisan.");
+      });
   }
 
   function findSelectedClient(id: string) {

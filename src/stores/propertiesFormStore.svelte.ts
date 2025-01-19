@@ -1,11 +1,8 @@
 import { getCurrentUser } from "../auth";
-import type { FormFieldType, Property, Client, InputValidator } from "../types";
-import { dataStore } from "./store.svelte";
-import { number, z } from "zod";
+import type { FormFieldType, Property } from "../types";
+import { z } from "zod";
 import { parseValueWithSuffix } from "../utils/numbers";
-
-// Call the createFormStore function with the appropriate type parameter
-// export const propertyFormStore = createFormStore<Property>();
+import { validators } from "./utils/validators";
 
 // type FormFieldType<T> = {
 //   label: string;
@@ -32,32 +29,7 @@ const optionsShape = z.array(
   })
 );
 
-const validators: Record<string, InputValidator> = {
-  imageSizeValidator: (value: File | undefined) => {
-    const maxSizeMb = 10;
-
-    if (value && value.size > maxSizeMb * 1024 * 1024) {
-      return `Image size must be less than ${maxSizeMb}MB (current size: ${
-        value.size / 1024 / 1024
-      }MB)`;
-    }
-    return null;
-  },
-  numberValidator: (value: string) => {
-    if (!z.number().safeParse(value).success) {
-      return "Value must be a number";
-    }
-    return null;
-  },
-  urlValidator: (value: string) => {
-    if (!z.string().url().safeParse(value).success) {
-      return "Value must be a valid URL";
-    }
-    return null;
-  },
-};
-
-export const propertyFormFields: FormFieldType<Property>[] = [
+const propertyFormFields: FormFieldType<Property>[] = [
   {
     label: "ID",
     inputElement: "input",
