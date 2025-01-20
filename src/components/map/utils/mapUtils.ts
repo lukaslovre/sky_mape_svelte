@@ -1,6 +1,5 @@
-import { LatLng, latLng, type LeafletMouseEvent } from "leaflet";
+import { LatLng, type LeafletMouseEvent } from "leaflet";
 import { dataStore } from "../../../stores/store.svelte";
-import { get } from "svelte/store";
 
 /**
  * Handles adding clicks to polygons based on the drawing state.
@@ -12,9 +11,7 @@ export function addClickToPolygons(
   e: LeafletMouseEvent,
   drawingPolygonCoords: LatLng[]
 ): LatLng[] {
-  const isDrawingValue = dataStore.isDrawing;
-
-  if (!isDrawingValue) return drawingPolygonCoords;
+  if (!dataStore.isDrawing) return drawingPolygonCoords;
 
   const newCoords = [...drawingPolygonCoords];
   if (newCoords.length === 0) {
@@ -78,13 +75,6 @@ export function addTemporaryProperty(e: LeafletMouseEvent): void {
       status: "available",
     });
   }
-}
-
-/**
- * Resets the selected property IDs.
- */
-export function resetSelectedProperty(): void {
-  dataStore.selectedPropertyIds = [];
 }
 
 /**

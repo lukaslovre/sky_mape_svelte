@@ -5,6 +5,7 @@
   import PropertyInformation from "./PropertyInformation.svelte";
   import PropertyListNavigator from "./PropertyListNavigator.svelte";
 
+  // If >1 selected property, show selected properties, else show filtered properties
   let propertyList = $derived<Property[]>(
     dataStore.selectedPropertyIds.length > 1
       ? (dataStore.selectedPropertyIds.map((id) =>
@@ -12,15 +13,24 @@
         ) as Property[])
       : dataStore.filteredProperties
   );
-  let selectedPropertyIndex = $state<number>(0);
-  let property = $derived(propertyList[selectedPropertyIndex]);
+  let property = $derived(
+    dataStore.properties.find((p) => p.id === dataStore.focusedPropertyId)
+  );
+  let selectedPropertyIndex = $derived(
+    propertyList.findIndex((p) => p.id === dataStore.focusedPropertyId)
+  );
 
   function cycleThruPropertiesBy(steps: number) {
     if (steps === 0) return;
 
-    selectedPropertyIndex =
-      (selectedPropertyIndex + steps + propertyList.length + propertyList.length * 5) %
-      propertyList.length;
+    const newIndex =
+      (selectedPropertyIndex + steps + propertyList.length * 4) % propertyList.length;
+
+    dataStore.focusedPropertyId = propertyList[newIndex].id;
+    // if only 1 selected property, set the new focused property as selected
+    if (dataStore.selectedPropertyIds.length === 1) {
+      dataStore.selectedPropertyIds = [propertyList[newIndex].id];
+    }
   }
 </script>
 

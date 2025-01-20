@@ -1,11 +1,10 @@
-import { get } from "svelte/store";
-import { dataStore } from "../stores/store.svelte";
 import type { Property } from "../types";
+import { dataStore } from "../stores/store.svelte";
 
 export function getPropertyFromId(ids: Property["id"][]) {
   return ids
     .map((id) => dataStore.properties.find((property) => property.id === id))
-    .filter((property) => property !== undefined);
+    .filter((property) => property != undefined);
 }
 
 export function sortProperties(

@@ -3,8 +3,6 @@
   import {
     addClickToPolygons,
     addTemporaryProperty,
-    panToPropertyById,
-    resetSelectedProperty,
     saveLatLngToClipboard,
     isClickNearStart,
   } from "./utils/mapUtils";
@@ -12,7 +10,10 @@
   import DrawnPolygonsList from "./overlays/DrawnPolygonsList.svelte";
   import { Map, TileLayer } from "sveaflet";
   import { mapOptions } from "../../assets/mapConfigValues";
-  import { fitViewToFilteredProperties } from "../../stores/actions";
+  import {
+    fitViewToFilteredProperties,
+    resetSelectedProperties,
+  } from "../../stores/actions";
   import FitBoundsButton from "./overlays/FitBoundsButton.svelte";
   import ShowUserPolygonsButton from "./overlays/ShowUserPolygonsButton.svelte";
   import PropertyMarkers from "./PropertyMarkers.svelte";
@@ -25,9 +26,28 @@
   let userPolygonsVisibility: boolean = $state(false);
   let eventListenersSet: boolean = $state(false);
 
+  // When mapInstance is ready, set event listeners
+  $effect(() => {
+    if (mapInstance && !eventListenersSet) {
+      setEventListeners(mapInstance);
+      eventListenersSet = true;
+    }
+  });
+
+  function setEventListeners(mapInstance: L.Map) {
+    mapInstance.on("click", handleClick);
+    mapInstance.on("mousemove", handleMouseMove); // For dynamic drawing
+    mapInstance.on("keypress", handleKeyPress); // For keyboard shortcuts (Enter, c, d)
+  }
+
   // Event Handlers
-  function handleMapClick(e: L.LeafletMouseEvent) {
+  function handleClick(e: L.LeafletMouseEvent) {
     if (!mapInstance) return;
+
+    console.log("Click MouseEvent", e.target, e.sourceTarget, e.propagatedFrom);
+
+    // Deselect properties
+    resetSelectedProperties();
 
     // Check if the click is near the start point
     if (isClickNearStart(mapInstance, e.latlng, drawingPolygonCoords)) {
@@ -45,14 +65,6 @@
     addTemporaryProperty(e);
   }
 
-  function handlePopupClose() {
-    resetSelectedProperty();
-  }
-
-  function handlePopupOpen(e: any) {
-    console.log(e);
-  }
-
   function handleMouseMove(e: L.LeafletMouseEvent) {
     if (!dataStore.isDrawing || drawingPolygonCoords.length === 0) return;
 
@@ -63,31 +75,14 @@
   function handleKeyPress(e: L.LeafletKeyboardEvent) {
     const key = e.originalEvent.key;
 
-    if (key === "Enter") {
-      if (dataStore.isDrawing) {
-        dataStore.isDrawing = false;
-      }
+    if ((key === "Enter" || key === "Escape") && dataStore.isDrawing) {
+      dataStore.isDrawing = false;
     } else if (key === "c") {
       fitViewToFilteredProperties(mapInstance, dataStore.propertiesBoundingBox);
     } else if (key === "d") {
       dataStore.isDrawing = true;
     }
   }
-
-  function setEventListeners(mapInstance: L.Map) {
-    mapInstance.on("click", handleMapClick);
-    mapInstance.on("popupclose", handlePopupClose);
-    // mapInstance.on("popupopen", handlePopupOpen);
-    mapInstance.on("mousemove", handleMouseMove);
-    mapInstance.on("keypress", handleKeyPress);
-  }
-
-  $effect(() => {
-    if (mapInstance && !eventListenersSet) {
-      setEventListeners(mapInstance);
-      eventListenersSet = true;
-    }
-  });
 
   // Other
   // Reactive statement to handle drawing state changes
@@ -107,18 +102,18 @@
     // Reset drawing coordinates
     drawingPolygonCoords = [];
   }
-
-  function toggleUserPolygonsVisibility() {
-    userPolygonsVisibility = !userPolygonsVisibility;
-  }
 </script>
 
 <section>
   <div class="map-controls-container">
     <FitBoundsButton {mapInstance} />
-    <ShowUserPolygonsButton {userPolygonsVisibility} {toggleUserPolygonsVisibility} />
+    <ShowUserPolygonsButton
+      {userPolygonsVisibility}
+      toggleUserPolygonsVisibility={() =>
+        (userPolygonsVisibility = !userPolygonsVisibility)}
+    />
   </div>
-  <!-- List of drawn polygons -->
+  <!-- List of drawn polygons (overlay) -->
   <DrawnPolygonsList polygons={filtersStore.filters.polygons} />
 
   <!-- Leaflet Map Component -->

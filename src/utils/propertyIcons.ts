@@ -1,24 +1,18 @@
 import type { Property } from "../types";
 
-type OnlyNeededPropertyAttributes = {
-  type: Property["type"];
-  hiddenOnWebsite: Property["hiddenOnWebsite"];
-  id?: Property["id"];
-};
+type OnlyNeededPropertyAttributes = Pick<Property, "type" | "hiddenOnWebsite" | "id">;
 
 export function getIconForProperty(
   property: OnlyNeededPropertyAttributes,
-  isFavorite: boolean
+  isFavorite: boolean = false,
+  isSelected: boolean = false
 ): string {
-  // console.log(property);
   const propertyType = property.type.toLowerCase();
-
-  if (property.id?.startsWith("temporary")) {
-    return `${propertyType}-temporary.png`;
-  }
-
+  // const propertyTemporary = property.id?.startsWith("temporary") ? "-temporary" : "";
+  const propertyTemporary = "";
   const propertyHidden = property.hiddenOnWebsite ? "-hidden" : "";
   const propertyFavorited = isFavorite ? "-favorited" : "";
+  const propertySelected = isSelected ? "-selected" : "";
 
-  return `/${propertyType}${propertyHidden}${propertyFavorited}.png`;
+  return `/${propertyType}${propertyTemporary}${propertyHidden}${propertyFavorited}${propertySelected}.png`;
 }

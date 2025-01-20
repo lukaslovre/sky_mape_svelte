@@ -7,14 +7,8 @@ frekvencija plaćanja
 
 ## Clients
 
-- refactor clients store
-- refactor clients form
-  - prikazati trenutne filtere
-
 ## Map
 
-- `selected` design ikona
-- tablica properties i mapa dijele `selected` properties, dakle ono sto je checkmarkano na tablici je i u store-u
 - hendlanje selectanja/deselectanja
 
 ## Ostatak:

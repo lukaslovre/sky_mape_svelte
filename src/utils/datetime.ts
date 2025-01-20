@@ -15,13 +15,13 @@ export function timeAgoHumanReadable(milliseconds: number, lang = "hr"): string 
       const trueYears: number[] = [2, 3, 4];
       const sufix = trueYears.includes(years) ? "e" : "a";
       return `prije ${years} godin${sufix}`;
-    } else if (months > 2) {
+    } else if (months > 1) {
       return `prije ${months} mjeseca`;
-    } else if (days > 2) {
+    } else if (days > 1) {
       return `prije ${days} dana`;
-    } else if (hours > 2) {
+    } else if (hours > 1) {
       return `prije ${hours} sata`;
-    } else if (minutes > 2) {
+    } else if (minutes > 1) {
       return `prije ${minutes} minuta`;
     } else {
       return `prije ${seconds} sekundi`;
@@ -32,7 +32,6 @@ export function timeAgoHumanReadable(milliseconds: number, lang = "hr"): string 
 }
 
 export function formatDateAndAgo(date: Date, lang = "hr-HR"): string {
-  // Use croatian
   return `${date.toLocaleDateString(lang)} (${timeAgoHumanReadable(
     Date.now() - date.getTime()
   )})`;

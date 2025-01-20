@@ -1,8 +1,6 @@
 // actions.js
-import type { LatLng, LatLngBounds } from "leaflet";
+import type { LatLngBounds } from "leaflet";
 import type { Property, Client } from "../types";
-import { emptyFiltersObject, parseFilterValues } from "../utils/filter";
-import { filtersStore } from "./filtersStore.svelte";
 import { dataStore } from "./store.svelte";
 
 // **Context for Copilot**:
@@ -15,20 +13,9 @@ export function toggleSelectedProperty(propertyId: Property["id"]) {
     : [...dataStore.selectedPropertyIds, propertyId];
 }
 
-// Apply user-specific filters and favorite properties
-export function applyUserFilters(
-  userFilters: Client["filters"] | undefined,
-  userFavoriteProperties: Property["id"][] | undefined
-) {
-  if (userFilters && typeof userFilters === "object") {
-    const parsedFilters = parseFilterValues(userFilters);
-
-    filters.set(parsedFilters);
-  }
-
-  if (userFavoriteProperties && Array.isArray(userFavoriteProperties)) {
-    favoriteProperties.set(userFavoriteProperties);
-  }
+// Reset the selected properties
+export function resetSelectedProperties(): void {
+  dataStore.selectedPropertyIds = [];
 }
 
 // Clear all favorite properties
