@@ -68,6 +68,10 @@
         handleDelete();
         break;
 
+      case "Favorit":
+        handleFavorite();
+        break;
+
       default:
         console.log("Unknown button pressed in the PropertyPage menubar");
     }
@@ -112,6 +116,28 @@
         console.error("Error deleting properties:", err);
         alert("Barem jedna nekretnina nije uspješno obrisana.");
       });
+  }
+
+  function handleFavorite() {
+    // For each selected property go over and add to favoriteProperties
+    // Check if at least 1 property is not already in favoriteProperties -> in that case all are added
+    // If all are already in favoriteProperties -> remove all from favoriteProperties
+
+    const newState: boolean = dataStore.selectedPropertyIds.some(
+      (id) => !dataStore.favoriteProperties.includes(id)
+    );
+
+    if (newState) {
+      dataStore.selectedPropertyIds.forEach((id) => {
+        if (!dataStore.favoriteProperties.includes(id)) {
+          dataStore.favoriteProperties.push(id);
+        }
+      });
+    } else {
+      dataStore.favoriteProperties = dataStore.favoriteProperties.filter(
+        (favoriteId) => !dataStore.selectedPropertyIds.includes(favoriteId)
+      );
+    }
   }
 
   // Util

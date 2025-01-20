@@ -8,7 +8,7 @@
   import Dropdown from "../common/Dropdown.svelte";
   import { filtersStore } from "../../stores/filtersStore.svelte";
   import { parseValueWithSuffix } from "../../utils/numbers";
-  import { onDestroy } from "svelte";
+  import { uiStateStore } from "../../stores/uiStateStore.svelte";
 
   $inspect(filtersStore.filters);
 
@@ -42,25 +42,13 @@
     emptyFavorites();
   }
 
-  // let agentsOptions: { label: string; value: string }[] = $state([]);
-
   let agentsOptions: { label: string; value: string }[] = $derived(
     dataStore.agents.map((agent) => {
       return { label: agent.name, value: agent.id };
     })
   );
 
-  // agents.subscribe((value) => {
-  //   if (value.length > 0) {
-  //     agentsOptions.push(
-  //       ...value.map((agent) => {
-  //         return { label: agent.name, value: agent.id };
-  //       })
-  //     );
-  //   }
-  // });
-
-  let inputs: InputType[] = $state([
+  let inputs: InputType[] = $derived([
     {
       type: "dropdown",
       label: "Tip nekretnine",
@@ -127,7 +115,7 @@
   ]);
 </script>
 
-<div class="filters-container">
+<div class="filters-container" class:highlight={uiStateStore.highlightFiltersContainer}>
   <div class="inputs-container">
     <LocationInput />
     {#each inputs as input}
@@ -192,6 +180,21 @@
     flex-direction: column;
     gap: 2rem;
   }
+  .filters-container.highlight {
+    /* Add a flashing effect to attract attention */
+    animation: highlight 1s infinite;
+  }
+
+  @keyframes highlight {
+    0%,
+    100% {
+      background-color: transparent;
+    }
+    50% {
+      background-color: hsl(60, 65%, 80%);
+    }
+  }
+
   .inputs-container {
     display: flex;
     flex-direction: column;

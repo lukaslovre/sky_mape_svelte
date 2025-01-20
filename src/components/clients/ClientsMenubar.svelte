@@ -30,11 +30,11 @@
       icon: TrashIcon,
       disabledIfCount: (count: number) => count === 0,
     },
-    {
-      label: "Spremi kao tablicu",
-      icon: SpreadsheetIcon,
-      disabledIfCount: (count: number) => false,
-    },
+    // {
+    //   label: "Spremi kao tablicu",
+    //   icon: SpreadsheetIcon,
+    //   disabledIfCount: (count: number) => false,
+    // },
   ]);
 
   function handleItemClickLocal(item: MenuItem) {

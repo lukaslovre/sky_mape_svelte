@@ -1,5 +1,6 @@
 <script lang="ts">
   import { filtersStore } from "../../stores/filtersStore.svelte";
+  import { uiStateStore } from "../../stores/uiStateStore.svelte";
   import { formatWithCommas } from "../../utils/numbers";
 
   let filters = $derived(filtersStore.filters);
@@ -20,12 +21,23 @@
     Status: filters.status.join(" ili ") || "Any",
     Agent: filters.agentIds.join(" ili ") || "Any",
   });
+
+  function handleQuestionmarkHover() {
+    uiStateStore.highlightFiltersContainer = true;
+  }
+  function handleQuestionmarkStopHover() {
+    uiStateStore.highlightFiltersContainer = false;
+  }
 </script>
 
 <div class="container">
   <div class="label-container">
     <p>Filteri</p>
-    <div class="hover-container">
+    <div
+      class="hover-container"
+      onmouseover={() => handleQuestionmarkHover()}
+      onmouseleave={() => handleQuestionmarkStopHover()}
+    >
       <span class="icon">?</span>
 
       <!-- Hover info -->

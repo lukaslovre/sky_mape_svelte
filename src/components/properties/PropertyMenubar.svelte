@@ -3,6 +3,7 @@
   import SaveIcon from "../../assets/icons/SaveIcon.svelte";
   import SortIcon from "../../assets/icons/SortIcon.svelte";
   import SpreadsheetIcon from "../../assets/icons/SpreadsheetIcon.svelte";
+  import StarIcon from "../../assets/icons/StarIcon.svelte";
   import TrashIcon from "../../assets/icons/TrashIcon.svelte";
   import type { MenuItem, Property } from "../../types";
   import Menubar from "../common/Menubar.svelte";
@@ -44,10 +45,15 @@
       disabledIfCount: (count: number) => false,
     },
     {
-      label: "Spremi kao tablicu",
-      icon: SpreadsheetIcon,
-      disabledIfCount: (count: number) => false,
+      label: "Favoritiziraj",
+      icon: StarIcon,
+      disabledIfCount: (count: number) => count === 0,
     },
+    // {
+    //   label: "Spremi kao tablicu",
+    //   icon: SpreadsheetIcon,
+    //   disabledIfCount: (count: number) => false,
+    // },
   ]);
 
   function handleItemClickLocal(item: MenuItem) {

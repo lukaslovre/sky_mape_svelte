@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Tabs } from "../../types";
   import { userIsAuthenticated } from "../../auth";
-  import { activeTab, tabsList } from "../../stores/uiStateStore.svelte";
+  import { uiStateStore, tabsList } from "../../stores/uiStateStore.svelte";
 
   import MapIcon from "../../assets/icons/MapIcon.svelte";
   import HouseIcon from "../../assets/icons/HouseIcon.svelte";
@@ -60,7 +60,7 @@
     if (tabConfigurations[tab].requiresAuth && !userIsAuthenticated()) {
       alert("Morate biti prijavljeni da biste pristupili ovoj podstranici.");
     } else {
-      activeTab.set(tab);
+      uiStateStore.activeTab = tab;
     }
   }
 </script>
@@ -71,11 +71,14 @@
       {@const SvelteComponent = tabConfigurations[tab].icon}
       <li>
         <button
-          class:active={tab === $activeTab}
+          class:active={tab === uiStateStore.activeTab}
           onclick={() => handleTabClick(tab)}
           aria-label={tabConfigurations[tab].label}
         >
-          <SvelteComponent size={24} color={tab === $activeTab ? "#1A1A1A" : "#4D4D4D"} />
+          <SvelteComponent
+            size={24}
+            color={tab === uiStateStore.activeTab ? "#1A1A1A" : "#4D4D4D"}
+          />
           {tabConfigurations[tab].label}
         </button>
       </li>

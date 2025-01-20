@@ -6,7 +6,7 @@
   import ClientsPage from "./components/clients/ClientsPage.svelte";
   import OwnersPage from "./components/owners/OwnersPage.svelte";
   import TabMenu from "./components/header/TabMenu.svelte";
-  import { activeTab } from "./stores/uiStateStore.svelte";
+  import { uiStateStore } from "./stores/uiStateStore.svelte";
 
   // SideNote
   type SideNoteParams = {
@@ -34,13 +34,13 @@
 
     <TabMenu />
 
-    {#if $activeTab === "Map"}
+    {#if uiStateStore.activeTab === "Map"}
       <Map />
-    {:else if $activeTab === "Properties"}
+    {:else if uiStateStore.activeTab === "Properties"}
       <PropertyPage />
-    {:else if $activeTab === "Buyers"}
+    {:else if uiStateStore.activeTab === "Buyers"}
       <ClientsPage />
-    {:else if $activeTab === "Owners"}
+    {:else if uiStateStore.activeTab === "Owners"}
       <OwnersPage />
     {/if}
   </div>
