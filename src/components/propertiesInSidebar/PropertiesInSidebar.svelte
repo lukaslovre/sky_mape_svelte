@@ -26,10 +26,11 @@
     const newIndex =
       (selectedPropertyIndex + steps + propertyList.length * 4) % propertyList.length;
 
-    dataStore.focusedPropertyId = propertyList[newIndex].id;
     // if only 1 selected property, set the new focused property as selected
     if (dataStore.selectedPropertyIds.length === 1) {
-      dataStore.selectedPropertyIds = [propertyList[newIndex].id];
+      dataStore.setSelectedPropertyIds([propertyList[newIndex].id]);
+    } else {
+      dataStore.focusedPropertyId = propertyList[newIndex].id;
     }
   }
 </script>

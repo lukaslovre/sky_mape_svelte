@@ -1,11 +1,12 @@
 import { LatLng } from "leaflet";
-import type { Filters, Property, Client } from "../types";
+import type { Property, Client } from "../types";
 import { latLngIsInPolygon } from "./geo";
 import { FiltersSchema, type Filter } from "../stores/filtersStore.svelte";
 
 // TODO: napravit lijepo typescript da kad se promjeni u filters nešto da mi svugdje kaže gdje treba promjeniti
+// TODO: Ova cijela datoteka vidjet di se još koristi
 
-export function emptyFiltersObject(): Filters {
+export function emptyFiltersObject(): Filter {
   return {
     action: [],
     type: [],
@@ -29,7 +30,7 @@ function parseNumber(value: unknown, defaultValue: number): number {
   return defaultValue;
 }
 
-export function parseFilterValues(filters: Partial<Filters>): Filters {
+export function parseFilterValues(filters: Partial<Filter>): Filter {
   return {
     action: filters.action || [],
     type: filters.type || [],
@@ -44,7 +45,7 @@ export function parseFilterValues(filters: Partial<Filters>): Filters {
   };
 }
 
-export function filtersIsEmpty(filters: Filters): boolean {
+export function filtersIsEmpty(filters: Filter): boolean {
   const parsedFilters = parseFilterValues(filters);
 
   return (
@@ -169,7 +170,9 @@ export function usersMatchingProperties(
   const usersMatchingProperties = users.filter((user) => {
     if (!user.filters) return false;
 
-    return properties.some((property) => propertyMatchesFilter(property, user.filters));
+    return properties.some((property) =>
+      propertyMatchesFilter(property, user.filters as Filter)
+    );
   });
 
   return usersMatchingProperties;

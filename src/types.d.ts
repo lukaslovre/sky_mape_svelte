@@ -60,22 +60,6 @@ type Property = {
   agent_id: Agent["id"];
 } & PocketbaseAttributes;
 
-// TODO: Use Zod for Filters
-type PropertyVisibilityOptions = "Visible" | "Hidden";
-
-type Filters = {
-  maxArea: number;
-  minArea: number;
-  maxPrice: number;
-  minPrice: number;
-  type: PropertyType[];
-  action: PropertyAction[];
-  visibility: PropertyVisibilityOptions[];
-  status: Property["status"][];
-  agentIds: Agent["id"][];
-  polygons: LatLng[][];
-};
-
 //////////////
 // UI Types
 //////////////

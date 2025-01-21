@@ -333,13 +333,3 @@ class PropertyFormStore {
 }
 
 export const propertyFormStore = new PropertyFormStore();
-
-// TODO:
-
-// Koraci:
-// 1. reaktivno ako je korisnik agent onda je disabled
-// 2. Kada se stisne clear onda se postavlja na trenutnog korisnika
-
-// const currentUser = getCurrentUser();
-//       field.value = [currentUser.id];
-//       field.disabled = currentUser.role === "agent";

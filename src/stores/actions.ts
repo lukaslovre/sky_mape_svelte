@@ -3,19 +3,18 @@ import type { LatLngBounds } from "leaflet";
 import type { Property, Client } from "../types";
 import { dataStore } from "./store.svelte";
 
-// **Context for Copilot**:
-// I am refactoring this file to use the new `dataStore` instead of the old `store.svelte` store. I am also trying to make the code more idiomatic to Svelte 5.
-
 // Toggle the selection of a property ID
 export function toggleSelectedProperty(propertyId: Property["id"]) {
-  dataStore.selectedPropertyIds = dataStore.selectedPropertyIds.includes(propertyId)
-    ? dataStore.selectedPropertyIds.filter((id) => id !== propertyId)
-    : [...dataStore.selectedPropertyIds, propertyId];
+  dataStore.setSelectedPropertyIds(
+    dataStore.selectedPropertyIds.includes(propertyId)
+      ? dataStore.selectedPropertyIds.filter((id) => id !== propertyId)
+      : [...dataStore.selectedPropertyIds, propertyId]
+  );
 }
 
 // Reset the selected properties
 export function resetSelectedProperties(): void {
-  dataStore.selectedPropertyIds = [];
+  dataStore.setSelectedPropertyIds([]);
 }
 
 // Clear all favorite properties

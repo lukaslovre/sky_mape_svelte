@@ -41,7 +41,8 @@
 
     // Check if actually changed
     if (newSelectedPropertyIds.length !== dataStore.selectedPropertyIds.length) {
-      dataStore.selectedPropertyIds = newSelectedPropertyIds;
+      dataStore.setSelectedPropertyIds(newSelectedPropertyIds);
+      // dataStore.selectedPropertyIds = newSelectedPropertyIds;
     }
   }
 
@@ -68,7 +69,7 @@
         handleDelete();
         break;
 
-      case "Favorit":
+      case "Favoritiziraj":
         handleFavorite();
         break;
 
@@ -150,11 +151,11 @@
     // True = ON, False = OFF
     if (newState) {
       if (!dataStore.selectedPropertyIds.includes(propertyId)) {
-        dataStore.selectedPropertyIds.push(propertyId);
+        dataStore.setSelectedPropertyIds([...dataStore.selectedPropertyIds, propertyId]);
       }
     } else {
-      dataStore.selectedPropertyIds = dataStore.selectedPropertyIds.filter(
-        (id) => id !== propertyId
+      dataStore.setSelectedPropertyIds(
+        dataStore.selectedPropertyIds.filter((id) => id !== propertyId)
       );
     }
   }

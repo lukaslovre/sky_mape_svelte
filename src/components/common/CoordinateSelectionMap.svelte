@@ -11,7 +11,6 @@
 <script lang="ts">
   import { Map, Marker, TileLayer } from "sveaflet";
   import { mapOptions, markerOptions } from "../../assets/mapConfigValues";
-  import { onDestroy } from "svelte";
   import L from "leaflet";
 
   interface Props {
@@ -46,15 +45,13 @@
   });
 
   $effect(() => {
-    if (marker) {
-      if (iconUrl) {
-        marker.setIcon(
-          new L.Icon({
-            ...markerOptions,
-            iconUrl: iconUrl,
-          })
-        );
-      }
+    if (marker && iconUrl) {
+      marker.setIcon(
+        new L.Icon({
+          ...markerOptions,
+          iconUrl: iconUrl,
+        })
+      );
     }
   });
 

@@ -25,19 +25,17 @@
   }
 
   let markerIconUrl = $derived(
-    getIconForProperty(
-      {
-        hiddenOnWebsite:
-          propertyFormStore.fields.find(
-            (field) => field.databaseFieldName === "hiddenOnWebsite"
-          )?.value || false,
-        type:
-          propertyFormStore.fields
-            .find((field) => field.databaseFieldName === "type")
-            ?.value.at(0) || "House",
-      },
-      false
-    )
+    getIconForProperty({
+      id: "",
+      hiddenOnWebsite:
+        propertyFormStore.fields.find(
+          (field) => field.databaseFieldName === "hiddenOnWebsite"
+        )?.value || false,
+      type:
+        propertyFormStore.fields
+          .find((field) => field.databaseFieldName === "type")
+          ?.value.at(0) || "House",
+    })
   );
 </script>
 

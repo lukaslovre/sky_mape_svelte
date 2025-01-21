@@ -62,7 +62,8 @@
       toggleSelectedProperty(property.id);
     } else {
       // Single select
-      dataStore.selectedPropertyIds = [property.id];
+      dataStore.setSelectedPropertyIds([property.id]);
+      // dataStore.selectedPropertyIds = [property.id];
     }
 
     // Last clicked is focused

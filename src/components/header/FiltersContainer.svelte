@@ -3,10 +3,9 @@
   import ResetIcon from "../../assets/icons/ResetIcon.svelte";
   import LocationInput from "./LocationInput.svelte";
   import { dataStore } from "../../stores/store.svelte";
-  import type { Filters } from "../../types";
   import { emptyFavorites } from "../../stores/actions";
   import Dropdown from "../common/Dropdown.svelte";
-  import { filtersStore } from "../../stores/filtersStore.svelte";
+  import { filtersStore, type Filter } from "../../stores/filtersStore.svelte";
   import { parseValueWithSuffix } from "../../utils/numbers";
   import { uiStateStore } from "../../stores/uiStateStore.svelte";
 
@@ -21,14 +20,14 @@
     | {
         type: "dropdown";
         label: string;
-        id: keyof Filters;
+        id: keyof Filter;
         options: { label: string; value: string }[];
       }
     | {
         type: "min-max";
         label: string;
-        idMax: keyof Filters;
-        idMin: keyof Filters;
+        idMax: keyof Filter;
+        idMin: keyof Filter;
       }
     | {
         type: "divider";
@@ -166,7 +165,6 @@
       onclick={emptyFavoriteProperties}
       disabled={activeFavoritesCount === 0}
     >
-      <!-- TODO: add star emoji -->
       <ResetIcon /> Favoriti ({activeFavoritesCount})
     </button>
   </div>

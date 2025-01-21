@@ -5,7 +5,7 @@ import {
   propertyMatchesFilter,
   usersMatchingProperties,
 } from "../utils/filter";
-import type { Filters, Property, Tabs, Client, Agent } from "../types";
+import type { Property, Client, Agent } from "../types";
 import { LatLngBounds } from "leaflet";
 import { getProperties } from "../models/Properties";
 import { getUsers } from "../models/Clients";
@@ -28,9 +28,9 @@ class DataStore {
   agents = $state<Agent[]>([]);
 
   selectedPropertyIds = $state<Property["id"][]>([]);
-  favoriteProperties = $state<Property["id"][]>([]);
   focusedPropertyId = $state<Property["id"] | null>(null);
 
+  favoriteProperties = $state<Property["id"][]>([]);
   isDrawing = $state<boolean>(false);
 
   ////////
@@ -105,6 +105,28 @@ class DataStore {
 
     return bounds.pad(0.2);
   });
+
+  ////////
+  // Methods
+  ////////
+  setSelectedPropertyIds(propertyIds: Property["id"][]) {
+    // I need to decide on some logic/way that will dictate the relationship between selectedPropertyIds and focusedPropertyId.
+    // For example, if only one property is selected, then focusedPropertyId should be the same as selectedPropertyIds[0].
+    // If multiple properties are selected, then focusedPropertyId should be the last one added
+    // If no properties are selected, then focusedPropertyId should be null.
+    // If a property is focused, then it should be selected.
+    // Am I missing any other cases?
+
+    this.selectedPropertyIds = propertyIds;
+
+    if (propertyIds.length === 1) {
+      this.focusedPropertyId = propertyIds[0];
+    } else if (propertyIds.length > 1) {
+      this.focusedPropertyId = propertyIds.at(-1) ?? null;
+    } else {
+      this.focusedPropertyId = null;
+    }
+  }
 }
 
 export const dataStore = new DataStore();
