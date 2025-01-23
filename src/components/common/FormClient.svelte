@@ -40,7 +40,7 @@
   }}
 >
   {#each clientFormStore.fields as field (field.databaseFieldName)}
-    {#if field.disabled && !field.value}
+    {#if (field.disabled && !field.value) || field.databaseFieldName === "agency_id"}
       <!-- Don't show -->
     {:else if field.inputElement === "input"}
       <Input formField={field} />

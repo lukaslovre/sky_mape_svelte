@@ -20,6 +20,7 @@
     Vidljivost: filters.visibility.join(" ili ") || "Any",
     Status: filters.status.join(" ili ") || "Any",
     Agent: filters.agentIds.join(" ili ") || "Any",
+    "Broj poligona": filters.polygons.length ? filters.polygons.length.toString() : "Any",
   });
 
   function handleQuestionmarkHover() {
