@@ -37,14 +37,14 @@
   function setEventListeners(mapInstance: L.Map) {
     mapInstance.on("click", handleClick);
     mapInstance.on("mousemove", handleMouseMove); // For dynamic drawing
-    mapInstance.on("keypress", handleKeyPress); // For keyboard shortcuts (Enter, c, d)
+    mapInstance.on("keydown", handleKeyPress); // For keyboard shortcuts (Enter, c, d)
   }
 
   // Event Handlers
   function handleClick(e: L.LeafletMouseEvent) {
     if (!mapInstance) return;
 
-    console.log("Click MouseEvent", e.target, e.sourceTarget, e.propagatedFrom);
+    // console.log("Click MouseEvent", e.target, e.sourceTarget, e.propagatedFrom);
 
     // Deselect properties
     resetSelectedProperties();
@@ -75,7 +75,10 @@
   function handleKeyPress(e: L.LeafletKeyboardEvent) {
     const key = e.originalEvent.key;
 
-    if ((key === "Enter" || key === "Escape") && dataStore.isDrawing) {
+    if (key === "Enter" && dataStore.isDrawing) {
+      dataStore.isDrawing = false;
+    } else if (key === "Escape" && dataStore.isDrawing) {
+      drawingPolygonCoords = [];
       dataStore.isDrawing = false;
     } else if (key === "c") {
       fitViewToFilteredProperties(mapInstance, dataStore.propertiesBoundingBox);

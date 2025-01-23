@@ -9,8 +9,6 @@ frekvencija plaćanja
 
 ## Map
 
-- hendlanje selectanja/deselectanja
-
 ## Ostatak:
 
 - selected property basic

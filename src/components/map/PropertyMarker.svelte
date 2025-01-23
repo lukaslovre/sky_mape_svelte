@@ -53,7 +53,7 @@
   }
 
   function handleClick(event: L.LeafletMouseEvent) {
-    console.log("Marker MouseEvent", event);
+    // console.log("Marker MouseEvent", event);
 
     const shiftPressed = event.originalEvent.shiftKey;
 
