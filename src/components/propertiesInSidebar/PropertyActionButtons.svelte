@@ -1,5 +1,4 @@
 <script lang="ts">
-  import EditIcon from "../../assets/icons/EditIcon.svelte";
   import InternetIcon from "../../assets/icons/InternetIcon.svelte";
   import StarIcon from "../../assets/icons/StarIcon.svelte";
   import { toggleFavorite } from "../../stores/actions";
@@ -12,14 +11,9 @@
 
   let { property }: Props = $props();
 
-  //   Temporary for development
+  // Temporary for development
   let isFavorite = $derived(dataStore.favoriteProperties.includes(property.id));
 
-  function handleEditClick() {
-    // TODO:
-    console.log("Edit button clicked");
-    alert("Not implemented yet");
-  }
   function handleFavoriteClick() {
     toggleFavorite(property.id);
   }
@@ -29,16 +23,7 @@
 </script>
 
 <div class="property-action-buttons">
-  <button
-    type="button"
-    onclick={(e) => {
-      e.stopPropagation();
-      handleEditClick();
-    }}
-  >
-    <EditIcon size={20} color="#fff" />
-  </button>
-
+  <!-- Favorite button -->
   <button
     type="button"
     style:background-color={isFavorite ? "#d98803" : undefined}
@@ -50,8 +35,10 @@
     <StarIcon size={20} color="#fff" />
   </button>
 
+  <!-- WebsiteURL button -->
   <button
     type="button"
+    disabled={!property.websiteUrl}
     onclick={(e) => {
       e.stopPropagation();
       handleWebsiteClick();
@@ -63,6 +50,8 @@
 
 <style>
   .property-action-buttons {
+    flex: 0;
+
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -82,5 +71,10 @@
   }
   .property-action-buttons button:hover {
     background-color: hsl(216, 90%, 35%);
+  }
+
+  .property-action-buttons button:disabled {
+    background-color: hsl(0, 0%, 70%);
+    cursor: not-allowed;
   }
 </style>

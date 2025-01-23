@@ -5,7 +5,10 @@
   import { formatWithCommas } from "../../utils/numbers";
   import { getIconForProperty } from "../../utils/propertyIcons";
   import InfoRow from "./PropertyInformationComponents/InfoRow.svelte";
+  import Tag from "./PropertyInformationComponents/Tag.svelte";
   import Thumbnail from "./PropertyInformationComponents/Thumbnail.svelte";
+
+  type TwoColumn = { label: string; value: string };
 
   interface Props {
     property: Property;
@@ -16,65 +19,97 @@
   const defaultImageUrl =
     "https://coffective.com/wp-content/uploads/2018/06/default-featured-image.png.jpg";
 
-  let propertyForDisplay = $derived(
-    parsePropertyForDisplay(property, dataStore.users, dataStore.agents)
-  );
-
-  function parsePropertyForDisplay(property: Property, users: Client[], agents: Agent[]) {
-    const parsedFields = {
-      // "Lat & Lng": `${property.lat}, ${property.lng}`,
-      // Type: property.type,
-      Agent: agents.find((agent) => agent.id === property.agent_id)?.name,
-      Status: property.status,
-      stripe: "stripe",
-      Price:
+  let simpleFields: Record<string, string> = $derived.by(() => {
+    const intermediateValue = {
+      Cijena:
         property.price &&
-        `${formatWithCommas(property.price)} € / mjesečno (${property.action === "Rent" ? "Iznajmljivanje" : "Prodaja"})`,
-      "Surface Area":
-        property.surfaceArea && `${formatWithCommas(property.surfaceArea)} m²`,
-      // todo, add frequency
-      "Website URL": property.websiteUrl,
-      // Visibility: property.hiddenOnWebsite ? "Off-market" : "Visible",
-      Bedrooms: property.bedrooms + " kupaonica",
-      Bathrooms: property.bathrooms + " spavaća soba",
-      Owner: users.find((user) => user.id === property.ownerId)?.name,
-      "Property Notes": property.propertyNotes,
-      "Seller Notes": property.sellerNotes,
-      Created: formatDateAndAgo(new Date(property.created)),
-      Updated: formatDateAndAgo(new Date(property.updated)),
+        `${formatWithCommas(property.price)} € ${property.action === "Rent" ? `/ mjesečno (Iznajmljivanje)` : "(Prodaja)"}`,
+      Površina: property.surfaceArea && `${formatWithCommas(property.surfaceArea)} m²`,
+      Kupaonica: property.bathrooms + " kupaonica",
+      "Spavaće sobe": property.bedrooms + " spavaća soba",
+      "Bilješke o nekretnini": property.propertyNotes,
+      Vlasnik: dataStore.users.find((user) => user.id === property.ownerId)?.name,
+      "Bilješke vlasnika": property.sellerNotes,
     };
 
-    const filteredObject = Object.fromEntries(
-      Object.entries(parsedFields).map(([key, value]) => {
-        if (
-          value == undefined ||
-          value == "" ||
-          (Array.isArray(value) && value.length == 0)
-        ) {
+    // Filter out empty fields
+    return Object.fromEntries(
+      Object.entries(intermediateValue).map(([key, value]) => {
+        if (value == undefined || value == "") {
           return [key, "N/A"];
         }
-        return [key, value];
+        return [key, value.toString()];
       })
     );
+  });
 
-    return filteredObject;
+  let twoColumnFields: Record<string, TwoColumn[]> = $derived({
+    "Two-Column": [
+      {
+        label: "Kreirano",
+        value: formatDateAndAgo(new Date(property.created)),
+      },
+      {
+        label: "Promijenjeno",
+        value: formatDateAndAgo(new Date(property.updated)),
+      },
+    ],
+  });
+
+  function getLabelFromStatus(status: Property["status"]): string {
+    switch (status) {
+      case "available":
+        return "Dostupno";
+      case "processing":
+        return "U obradi";
+      case "sold":
+        return "Prodano";
+      default:
+        return "N/A";
+    }
+  }
+
+  function getHueFromStatus(status: Property["status"]): number {
+    switch (status) {
+      case "available":
+        return 120;
+      case "processing":
+        return 50;
+      case "sold":
+        return 0;
+      default:
+        return 0;
+    }
   }
 </script>
 
 <div class="property-information">
+  <div class="tags-container">
+    <Tag
+      label={getLabelFromStatus(property.status)}
+      hue={getHueFromStatus(property.status)}
+    />
+  </div>
+
   <Thumbnail imageUrl={property.imgUrl[0] || defaultImageUrl} />
 
-  <!-- TODO: npr broj soba two column row, mozda jos neke -->
+  <!-- type and visibility (using color) -->
+  <div class="coloredStripe">
+    <img src={getIconForProperty(property, false)} alt="icon" />
+  </div>
 
-  {#each Object.entries(propertyForDisplay) as [key, value]}
-    {#if key === "stripe"}
-      <!-- type and visibility (using color) -->
-      <div class="coloredStripe">
-        <img src={getIconForProperty(property, false)} alt="" />
-      </div>
-    {:else}
-      <InfoRow label={key} {value} isUndefined={value === "N/A"} />
-    {/if}
+  {#each Object.entries(simpleFields) as [key, value]}
+    <InfoRow label={key} {value} isUndefined={value === "N/A"} />
+  {/each}
+
+  {#each Object.values(twoColumnFields) as twoColumns}
+    <div class="two-column-container">
+      {#each twoColumns as { label, value }}
+        <div class="two-column">
+          <InfoRow {label} {value} isUndefined={value === "N/A"} />
+        </div>
+      {/each}
+    </div>
   {/each}
 </div>
 
@@ -85,10 +120,21 @@
     gap: 1.25rem;
   }
 
+  .two-column-container {
+    display: flex;
+    gap: 1.25rem;
+  }
+
   .coloredStripe {
     height: 4rem;
   }
   .coloredStripe img {
     height: 100%;
+  }
+
+  .tags-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
   }
 </style>

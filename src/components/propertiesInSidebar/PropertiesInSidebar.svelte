@@ -19,6 +19,9 @@
   let selectedPropertyIndex = $derived(
     propertyList.findIndex((p) => p.id === dataStore.focusedPropertyId)
   );
+  let responsibleAgent = $derived(
+    dataStore.agents.find((agent) => agent.id === property?.agent_id)
+  );
 
   function cycleThruPropertiesBy(steps: number) {
     if (steps === 0) return;
@@ -43,7 +46,13 @@
   />
 
   {#if property}
-    <PropertyActionButtons {property} />
+    <div class="agent-and-actions-container">
+      <div class="agent-container">
+        <img src={responsibleAgent?.avatar || "profile.png"} alt="agent pfp" />
+        <p>{responsibleAgent?.name}</p>
+      </div>
+      <PropertyActionButtons {property} />
+    </div>
 
     <PropertyInformation {property} />
   {/if}
@@ -54,5 +63,29 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
+  }
+  .agent-and-actions-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .agent-container {
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid hsl(0, 0%, 90%);
+
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .agent-container p {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  .agent-container img {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    object-fit: cover;
   }
 </style>
