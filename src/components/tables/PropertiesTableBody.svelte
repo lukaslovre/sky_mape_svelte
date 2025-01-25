@@ -6,6 +6,7 @@
   import { formatWithCommas } from "../../utils/numbers";
   import Checkbox from "./general/Checkbox.svelte";
   import CopyableBodyCell from "./general/CopyableBodyCell.svelte";
+  import { trimText } from "../../utils/string";
 
   interface Props {
     selectedPropertyIds?: Property["id"][];
@@ -97,6 +98,8 @@
             {parseId(property, column)}
           {:else if column === "created"}
             {parseDate(property[column])}
+          {:else if ["propertyNotes", "sellerNotes"].includes(column as string)}
+            {trimText(property[column], 100)}
           {:else if column === "imgUrl"}
             {#if property[column].length > 0}
               <a

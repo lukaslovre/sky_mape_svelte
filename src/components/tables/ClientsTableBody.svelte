@@ -1,11 +1,12 @@
 <script lang="ts">
-  import type { Filters, Client } from "../../types";
+  import type { Client } from "../../types";
   import { formatDateAndAgo } from "../../utils/datetime";
   import Popup from "../common/Popup.svelte";
   import Checkbox from "./general/Checkbox.svelte";
   import CopyableBodyCell from "./general/CopyableBodyCell.svelte";
   import { filtersStore } from "../../stores/filtersStore.svelte";
   import { dataStore } from "../../stores/store.svelte";
+  import { trimText } from "../../utils/string";
 
   interface Props {
     selectedIds?: Client["id"][];
@@ -123,6 +124,8 @@
             <span class="empty">N/A</span>
           {:else if ["updated", "created"].includes(column as string)}
             {formatDateAndAgo(new Date(user[column]))}
+          {:else if ["note"].includes(column as string)}
+            {trimText(user[column], 100)}
           {:else if column === "filters"}
             <button
               class="applyFiltersButton"
