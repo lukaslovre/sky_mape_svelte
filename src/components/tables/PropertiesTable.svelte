@@ -77,18 +77,18 @@
       visible: true,
     },
     {
+      key: "propertyNotes",
+      label: "Bilješke o nekretnini",
+      visible: true,
+    },
+    {
       key: "ownerId",
       label: "Vlasnik",
       visible: true,
     },
     {
-      key: "propertyNotes",
-      label: "Napomena",
-      visible: true,
-    },
-    {
       key: "sellerNotes",
-      label: "Napomene prodavača",
+      label: "Bilješke vlasnika",
       visible: true,
     },
     {

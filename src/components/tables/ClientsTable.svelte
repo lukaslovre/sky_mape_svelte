@@ -52,7 +52,7 @@
     },
     {
       key: "note",
-      label: "Napomena",
+      label: "Bilješka",
       visible: true,
     },
     {
