@@ -54,7 +54,14 @@
   }
 
   function handleAdd() {
-    clientFormStore.resetForm();
+    if (
+      clientFormStore.fields.find((field) => field.databaseFieldName === "id")?.value !==
+      ""
+    ) {
+      // If id field is not empty, reset the form
+      clientFormStore.resetForm();
+    }
+
     showForm = true;
   }
 

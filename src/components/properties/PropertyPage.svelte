@@ -80,7 +80,13 @@
 
   // Shows the form for adding a new property
   function handleAdd() {
-    propertyFormStore.resetForm();
+    if (
+      propertyFormStore.fields.find((field) => field.databaseFieldName === "id")
+        ?.value !== ""
+    ) {
+      // If id field is not empty, reset the form
+      propertyFormStore.resetForm();
+    }
     showForm = true;
   }
 

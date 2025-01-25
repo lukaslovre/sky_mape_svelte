@@ -124,8 +124,8 @@
             <span class="empty">N/A</span>
           {:else if ["updated", "created"].includes(column as string)}
             {formatDateAndAgo(new Date(user[column]))}
-          {:else if ["note"].includes(column as string)}
-            {trimText(user[column], 100)}
+            <!-- {:else if ["note"].includes(column as string)}
+            {trimText(user[column], 100)} -->
           {:else if column === "filters"}
             <button
               class="applyFiltersButton"

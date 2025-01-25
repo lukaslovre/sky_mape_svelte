@@ -265,7 +265,17 @@ class PropertyFormStore {
       }
     }, {} as Property);
 
-    return formattedData;
+    // Remove empty or undefined fields
+    const filteredData = Object.fromEntries(
+      Object.entries(formattedData).filter(([_, value]) => {
+        if (value === "" || value === undefined) {
+          return false;
+        }
+        return true;
+      })
+    );
+
+    return filteredData;
   };
 
   setFieldOptions = (
