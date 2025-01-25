@@ -2,6 +2,7 @@
   import { dataStore } from "../../stores/store.svelte";
   import type { Agent, Property, Client } from "../../types";
   import { formatDateAndAgo } from "../../utils/datetime";
+  import { getDefaultImageURL } from "../../utils/image";
   import { formatWithCommas } from "../../utils/numbers";
   import { getIconForProperty } from "../../utils/propertyIcons";
   import InfoRow from "./PropertyInformationComponents/InfoRow.svelte";
@@ -16,8 +17,7 @@
 
   let { property }: Props = $props();
 
-  const defaultImageUrl =
-    "https://coffective.com/wp-content/uploads/2018/06/default-featured-image.png.jpg";
+  const defaultImageUrl = getDefaultImageURL();
 
   let simpleFields: Record<string, string> = $derived.by(() => {
     const intermediateValue = {
