@@ -48,6 +48,11 @@ export function updatePropertyInStore(property: Property) {
     currentProperty.id === property.id ? property : currentProperty
   );
 }
+export function removePropertyFromStore(propertyId: Property["id"]) {
+  dataStore.properties = dataStore.properties.filter(
+    (currentProperty) => currentProperty.id !== propertyId
+  );
+}
 
 // Client actions
 export function addClientToStore(client: Client) {
@@ -57,4 +62,7 @@ export function updateClientInStore(client: Client) {
   dataStore.users = dataStore.users.map((currentUser) =>
     currentUser.id === client.id ? client : currentUser
   );
+}
+export function removeClientFromStore(clientId: Client["id"]) {
+  dataStore.users = dataStore.users.filter((currentUser) => currentUser.id !== clientId);
 }

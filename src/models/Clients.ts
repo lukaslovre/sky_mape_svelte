@@ -1,7 +1,11 @@
 import type { Client } from "../types";
 import { pb } from "../PocketBaseInit";
 import { handlePocketbaseError } from "./errorHandling";
-import { addClientToStore, updateClientInStore } from "../stores/actions";
+import {
+  addClientToStore,
+  removeClientFromStore,
+  updateClientInStore,
+} from "../stores/actions";
 
 // EXAMPLE DATA
 // {
@@ -70,6 +74,7 @@ export async function deleteUser(id: string): Promise<void> {
     const collection = pb.collection<Client>("Clients");
     const res = await collection.delete(id);
     console.log("User deleted:", res);
+    removeClientFromStore(id);
   } catch (err) {
     throw handlePocketbaseError(err);
   }

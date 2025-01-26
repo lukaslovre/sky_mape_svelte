@@ -2,7 +2,11 @@ import type { Property } from "../types";
 
 import { pb } from "../PocketBaseInit";
 import { handlePocketbaseError } from "./errorHandling";
-import { addPropertyToStore, updatePropertyInStore } from "../stores/actions";
+import {
+  addPropertyToStore,
+  removePropertyFromStore,
+  updatePropertyInStore,
+} from "../stores/actions";
 
 // EXAMPLE DATA
 // {
@@ -79,6 +83,7 @@ export async function deleteProperty(id: string): Promise<void> {
     const collection = pb.collection<Property>("Properties");
     const res = await collection.delete(id);
     console.log("Property deleted:", res);
+    removePropertyFromStore(id);
   } catch (err) {
     throw handlePocketbaseError(err);
   }
