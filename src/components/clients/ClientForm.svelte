@@ -1,8 +1,6 @@
 <script lang="ts">
   import { createUser } from "../../models/Clients";
   import FormClient from "../common/FormClient.svelte";
-  import { dataStore } from "../../stores/store.svelte";
-  import { filtersStore } from "../../stores/filtersStore.svelte";
   import { clientFormStore } from "../../stores/clientsFormStore.svelte";
   import type { ParsedError } from "../../models/errorHandling";
 
@@ -16,8 +14,6 @@
 
   async function handleSubmit() {
     clientFormStore.print();
-
-    // Do something with favorites and filters maybe here?
 
     try {
       await createUser(clientFormStore.formatForUploadingToDatabase());

@@ -169,6 +169,7 @@ export function usersMatchingProperties(
 ): Client[] {
   const usersMatchingProperties = users.filter((user) => {
     if (!user.filters) return false;
+    if (user.userType === "seller") return false;
 
     return properties.some((property) =>
       propertyMatchesFilter(property, user.filters as Filter)

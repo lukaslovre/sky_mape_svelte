@@ -6,19 +6,19 @@
   interface Props {
     showHeader?: boolean;
     data?: Client[];
-    selectedClientIds?: Client["id"][];
+    selectedOwnerIds?: Client["id"][];
     handleCheckboxClick: (clientId: Client["id"], newState: boolean) => void;
   }
 
   let {
     showHeader = true,
     data = [],
-    selectedClientIds = [],
+    selectedOwnerIds = [],
     handleCheckboxClick,
   }: Props = $props();
 
   // State Variables
-  let isSelectAll = $derived(selectedClientIds.length === data.length);
+  let isSelectAll = $derived(selectedOwnerIds.length === data.length);
 
   type Column = {
     key: keyof Client;
@@ -36,7 +36,7 @@
     {
       key: "userType",
       label: "Tip korisnika",
-      visible: false,
+      visible: true,
     },
     {
       key: "email",
@@ -58,17 +58,17 @@
     {
       key: "payment_method",
       label: "Način plaćanja",
-      visible: true,
+      visible: false,
     },
     {
       key: "favoriteProperties",
       label: "Favoriti",
-      visible: true,
+      visible: false,
     },
     {
       key: "filters",
       label: "Filteri",
-      visible: true,
+      visible: false,
     },
     {
       key: "id",
@@ -115,7 +115,7 @@
     if (!attributeKey) return [];
 
     // Gather attribute values from data where the corresponding checkbox is checked.
-    return selectedClientIds
+    return selectedOwnerIds
       .map(
         (clientId) => data.find((client) => client.id === clientId)?.[attributeKey] ?? ""
       )
@@ -141,7 +141,7 @@
 
     {#if data.length > 0}
       <ClientsTableBody
-        selectedIds={selectedClientIds}
+        selectedIds={selectedOwnerIds}
         {data}
         columns={columns.filter((column) => column.visible).map((column) => column.key)}
         {handleCheckboxClick}

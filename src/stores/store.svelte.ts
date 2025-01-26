@@ -51,8 +51,6 @@ class DataStore {
 
       return usersMatchingProperties(this.users, selectedProperties);
     } else {
-      if (this.filteredProperties.length === this.properties.length) return this.users;
-
       return usersMatchingProperties(this.users, this.filteredProperties);
     }
   });

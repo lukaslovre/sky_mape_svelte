@@ -70,6 +70,7 @@
       clientFormStore.resetForm();
     }
 
+    clientFormStore.setFieldValue("userType", ["buyer"]);
     showForm = true;
   }
 
@@ -80,10 +81,19 @@
 
   // Handles editing of a selected property
   function handleEdit() {
+    const clientIdField = clientFormStore.fields.find(
+      (field) => field.databaseFieldName === "id"
+    )?.value;
+
     const selectedClient = findSelectedClient(selectedClientIds[0]);
+
     if (selectedClient) {
-      clientFormStore.resetForm();
-      clientFormStore.setFieldValuesFromClientObject(selectedClient);
+      if (clientIdField !== selectedClient.id) {
+        // If id field is not empty, reset the form
+        clientFormStore.resetForm();
+        clientFormStore.setFieldValuesFromClientObject(selectedClient);
+      }
+
       showForm = true;
     }
   }
