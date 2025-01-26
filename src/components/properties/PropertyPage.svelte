@@ -80,13 +80,25 @@
 
   // Shows the form for adding a new property
   function handleAdd() {
-    if (
-      propertyFormStore.fields.find((field) => field.databaseFieldName === "id")
-        ?.value !== ""
-    ) {
+    const propertyIdField = propertyFormStore.fields.find(
+      (field) => field.databaseFieldName === "id"
+    )?.value;
+
+    const propertyAgentField = propertyFormStore.fields.find(
+      (field) => field.databaseFieldName === "agent_id"
+    )?.value;
+
+    if (propertyIdField !== "" && propertyIdField !== undefined) {
       // If id field is not empty, reset the form
       propertyFormStore.resetForm();
+    } else if (
+      !propertyAgentField ||
+      (Array.isArray(propertyAgentField) && propertyAgentField.length === 0)
+    ) {
+      // If agent field is empty, reset the form
+      propertyFormStore.resetForm();
     }
+
     showForm = true;
   }
 

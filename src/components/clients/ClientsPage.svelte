@@ -54,11 +54,19 @@
   }
 
   function handleAdd() {
-    if (
-      clientFormStore.fields.find((field) => field.databaseFieldName === "id")?.value !==
-      ""
-    ) {
+    const clientIdField = clientFormStore.fields.find(
+      (field) => field.databaseFieldName === "id"
+    )?.value;
+
+    const clientAgencyIdField = clientFormStore.fields.find(
+      (field) => field.databaseFieldName === "agency_id"
+    )?.value;
+
+    if (clientIdField !== "" && clientIdField !== undefined) {
       // If id field is not empty, reset the form
+      clientFormStore.resetForm();
+    } else if (!clientAgencyIdField) {
+      // If agency_id field is not empty, reset the form
       clientFormStore.resetForm();
     }
 

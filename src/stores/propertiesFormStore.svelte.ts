@@ -248,7 +248,7 @@ class PropertyFormStore {
 
   formatForUploadingToDatabase = () => {
     const formattedData = this.fields.reduce((acc, field) => {
-      // Handle special cases
+      // 1. Handle special cases
 
       // Lat & Lng - split the one field into 2 seperate (lat, lng) fields
       if (field.databaseFieldName === "lat") {
@@ -265,10 +265,14 @@ class PropertyFormStore {
       }
     }, {} as Property);
 
-    // Remove empty or undefined fields
+    // 2. Remove empty or undefined fields
     const filteredData = Object.fromEntries(
       Object.entries(formattedData).filter(([_, value]) => {
-        if (value === "" || value === undefined) {
+        if (
+          value === "" ||
+          value === undefined ||
+          (Array.isArray(value) && value.length === 0)
+        ) {
           return false;
         }
         return true;

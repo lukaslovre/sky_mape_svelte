@@ -127,7 +127,7 @@ class ClientFormStore {
       })
     );
   };
-
+  // TODO: userType: "buyer" | "seller" = "buyer"
   resetForm = () => {
     this.fields.forEach((field) => {
       // 1. Set values to default values
