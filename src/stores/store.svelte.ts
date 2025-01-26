@@ -1,6 +1,4 @@
 import {
-  emptyFiltersObject,
-  filtersIsEmpty,
   ownersMatchingProperties,
   propertyMatchesFilter,
   usersMatchingProperties,
@@ -11,11 +9,7 @@ import { getProperties } from "../models/Properties";
 import { getUsers } from "../models/Clients";
 import { emptyBoundsObject, getBoundsReducer } from "./utils/bounds";
 import { getAgentsFromDb } from "../models/Agents";
-import {
-  FiltersSchema,
-  FiltersSchemaWithDefaults,
-  filtersStore,
-} from "./filtersStore.svelte";
+import { FiltersSchemaWithDefaults, filtersStore } from "./filtersStore.svelte";
 import { propertyFormStore } from "./propertiesFormStore.svelte";
 
 class DataStore {
@@ -38,13 +32,6 @@ class DataStore {
   ////////
 
   filteredProperties = $derived.by<Property[]>(() => {
-    // if (this.selectedPropertyIds.length > 1) {
-    //   // Return properties matching the selected IDs
-    //   return this.properties.filter((property) =>
-    //     this.selectedPropertyIds.includes(property.id)
-    //   );
-    // }
-
     if (filtersStore.isEmpty()) return this.properties;
 
     return this.properties.filter((property) =>
@@ -53,18 +40,16 @@ class DataStore {
   });
 
   filteredUsers = $derived.by<Client[]>(() => {
-    if (this.selectedPropertyIds.length === 1) {
-      const selectedPropertyId = this.selectedPropertyIds[0];
-      const selectedProperty = this.properties.find(
-        (property) => property.id === selectedPropertyId
+    if (this.selectedPropertyIds.length > 0) {
+      const selectedProperties: Property[] = this.getPropertiesByIds(
+        this.selectedPropertyIds
       );
 
-      if (!selectedProperty) {
-        console.log(`Property with ID ${selectedPropertyId} not found.`);
+      if (!selectedProperties) {
         return [];
       }
 
-      return usersMatchingProperties(this.users, [selectedProperty]);
+      return usersMatchingProperties(this.users, selectedProperties);
     } else {
       if (this.filteredProperties.length === this.properties.length) return this.users;
 
@@ -73,18 +58,16 @@ class DataStore {
   });
 
   filteredOwners = $derived.by<Client[]>(() => {
-    if (this.selectedPropertyIds.length === 1) {
-      const selectedPropertyId = this.selectedPropertyIds[0];
-      const selectedProperty = this.properties.find(
-        (property) => property.id === selectedPropertyId
+    if (this.selectedPropertyIds.length > 0) {
+      const selectedProperties: Property[] = this.getPropertiesByIds(
+        this.selectedPropertyIds
       );
 
-      if (!selectedProperty) {
-        console.log(`Property with ID ${selectedPropertyId} not found.`);
+      if (!selectedProperties) {
         return [];
       }
 
-      return ownersMatchingProperties(this.users, [selectedProperty]);
+      return ownersMatchingProperties(this.users, selectedProperties);
     } else {
       return ownersMatchingProperties(this.users, this.filteredProperties);
     }
@@ -126,6 +109,10 @@ class DataStore {
     } else {
       this.focusedPropertyId = null;
     }
+  }
+
+  getPropertiesByIds(propertyIds: Property["id"][]): Property[] {
+    return this.properties.filter((property) => propertyIds.includes(property.id));
   }
 }
 

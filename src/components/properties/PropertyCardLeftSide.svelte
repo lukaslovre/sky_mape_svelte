@@ -12,7 +12,10 @@
   let { property }: Props = $props();
 
   let tags = $derived.by(() => {
-    const price = property.price ? `€ ${formatWithCommas(property.price)}` : "€ 0";
+    const priceSuffix = property.action === "Rent" ? "/mj" : "";
+    const price = property.price
+      ? `€ ${formatWithCommas(property.price)} ${priceSuffix}`
+      : "€ 0";
     const surfaceArea = property.surfaceArea
       ? `${formatWithCommas(property.surfaceArea)} m²`
       : "0 m²";
