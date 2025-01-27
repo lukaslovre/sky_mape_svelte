@@ -257,6 +257,11 @@ class PropertyFormStore {
           lat: field.value.lat,
           lng: field.value.lng,
         };
+      } else if (field.databaseFieldName === "imgUrl") {
+        return {
+          ...acc,
+          imgUrl: field.value?.url ? "" : field.value,
+        };
       } else {
         return {
           ...acc,
@@ -298,6 +303,8 @@ class PropertyFormStore {
     if (field) {
       field.options = zodResponse.data;
     }
+
+    console.log("Field options updated:", fieldName, newOptions);
   };
 
   setFieldValue = (fieldName: keyof Property, value: any) => {
@@ -332,7 +339,7 @@ class PropertyFormStore {
           lng: property.lng,
         };
       } else if (field.databaseFieldName === "imgUrl") {
-        field.value = "";
+        field.value = property.imgUrl.length === 0 ? "" : { url: property.imgUrl[0] };
       } else if (Array.isArray(field.value)) {
         field.value =
           property[field.databaseFieldName] === ""

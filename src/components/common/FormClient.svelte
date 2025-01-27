@@ -35,6 +35,7 @@
       successState = true;
       setTimeout(() => {
         close();
+        clientFormStore.resetForm();
       }, 2000);
     }
   }}

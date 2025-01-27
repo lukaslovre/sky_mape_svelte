@@ -50,6 +50,7 @@
       successState = true;
       setTimeout(() => {
         close();
+        propertyFormStore.resetForm();
       }, 2000);
     }
   }}

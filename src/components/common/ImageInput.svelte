@@ -18,10 +18,29 @@
       return;
     }
 
-    const file = files[0];
+    handleFile(files[0]);
+  }
 
+  function handlePaste(event: ClipboardEvent) {
+    console.log(event.clipboardData);
+
+    const items = event.clipboardData?.items;
+    if (!items) return;
+
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      if (item.kind === "file") {
+        const file = item.getAsFile();
+        if (!file) continue;
+
+        handleFile(file);
+      }
+    }
+  }
+
+  function handleFile(file: File) {
     // Validate file type
-    if (!file.type.startsWith("image/")) {
+    if (!file.type.includes("image")) {
       formField.error = "Please select an image file";
       return;
     }
@@ -33,14 +52,12 @@
 
     formField.error = error || undefined;
     formField.value = error ? null : file;
-    // if error clear the input
-    if (error) {
-      target.value = "";
-    }
 
     console.log(`${formField.databaseFieldName} input parsed:`, formField.value);
   }
 </script>
+
+<svelte:document onpaste={handlePaste} />
 
 <div class="image-input">
   <Label
@@ -63,9 +80,20 @@
 
   {#if formField.value}
     <div class="pill-container">
-      <span class="pill">{formField.value.name}</span>
-      <span class="pill">{bytesToHumanReadable(formField.value.size)}</span>
-      <span class="pill">{formField.value.type}</span>
+      <!-- if its File type -->
+      {#if formField.value instanceof File}
+        <div class="img-preview-pill">
+          <img src={URL.createObjectURL(formField.value)} alt="Selected image preview" />
+        </div>
+        <span class="pill">{formField.value.name}</span>
+        <span class="pill">{bytesToHumanReadable(formField.value.size)}</span>
+        <span class="pill">{formField.value.type}</span>
+        <!-- If its an object with a .url property -->
+      {:else if formField.value.url}
+        <div class="img-preview-pill">
+          <img src={formField.value.url} alt="Selected image preview" />
+        </div>
+      {/if}
     </div>
   {/if}
 </div>
@@ -111,6 +139,7 @@
   .pill-container {
     display: flex;
     flex-wrap: wrap;
+    align-items: flex-start;
     gap: 0.5rem;
   }
   .pill {
@@ -122,5 +151,24 @@
     padding: 0.25rem 0.5rem;
     border-radius: 0.25rem;
     background-color: hsla(214, 89%, 75%, 0.25);
+  }
+
+  .pill-container .img-preview-pill {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    padding: 0.25rem;
+    background-color: hsla(214, 89%, 75%, 0.25);
+    border: hsla(214, 89%, 75%, 0.5) 1px solid;
+  }
+  .pill-container .img-preview-pill img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* What is the formula to make an inside border radius feel natural compared to parent border radius? It depends on parent border radius and gap/padding */
+    /* A common approach: subtract the inner gap or padding from the parent’s radius */
+    /* border-radius: calc(var(--parent-radius) - var(--gap)); */
+    border-radius: calc(0.5rem - 0.25rem);
   }
 </style>

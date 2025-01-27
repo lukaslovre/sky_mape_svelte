@@ -147,15 +147,15 @@ getUsers()
     dataStore.users = parsedData;
 
     // Populate the dropdown options for the property form
-    // propertyFormStore.setFieldOptions(
-    //   "ownerId",
-    //   parsedData
-    //     .filter((user) => user.userType === "seller")
-    //     .map((user) => ({
-    //       value: user.id,
-    //       label: user.name,
-    //     }))
-    // );
+    propertyFormStore.setFieldOptions(
+      "ownerId",
+      parsedData
+        .filter((user) => user.userType === "seller")
+        .map((user) => ({
+          value: user.id,
+          label: user.name,
+        }))
+    );
   })
   .catch(console.error);
 
