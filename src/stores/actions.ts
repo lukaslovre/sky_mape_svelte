@@ -2,6 +2,7 @@
 import type { LatLngBounds } from "leaflet";
 import type { Property, Client } from "../types";
 import { dataStore } from "./store.svelte";
+import { propertyFormStore } from "./propertiesFormStore.svelte";
 
 // Toggle the selection of a property ID
 export function toggleSelectedProperty(propertyId: Property["id"]) {
@@ -57,12 +58,34 @@ export function removePropertyFromStore(propertyId: Property["id"]) {
 // Client actions
 export function addClientToStore(client: Client) {
   dataStore.users.push(client);
+
+  if (client.userType === "seller") {
+    setOwnerDropdownOptions();
+  }
 }
 export function updateClientInStore(client: Client) {
   dataStore.users = dataStore.users.map((currentUser) =>
     currentUser.id === client.id ? client : currentUser
   );
+
+  if (client.userType === "seller") {
+    setOwnerDropdownOptions();
+  }
 }
 export function removeClientFromStore(clientId: Client["id"]) {
   dataStore.users = dataStore.users.filter((currentUser) => currentUser.id !== clientId);
+
+  setOwnerDropdownOptions();
+}
+
+function setOwnerDropdownOptions() {
+  propertyFormStore.setFieldOptions(
+    "ownerId",
+    dataStore.users
+      .filter((user) => user.userType === "seller")
+      .map((user) => ({
+        value: user.id,
+        label: user.name,
+      }))
+  );
 }

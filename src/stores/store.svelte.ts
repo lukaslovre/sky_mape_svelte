@@ -125,7 +125,7 @@ getProperties()
 
 getUsers()
   .then((data) => {
-    const parsedData = data
+    const parsedData: Client[] = data
       .map((user) => {
         // If an incomplete filter is sent, it will be filled with default values
         const zodResult = FiltersSchemaWithDefaults.safeParse(user.filters);
@@ -145,15 +145,17 @@ getUsers()
     console.log(parsedData);
 
     dataStore.users = parsedData;
-    propertyFormStore.setFieldOptions(
-      "ownerId",
-      parsedData
-        .filter((user) => user.userType === "seller")
-        .map((user) => ({
-          value: user.id,
-          label: user.name,
-        }))
-    );
+
+    // Populate the dropdown options for the property form
+    // propertyFormStore.setFieldOptions(
+    //   "ownerId",
+    //   parsedData
+    //     .filter((user) => user.userType === "seller")
+    //     .map((user) => ({
+    //       value: user.id,
+    //       label: user.name,
+    //     }))
+    // );
   })
   .catch(console.error);
 
