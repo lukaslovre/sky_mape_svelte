@@ -274,13 +274,18 @@ class PropertyFormStore {
     }, {} as Property);
 
     // 2. Remove empty or undefined fields
+
     const filteredData = Object.fromEntries(
-      Object.entries(formattedData).filter(([_, value]) => {
-        if (
-          value === "" ||
-          value === undefined ||
-          (Array.isArray(value) && value.length === 0)
-        ) {
+      Object.entries(formattedData).filter(([key, value]) => {
+        // If you remove everything then you can't remove a field that was previously set
+        // if (
+        //   value === "" ||
+        //   value === undefined ||
+        //   (Array.isArray(value) && value.length === 0)
+        // ) {
+        //   return false;
+        // }
+        if (key === "imgUrl" && value === "") {
           return false;
         }
         return true;

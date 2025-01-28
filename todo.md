@@ -1,8 +1,5 @@
 # TODO
 
-prevest sve na rhrvatski
-frekvencija plaćanja
-
 ## Properties
 
 ## Clients
