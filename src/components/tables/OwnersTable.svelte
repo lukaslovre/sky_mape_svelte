@@ -36,7 +36,7 @@
     {
       key: "userType",
       label: "Tip korisnika",
-      visible: true,
+      visible: false,
     },
     {
       key: "email",
