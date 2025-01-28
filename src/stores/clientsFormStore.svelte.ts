@@ -107,7 +107,7 @@ const clientFormFields: FormFieldType<Client>[] = [
     databaseFieldName: "note",
     value: "",
     defaultValue: "",
-    placeholder: "#Naslov\nInformacije o klijentu",
+    placeholder: "# Naslov\nPreferencije klijenta, napomene, itd.",
     parsingFunction: (value: string) => value.trim(),
     validators: [],
   },

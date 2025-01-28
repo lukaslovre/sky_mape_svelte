@@ -66,7 +66,7 @@ const propertyFormFields: FormFieldType<Property>[] = [
     required: true,
   },
   {
-    label: "Property Type",
+    label: "Tip nekretnine",
     inputElement: "select",
     databaseFieldName: "type",
     value: ["House"],
@@ -81,7 +81,7 @@ const propertyFormFields: FormFieldType<Property>[] = [
     required: true,
   },
   {
-    label: "Action",
+    label: "Akcija",
     inputElement: "select",
     databaseFieldName: "action",
     value: ["Sale"],
@@ -94,7 +94,8 @@ const propertyFormFields: FormFieldType<Property>[] = [
     required: true,
   },
   {
-    label: "Image (max 10MB)",
+    label:
+      "Slika (max 10MB) (samo jedna slika) (može se zaljepiti slika iz clipboarda -> CTRL+V)",
     inputElement: "imageInput",
     databaseFieldName: "imgUrl",
     value: "",
@@ -102,7 +103,7 @@ const propertyFormFields: FormFieldType<Property>[] = [
     validators: [validators.imageSizeValidator],
   },
   {
-    label: "Price (€) (može se koristiti slovo 'k' ili 'm')",
+    label: "Cijena (€) (dostupan 'k' ili 'm' sufix)",
     inputElement: "input",
     databaseFieldName: "price",
     value: "",
@@ -112,7 +113,7 @@ const propertyFormFields: FormFieldType<Property>[] = [
     placeholder: "€ 123456",
   },
   {
-    label: "Surface Area (m²) (može se koristiti slovo 'k' ili 'm')",
+    label: "Površina (m²) (dostupan 'k' ili 'm' sufix)",
     inputElement: "input",
     databaseFieldName: "surfaceArea",
     value: "",
@@ -122,7 +123,7 @@ const propertyFormFields: FormFieldType<Property>[] = [
     placeholder: "123 m²",
   },
   {
-    label: "Website URL",
+    label: "Web URL",
     inputElement: "input",
     databaseFieldName: "websiteUrl",
     value: "",
@@ -132,7 +133,7 @@ const propertyFormFields: FormFieldType<Property>[] = [
     placeholder: "https://example.com",
   },
   {
-    label: "Hidden on Website",
+    label: "Sakriveno",
     inputElement: "checkbox",
     databaseFieldName: "hiddenOnWebsite",
     value: false,
@@ -141,7 +142,7 @@ const propertyFormFields: FormFieldType<Property>[] = [
     validators: [],
   },
   {
-    label: "Bedrooms",
+    label: "Spavaće sobe",
     inputElement: "input",
     databaseFieldName: "bedrooms",
     value: "",
@@ -151,7 +152,7 @@ const propertyFormFields: FormFieldType<Property>[] = [
     placeholder: "3 spavaće sobe",
   },
   {
-    label: "Bathrooms",
+    label: "Kupaonice",
     inputElement: "input",
     databaseFieldName: "bathrooms",
     value: "",
@@ -161,7 +162,18 @@ const propertyFormFields: FormFieldType<Property>[] = [
     placeholder: "2 kupaonice",
   },
   {
-    label: "Owner",
+    label: "Bilješke o nekretnini",
+    inputElement: "textarea",
+    databaseFieldName: "propertyNotes",
+    value: "",
+    defaultValue: "",
+    placeholder:
+      "# Naslov\nDodatne informacije o nekretnini, napomene, posebnosti, stanje, itd.",
+    parsingFunction: (value: string) => value.trim(),
+    validators: [],
+  },
+  {
+    label: "Vlasnik",
     inputElement: "select",
     databaseFieldName: "ownerId",
     value: [],
@@ -170,22 +182,13 @@ const propertyFormFields: FormFieldType<Property>[] = [
     validators: [],
   },
   {
-    label: "Property Notes",
-    inputElement: "textarea",
-    databaseFieldName: "propertyNotes",
-    value: "",
-    defaultValue: "",
-    placeholder: "# Naslov\nInformacije o nekretnini",
-    parsingFunction: (value: string) => value.trim(),
-    validators: [],
-  },
-  {
-    label: "Seller Notes",
+    label: "Bilješke vlasnika",
     inputElement: "textarea",
     databaseFieldName: "sellerNotes",
     value: "",
     defaultValue: "",
-    placeholder: "# Naslov\nInformacije o prodavaču",
+    placeholder:
+      "# Naslov\nNapomene vlasnika nekretnine, posebne informacije, želje, itd.",
     parsingFunction: (value: string) => value.trim(),
     validators: [],
   },

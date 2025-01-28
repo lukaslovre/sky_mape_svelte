@@ -22,7 +22,7 @@
 
   img {
     width: 100%;
-    aspect-ratio: 16/9;
+    max-height: 100%;
     object-fit: cover;
 
     border-radius: 0.75rem;
