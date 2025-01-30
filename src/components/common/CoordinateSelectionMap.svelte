@@ -26,12 +26,11 @@
   let map: L.Map | undefined = $state(undefined);
   let marker: L.Marker | undefined = $state(undefined);
 
-  // TODO: While refactoring I put the function and the return inside the effect (before it was outside effect and in the onDestroy), I don't know if this is the same.
   $effect(() => {
-    function clickHandler(e: L.LeafletMouseEvent) {
+    const clickHandler = (e: L.LeafletMouseEvent) => {
       const { lat, lng } = e.latlng;
       onCoordinatesSelected(lat, lng);
-    }
+    };
 
     if (map) {
       map.on("click", clickHandler);
@@ -54,12 +53,6 @@
       );
     }
   });
-
-  // onDestroy(() => {
-  //   if (map) {
-  //     map.off("click", clickHandler);
-  //   }
-  // });
 </script>
 
 <Map

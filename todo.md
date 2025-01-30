@@ -1,21 +1,13 @@
 # TODO
 
-## Properties
-
-## Clients
-
-## Map
-
 ## Ostatak:
+
+- file storage (documents)
 
 - selected property basic
 
 - editanje polygona
   - kad se stisne polygon se pokaže popup sa edit|delete gumbima
-- kada se stisne nekretina, sidebar je detailed view nekretnine
-  - ikona na mapi ima 'selected' state
-  - postoje strelice lijevo|desno za prolaženje kroz sve filteredProperties
-- menubar na owner
 
 ## MVP
 
@@ -29,36 +21,14 @@
 
 ## Low
 
-- [ ] auth
-
-- [ ] Na property gridu imati kao grid divider i onda su ispod "favoriti koji ne matchaju filtere"
-
-- [ ] Mogućnost priložiti/spremiti dokumente koji su onda povezani sa nekom nekretninom te se mogu brzo pristupiti. Na buyers mora bit isto tablica jer je ovo vec previse polja i gumba. Kad se stisne na mapi na nekretninu onda je samo 1 nekretnina odabrana i prikazana na listi. Ima polje dokumenti koji isto izbaci side-note sa svim file-ovima, google drive style.
-
-- [ ] Srediti lijepo side-note funkcionalnost (UI)
-
 - [ ] Editanje polygona (micanje rubova, tog tipa) -> za ovo već nešto postoji, vidjet možda ako je dovoljno "lean".
 - [ ] Na hover polygona u listi polygona se promjeni boja odgovarajućeg polygona na mapi tako da se zna koji se hovera
 
-- [ ] Imat gumb sa više opcija za polygone korisnika:
-  - [ ] gumb da se vide samo viable kupci
-  - [ ] gumb da se vide svi kupci
-  - [ ] gumb da se vide
 - [ ] Može se save-at temporary nekretnina nakon šta se edita da postane "prava"
 
 ## Kasnije od kasnije
 
-- [ ] Shift click -> multiple select -> promjeni se kursor
-- [ ] Klik na adresu u kartici prebacuje na `Map` tab i prikazuje adresu na mapi
 - [ ] Klik na `Nacrtaj` filter prebaci na `Map` tab ako nije već tamo
-
-# Pitanja za kolegu
-
-1. Planirate li u budućnosti da svaki agent ima svoj korisnički račun, pri čemu ne bi svi agenti imali pristup istim nekretninama?
-2. Jesu li off-market nekretnine privatne, tj. imaju li pristup informacijama o njima samo određeni agenti, ili su svi zaposlenici svjesni tih nekretnina?
-3. Treba li za svaku nekretninu biti određen agent koji je odgovoran za nju, ili svi agenti mogu raditi na prodaji svih nekretnina?
-4. Trebate li funkcionalnost za pohranu dokumenata (ugovora, izjava, itd.) vezanih uz određene nekretnine, ili vam odgovara trenutni način na koji pohranjujete dokumente?
-5. Želite li zaseban atribut "spremnosti" za klijente (npr. razina zainteresiranosti ili spremnosti za kupnju), ili je dovoljno da te informacije budu unesene kao bilješke u profilu kupca?
 
 # Ideje
 

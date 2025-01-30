@@ -8,6 +8,7 @@
   import CoordinateSelectionMap from "./CoordinateSelectionMap.svelte";
   import { getIconForProperty } from "../../utils/propertyIcons";
   import DropdownFormFieldWrapped from "./DropdownFormFieldWrapped.svelte";
+  import { dataStore } from "../../stores/store.svelte";
 
   interface Props {
     onSubmit: () => Promise<boolean>;
@@ -37,6 +38,26 @@
           ?.value.at(0) || "House",
     })
   );
+
+  // Map specific
+  // Check if a property with the same lat and lng already exists
+  // If it does, show a warning message
+  let propertyOnSameLocationExists = $derived.by(() => {
+    const latLng = propertyFormStore.fields.find(
+      (field) => field.databaseFieldName === "lat"
+    )?.value as { lat: number; lng: number } | undefined;
+
+    if (!latLng) return false;
+
+    // It should actually check a rounded down value of the lat and lng
+    // maybe to 4 decimal places
+
+    const sameLocation = dataStore.properties.some(
+      (property) => property.lat === latLng.lat && property.lng === latLng.lng
+    );
+
+    return sameLocation;
+  });
 </script>
 
 <Close onClose={close} />
@@ -70,6 +91,10 @@
       <ImageInput formField={field} />
     {:else if field.inputElement === "latLngMapInput"}
       <div class="latLngMapInputContainer">
+        {#if propertyOnSameLocationExists}
+          <p class="warning">A property already exists at this location</p>
+        {/if}
+
         <CoordinateSelectionMap
           lat={field.value.lat}
           lng={field.value.lng}
@@ -106,10 +131,26 @@
   }
 
   .latLngMapInputContainer {
+    position: relative;
     width: 100%;
     height: 25rem;
     border: 1px solid #cccccc;
     box-shadow: 0 2px 1px rgba(0, 0, 0, 0.125);
+  }
+  .latLngMapInputContainer .warning {
+    position: absolute;
+    z-index: 999;
+    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: hsl(48, 100%, 50%, 1);
+    border-radius: 0.5rem;
+    border: 1px solid hsl(48, 100%, 25%);
+    color: hsl(0, 0%, 25%);
+    line-height: 150%;
+    font-weight: 600;
+    text-align: center;
   }
 
   .non-field-specific-error-container {
