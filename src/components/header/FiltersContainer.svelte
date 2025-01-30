@@ -3,7 +3,6 @@
   import ResetIcon from "../../assets/icons/ResetIcon.svelte";
   import LocationInput from "./LocationInput.svelte";
   import { dataStore } from "../../stores/store.svelte";
-  import { emptyFavorites } from "../../stores/actions";
   import Dropdown from "../common/Dropdown.svelte";
   import { filtersStore, type Filter } from "../../stores/filtersStore.svelte";
   import { parseValueWithSuffix } from "../../utils/numbers";
@@ -38,7 +37,7 @@
   }
 
   function emptyFavoriteProperties() {
-    emptyFavorites();
+    dataStore.resetFavoriteProperties();
   }
 
   let agentsOptions: { label: string; value: string }[] = $derived(

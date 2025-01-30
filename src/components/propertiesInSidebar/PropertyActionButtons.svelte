@@ -1,7 +1,7 @@
 <script lang="ts">
   import InternetIcon from "../../assets/icons/InternetIcon.svelte";
   import StarIcon from "../../assets/icons/StarIcon.svelte";
-  import { toggleFavorite } from "../../stores/actions";
+
   import { dataStore } from "../../stores/store.svelte";
   import type { Property } from "../../types";
 
@@ -15,7 +15,11 @@
   let isFavorite = $derived(dataStore.favoriteProperties.includes(property.id));
 
   function handleFavoriteClick() {
-    toggleFavorite(property.id);
+    if (isFavorite) {
+      dataStore.removePropertyFromFavorites(property.id);
+    } else {
+      dataStore.addPropertyToFavorites(property.id);
+    }
   }
   function handleWebsiteClick() {
     if (property.websiteUrl) window.open(property.websiteUrl, "_blank");

@@ -92,7 +92,9 @@
     console.log("handleApplyFilters called with user:", user);
     filtersStore.loadFiltersFromClient(user);
     if (user.favoriteProperties.length > 0) {
-      dataStore.favoriteProperties = user.favoriteProperties;
+      user.favoriteProperties.forEach((propertyId) => {
+        dataStore.addPropertyToFavorites(propertyId);
+      });
     }
   };
 </script>

@@ -148,14 +148,12 @@
 
     if (newState) {
       dataStore.selectedPropertyIds.forEach((id) => {
-        if (!dataStore.favoriteProperties.includes(id)) {
-          dataStore.favoriteProperties.push(id);
-        }
+        dataStore.addPropertyToFavorites(id);
       });
     } else {
-      dataStore.favoriteProperties = dataStore.favoriteProperties.filter(
-        (favoriteId) => !dataStore.selectedPropertyIds.includes(favoriteId)
-      );
+      dataStore.selectedPropertyIds.forEach((id) => {
+        dataStore.removePropertyFromFavorites(id);
+      });
     }
   }
 

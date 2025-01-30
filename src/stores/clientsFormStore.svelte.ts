@@ -215,7 +215,7 @@ class ClientFormStore {
       console.log(zodResponse.error);
     }
 
-    dataStore.favoriteProperties = client.favoriteProperties;
+    dataStore.favoriteProperties = [...client.favoriteProperties];
   };
 }
 

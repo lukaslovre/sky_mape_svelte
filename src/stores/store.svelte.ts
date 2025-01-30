@@ -90,6 +90,10 @@ class DataStore {
   ////////
   // Methods
   ////////
+  getPropertiesByIds(propertyIds: Property["id"][]): Property[] {
+    return this.properties.filter((property) => propertyIds.includes(property.id));
+  }
+
   setSelectedPropertyIds(propertyIds: Property["id"][]) {
     // I need to decide on some logic/way that will dictate the relationship between selectedPropertyIds and focusedPropertyId.
     // For example, if only one property is selected, then focusedPropertyId should be the same as selectedPropertyIds[0].
@@ -109,8 +113,23 @@ class DataStore {
     }
   }
 
-  getPropertiesByIds(propertyIds: Property["id"][]): Property[] {
-    return this.properties.filter((property) => propertyIds.includes(property.id));
+  addPropertyToFavorites(propertyId: Property["id"]) {
+    // Check if the propertyId is valid (exists in the properties array)
+    const property = this.properties.find((property) => property.id === propertyId);
+    if (!property) return;
+
+    // Check if the property is already in the favorites
+    if (this.favoriteProperties.includes(propertyId)) return;
+
+    this.favoriteProperties.push(propertyId);
+  }
+
+  removePropertyFromFavorites(propertyId: Property["id"]) {
+    this.favoriteProperties = this.favoriteProperties.filter((id) => id !== propertyId);
+  }
+
+  resetFavoriteProperties() {
+    this.favoriteProperties = [];
   }
 }
 

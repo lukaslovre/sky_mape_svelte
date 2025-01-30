@@ -18,18 +18,6 @@ export function resetSelectedProperties(): void {
   dataStore.setSelectedPropertyIds([]);
 }
 
-// Clear all favorite properties
-export function emptyFavorites() {
-  dataStore.favoriteProperties = [];
-}
-
-// Toggle favorite
-export function toggleFavorite(propertyId: Property["id"]) {
-  dataStore.favoriteProperties = dataStore.favoriteProperties.includes(propertyId)
-    ? dataStore.favoriteProperties.filter((id) => id !== propertyId)
-    : [...dataStore.favoriteProperties, propertyId];
-}
-
 // Fit the view to the bounds of the properties
 export function fitViewToFilteredProperties(
   mapInstance: L.Map | undefined,

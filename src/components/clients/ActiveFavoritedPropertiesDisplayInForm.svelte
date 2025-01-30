@@ -1,7 +1,5 @@
 <script lang="ts">
   import { dataStore } from "../../stores/store.svelte";
-
-  // dataStore.favoriteProperties
 </script>
 
 <div class="container">
