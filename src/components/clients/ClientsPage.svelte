@@ -9,7 +9,6 @@
   import { clientFormStore } from "../../stores/clientsFormStore.svelte";
 
   let showForm: boolean = $state(false);
-  let selectedClientIds: string[] = $state([]);
 
   $effect(() => {
     removeUnfilteredClientsFromSelection(dataStore.filteredUsers);
@@ -17,13 +16,13 @@
 
   function removeUnfilteredClientsFromSelection(filteredClients: Client[]) {
     // Remove clients that are no longer in the filteredUsers store
-    const newSelectedClientIds = selectedClientIds.filter((id) => {
+    const newSelectedClientIds = dataStore.selectedClientIds.filter((id) => {
       return filteredClients.some((client) => client.id === id);
     });
 
     // Check if actually changed
-    if (newSelectedClientIds.length !== selectedClientIds.length) {
-      selectedClientIds = newSelectedClientIds;
+    if (newSelectedClientIds.length !== dataStore.selectedClientIds.length) {
+      dataStore.selectedClientIds = newSelectedClientIds;
     }
   }
 
@@ -85,7 +84,7 @@
       (field) => field.databaseFieldName === "id"
     )?.value;
 
-    const selectedClient = findSelectedClient(selectedClientIds[0]);
+    const selectedClient = findSelectedClient(dataStore.selectedClientIds[0]);
 
     if (selectedClient) {
       if (clientIdField !== selectedClient.id) {
@@ -101,11 +100,11 @@
   // Deletes selected properties
   function handleDelete() {
     const confirmDeletion = window.confirm(
-      `Are you sure you want to delete ${selectedClientIds.length} selected clients?`
+      `Are you sure you want to delete ${dataStore.selectedClientIds.length} selected clients?`
     );
     if (!confirmDeletion) return;
 
-    const promises = selectedClientIds.map((id) => deleteUser(id));
+    const promises = dataStore.selectedClientIds.map((id) => deleteUser(id));
 
     Promise.all(promises)
       .then(() => {
@@ -124,11 +123,13 @@
   function handleCheckboxClick(clientId: Client["id"], newState: boolean): void {
     // True = ON, False = OFF
     if (newState) {
-      if (!selectedClientIds.includes(clientId)) {
-        selectedClientIds.push(clientId);
+      if (!dataStore.selectedClientIds.includes(clientId)) {
+        dataStore.selectedClientIds.push(clientId);
       }
     } else {
-      selectedClientIds = selectedClientIds.filter((id) => id !== clientId);
+      dataStore.selectedClientIds = dataStore.selectedClientIds.filter(
+        (id) => id !== clientId
+      );
     }
   }
 </script>
@@ -138,7 +139,7 @@
 
   {#if !showForm}
     <ClientsMenubar
-      selectedClientsLength={selectedClientIds.length}
+      selectedClientsLength={dataStore.selectedClientIds.length}
       onMenuItemClick={handleMenuItemClick}
     />
 
@@ -146,7 +147,7 @@
       showHeader={true}
       data={dataStore.filteredUsers}
       {handleCheckboxClick}
-      {selectedClientIds}
+      selectedClientIds={dataStore.selectedClientIds}
     />
   {:else}
     <ClientForm close={() => (showForm = false)} />

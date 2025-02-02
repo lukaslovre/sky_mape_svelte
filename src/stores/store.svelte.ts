@@ -24,6 +24,9 @@ class DataStore {
   selectedPropertyIds = $state<Property["id"][]>([]);
   focusedPropertyId = $state<Property["id"] | null>(null);
 
+  selectedClientIds = $state<Client["id"][]>([]);
+  selectedOwnerIds = $state<Client["id"][]>([]);
+
   favoriteProperties = $state<Property["id"][]>([]);
   isDrawing = $state<boolean>(false);
 

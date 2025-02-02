@@ -9,7 +9,6 @@
   import OwnersTable from "../tables/OwnersTable.svelte";
 
   let showForm: boolean = $state(false);
-  let selectedOwnerIds: string[] = $state([]);
 
   $effect(() => {
     removeUnfilteredOwnersFromSelection(dataStore.filteredOwners);
@@ -17,13 +16,13 @@
 
   function removeUnfilteredOwnersFromSelection(filteredUsers: Client[]) {
     // Remove owners that are no longer in the filteredOwners store
-    const newSelectedOwnerIds = selectedOwnerIds.filter((id) => {
+    const newSelectedOwnerIds = dataStore.selectedOwnerIds.filter((id) => {
       return filteredUsers.some((client) => client.id === id);
     });
 
     // Check if actually changed
-    if (newSelectedOwnerIds.length !== selectedOwnerIds.length) {
-      selectedOwnerIds = newSelectedOwnerIds;
+    if (newSelectedOwnerIds.length !== dataStore.selectedOwnerIds.length) {
+      dataStore.selectedOwnerIds = newSelectedOwnerIds;
     }
   }
 
@@ -85,7 +84,7 @@
       (field) => field.databaseFieldName === "id"
     )?.value;
 
-    const selectedClient = findSelectedOwner(selectedOwnerIds[0]);
+    const selectedClient = findSelectedOwner(dataStore.selectedOwnerIds[0]);
 
     if (selectedClient) {
       if (clientIdField !== selectedClient.id) {
@@ -101,11 +100,11 @@
   // Deletes selected owners
   function handleDelete() {
     const confirmDeletion = window.confirm(
-      `Are you sure you want to delete ${selectedOwnerIds.length} selected clients?`
+      `Are you sure you want to delete ${dataStore.selectedOwnerIds.length} selected clients?`
     );
     if (!confirmDeletion) return;
 
-    const promises = selectedOwnerIds.map((id) => deleteUser(id));
+    const promises = dataStore.selectedOwnerIds.map((id) => deleteUser(id));
 
     Promise.all(promises)
       .then(() => {
@@ -124,11 +123,13 @@
   function handleCheckboxClick(ownerid: Client["id"], newState: boolean): void {
     // True = ON, False = OFF
     if (newState) {
-      if (!selectedOwnerIds.includes(ownerid)) {
-        selectedOwnerIds.push(ownerid);
+      if (!dataStore.selectedOwnerIds.includes(ownerid)) {
+        dataStore.selectedOwnerIds.push(ownerid);
       }
     } else {
-      selectedOwnerIds = selectedOwnerIds.filter((id) => id !== ownerid);
+      dataStore.selectedOwnerIds = dataStore.selectedOwnerIds.filter(
+        (id) => id !== ownerid
+      );
     }
   }
 </script>
@@ -138,7 +139,7 @@
 
   {#if !showForm}
     <ClientsMenubar
-      selectedClientsLength={selectedOwnerIds.length}
+      selectedClientsLength={dataStore.selectedOwnerIds.length}
       onMenuItemClick={handleMenuItemClick}
     />
 
@@ -146,7 +147,7 @@
       showHeader={true}
       data={dataStore.filteredOwners}
       {handleCheckboxClick}
-      {selectedOwnerIds}
+      selectedOwnerIds={dataStore.selectedOwnerIds}
     />
   {:else}
     <ClientForm close={() => (showForm = false)} />
