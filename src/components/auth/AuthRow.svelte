@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getCurrentUser, logOut, userIsAuthenticated } from "../../auth";
+  import { getCurrentUser, userIsAuthenticated } from "../../auth";
   import LoginPopup from "./LoginPopup.svelte";
   import UserDisplay from "./UserDisplay.svelte";
 
@@ -7,37 +7,40 @@
   let user = getCurrentUser();
   let showLoginPopup: boolean = $state(false);
 
-  function handleLogOutClick() {
-    logOut();
-    window.location.reload();
-  }
-
   function toggleLoginPopupVisibility() {
     showLoginPopup = !showLoginPopup;
   }
 </script>
 
-<div id="auth-row">
-  {#if isAuth && user}
+{#if isAuth && user}
+  <div id="auth-row-logged-in">
     <UserDisplay {user} />
 
-    <button onclick={handleLogOutClick}>Log out</button>
-  {:else}
+    <!-- <UserSettingsIcon size={24} color="hsl(0,0%,50%)" /> -->
+  </div>
+{:else}
+  <div id="auth-row-logged-out">
     {#if showLoginPopup}
       <LoginPopup />
     {/if}
-
     <button onclick={toggleLoginPopupVisibility}>Prijavi se</button>
-  {/if}
-</div>
+  </div>
+{/if}
 
 <style>
-  #auth-row {
-    position: relative;
+  #auth-row-logged-in,
+  #auth-row-logged-out {
     display: flex;
-    justify-content: flex-end;
     align-items: center;
     width: 100%;
+    position: relative;
+  }
+
+  #auth-row-logged-in {
+    justify-content: space-between;
+  }
+  #auth-row-logged-out {
+    justify-content: flex-end;
   }
 
   button {

@@ -114,6 +114,25 @@
 </script>
 
 <div class="filters-container" class:highlight={uiStateStore.highlightFiltersContainer}>
+  <div class="buttons-container">
+    <button
+      type="reset"
+      class="button"
+      onclick={resetValues}
+      disabled={activeFiltersCount === 0}
+    >
+      <ResetIcon /> Filtri ({activeFiltersCount})
+    </button>
+    <button
+      type="reset"
+      class="button"
+      onclick={emptyFavoriteProperties}
+      disabled={activeFavoritesCount === 0}
+    >
+      <ResetIcon /> Favoriti ({activeFavoritesCount})
+    </button>
+  </div>
+
   <div class="inputs-container">
     <LocationInput />
     {#each inputs as input}
@@ -147,25 +166,6 @@
         <hr class="filtersDivider" />
       {/if}
     {/each}
-  </div>
-
-  <div class="buttons-container">
-    <button
-      type="reset"
-      class="button"
-      onclick={resetValues}
-      disabled={activeFiltersCount === 0}
-    >
-      <ResetIcon /> Filtri ({activeFiltersCount})
-    </button>
-    <button
-      type="reset"
-      class="button"
-      onclick={emptyFavoriteProperties}
-      disabled={activeFavoritesCount === 0}
-    >
-      <ResetIcon /> Favoriti ({activeFavoritesCount})
-    </button>
   </div>
 </div>
 

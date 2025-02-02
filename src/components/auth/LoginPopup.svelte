@@ -27,22 +27,29 @@
     errorMessage = "";
   }}
 >
-  <input
-    type="text"
-    name="username"
-    id="username"
-    autocomplete="off"
-    placeholder="npr. lukaslov"
-    bind:value={username}
-  />
-  <input
-    type="password"
-    name="password"
-    id="password"
-    autocomplete="off"
-    placeholder="npr. testtest"
-    bind:value={password}
-  />
+  <div>
+    <label for="username">Username</label>
+    <input
+      type="text"
+      name="username"
+      id="username"
+      autocomplete="off"
+      placeholder="npr. lukaslov"
+      bind:value={username}
+    />
+  </div>
+
+  <div>
+    <label for="password">Password</label>
+    <input
+      type="password"
+      name="password"
+      id="password"
+      autocomplete="off"
+      placeholder="npr. testtest"
+      bind:value={password}
+    />
+  </div>
 
   <p class="error-message">{errorMessage}</p>
 
@@ -65,6 +72,18 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
+  }
+
+  #login-form > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  #login-form label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: hsl(0, 0%, 33%);
   }
 
   input {

@@ -20,6 +20,7 @@
   import DrawnPolygons from "./DrawnPolygons.svelte";
   import UserPolygons from "./UserPolygons.svelte";
   import { filtersStore } from "../../stores/filtersStore.svelte";
+  import { onMount } from "svelte";
 
   let mapInstance: L.Map | undefined = $state();
   let drawingPolygonCoords: LatLng[] = $state([]);
@@ -39,6 +40,11 @@
     mapInstance.on("mousemove", handleMouseMove); // For dynamic drawing
     mapInstance.on("keydown", handleKeyPress); // For keyboard shortcuts (Enter, c, d)
   }
+
+  $effect(() => {
+    // Fit map view to properties bounding box
+    fitViewToFilteredProperties(mapInstance, dataStore.propertiesBoundingBox);
+  });
 
   // Event Handlers
   function handleClick(e: L.LeafletMouseEvent) {
