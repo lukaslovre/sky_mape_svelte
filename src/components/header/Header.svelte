@@ -25,7 +25,7 @@
     flex-direction: column;
     gap: 3rem;
 
-    overflow-y: auto;
+    overflow-y: scroll;
     overflow-x: hidden;
 
     background-color: #f5f5f5;

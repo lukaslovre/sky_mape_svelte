@@ -3,6 +3,7 @@ import type { FormFieldType, Property } from "../types";
 import { z } from "zod";
 import { parseValueWithSuffix } from "../utils/numbers";
 import { validators } from "./utils/validators";
+import { paymentFrequencyDropdownOptions } from "../utils/paymentFrequency";
 
 // type FormFieldType<T> = {
 //   label: string;
@@ -29,6 +30,8 @@ const optionsShape = z.array(
   })
 );
 
+// Note: If a field is of type 'select', the value should always be an array because in some other methods i do a check if the .value is an array to determine what to do with data
+// It's a bad design but works if you dont make it become a non-array value
 const propertyFormFields: FormFieldType<Property>[] = [
   {
     label: "ID",
@@ -39,6 +42,16 @@ const propertyFormFields: FormFieldType<Property>[] = [
     parsingFunction: (value: string) => value.trim(),
     validators: [],
     disabled: true,
+  },
+  {
+    label: "Agent",
+    inputElement: "select",
+    databaseFieldName: "agent_id",
+    value: [],
+    defaultValue: [],
+    validators: [],
+    options: [],
+    required: true,
   },
   {
     label: "Lat & Lng",
@@ -56,14 +69,13 @@ const propertyFormFields: FormFieldType<Property>[] = [
     required: true,
   },
   {
-    label: "Agent",
-    inputElement: "select",
-    databaseFieldName: "agent_id",
-    value: [],
-    defaultValue: [],
-    validators: [],
-    options: [],
-    required: true,
+    label:
+      "Slika (max 10MB) (samo jedna slika) (može se zaljepiti slika iz clipboarda -> CTRL+V)",
+    inputElement: "imageInput",
+    databaseFieldName: "imgUrl",
+    value: "",
+    defaultValue: "",
+    validators: [validators.imageSizeValidator],
   },
   {
     label: "Tip nekretnine",
@@ -94,15 +106,6 @@ const propertyFormFields: FormFieldType<Property>[] = [
     required: true,
   },
   {
-    label:
-      "Slika (max 10MB) (samo jedna slika) (može se zaljepiti slika iz clipboarda -> CTRL+V)",
-    inputElement: "imageInput",
-    databaseFieldName: "imgUrl",
-    value: "",
-    defaultValue: "",
-    validators: [validators.imageSizeValidator],
-  },
-  {
     label: "Cijena (€) (dostupan 'k' ili 'm' sufix)",
     inputElement: "input",
     databaseFieldName: "price",
@@ -111,6 +114,15 @@ const propertyFormFields: FormFieldType<Property>[] = [
     parsingFunction: (value: string) => parseFloat(parseValueWithSuffix(value)),
     validators: [validators.numberValidator],
     placeholder: "€ 123456",
+  },
+  {
+    label: "Frekvencija plaćanja",
+    inputElement: "select",
+    databaseFieldName: "paymentFrequency",
+    value: [],
+    defaultValue: ["monthly"],
+    options: paymentFrequencyDropdownOptions,
+    validators: [],
   },
   {
     label: "Površina (m²) (dostupan 'k' ili 'm' sufix)",
@@ -211,6 +223,20 @@ const propertyFormFields: FormFieldType<Property>[] = [
 class PropertyFormStore {
   fields = $state(propertyFormFields);
 
+  getFieldByDatabaseFieldName = (fieldName: keyof Property) => {
+    return this.fields.find((field) => field.databaseFieldName === fieldName);
+  };
+
+  // derived values
+  // payment frequency shown/available only if `action` === "Rent" -->
+  isPaymentFrequencyVisible: boolean = $derived.by(() => {
+    const value = this.getFieldByDatabaseFieldName("action")?.value as
+      | string[]
+      | undefined;
+
+    return value?.at(0) === "Rent" ? true : false;
+  });
+
   print = () => {
     console.log(
       "Fields:",
@@ -265,7 +291,13 @@ class PropertyFormStore {
           ...acc,
           imgUrl: field.value?.url ? "" : field.value,
         };
-      } else {
+      } else if (field.databaseFieldName === "paymentFrequency")
+        // If action is not "Rent", don't include the paymentFrequency field (set it to null)
+        return {
+          ...acc,
+          paymentFrequency: this.isPaymentFrequencyVisible ? field.value : null,
+        };
+      else {
         return {
           ...acc,
           [field.databaseFieldName]: field.value,
@@ -273,18 +305,9 @@ class PropertyFormStore {
       }
     }, {} as Property);
 
-    // 2. Remove empty or undefined fields
-
+    // 2. Remove imgUrl field if it's an empty string
     const filteredData = Object.fromEntries(
       Object.entries(formattedData).filter(([key, value]) => {
-        // If you remove everything then you can't remove a field that was previously set
-        // if (
-        //   value === "" ||
-        //   value === undefined ||
-        //   (Array.isArray(value) && value.length === 0)
-        // ) {
-        //   return false;
-        // }
         if (key === "imgUrl" && value === "") {
           return false;
         }
@@ -307,7 +330,7 @@ class PropertyFormStore {
     }
 
     // Update the options of the field with the given fieldName
-    const field = this.fields.find((field) => field.databaseFieldName === fieldName);
+    const field = this.getFieldByDatabaseFieldName(fieldName);
     if (field) {
       field.options = zodResponse.data;
     }
@@ -318,7 +341,7 @@ class PropertyFormStore {
   setFieldValue = (fieldName: keyof Property, value: any) => {
     console.log("Setting field value:", fieldName, value);
 
-    const field = this.fields.find((field) => field.databaseFieldName === fieldName);
+    const field = this.getFieldByDatabaseFieldName(fieldName);
     if (field) {
       field.value = value;
     }
@@ -333,7 +356,7 @@ class PropertyFormStore {
       return;
     }
 
-    const field = this.fields.find((field) => field.databaseFieldName === fieldName);
+    const field = this.getFieldByDatabaseFieldName(fieldName);
     if (field) {
       field.error = error;
     }

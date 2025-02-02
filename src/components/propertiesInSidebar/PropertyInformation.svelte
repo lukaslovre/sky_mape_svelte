@@ -4,6 +4,7 @@
   import { formatDateAndAgo } from "../../utils/datetime";
   import { getDefaultImageURL } from "../../utils/image";
   import { formatWithCommas } from "../../utils/numbers";
+  import { parsePaymentFrequency } from "../../utils/paymentFrequency";
   import { getIconForProperty } from "../../utils/propertyIcons";
   import InfoRow from "./PropertyInformationComponents/InfoRow.svelte";
   import Tag from "./PropertyInformationComponents/Tag.svelte";
@@ -23,7 +24,7 @@
     const intermediateValue = {
       Cijena:
         property.price &&
-        `${formatWithCommas(property.price)} € ${property.action === "Rent" ? `/ mjesečno (Iznajmljivanje)` : "(Prodaja)"}`,
+        `${formatWithCommas(property.price)} € ${property.action === "Rent" ? `/ ${parsePaymentFrequency(property.paymentFrequency).label.toLocaleLowerCase()}` : ""}`,
       Površina: property.surfaceArea && `${formatWithCommas(property.surfaceArea)} m²`,
       Kupaonica: property.bathrooms + " kupaonica",
       "Spavaće sobe": property.bedrooms + " spavaća soba",

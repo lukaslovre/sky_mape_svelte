@@ -49,6 +49,14 @@ type Property = {
   imgUrl: string[]; // Returns empty array if not set
   surfaceArea: number?;
   price: number?;
+  paymentFrequency:
+    | "weekly"
+    | "bi-weekly"
+    | "monthly"
+    | "quarterly"
+    | "semi-annually"
+    | "annually"
+    | null;
   websiteUrl: string?;
   hiddenOnWebsite: boolean?;
   bedrooms: number?;
@@ -65,7 +73,6 @@ type Property = {
 //////////////
 
 type Tabs = "Map" | "Properties" | "Buyers" | "Owners";
-type DialogType = "saveBuyer" | "saveProperty";
 type MenuItem = {
   label: string;
   href?: string;

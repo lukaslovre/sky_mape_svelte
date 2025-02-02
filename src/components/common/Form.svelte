@@ -84,7 +84,11 @@
     {:else if field.inputElement === "textarea"}
       <Textarea formField={field} />
     {:else if field.inputElement === "select" && field.options}
-      <DropdownFormFieldWrapped formField={field} />
+      {#if !propertyFormStore.isPaymentFrequencyVisible && field.databaseFieldName === "paymentFrequency"}
+        <!-- Don't show field -->
+      {:else}
+        <DropdownFormFieldWrapped formField={field} />
+      {/if}
     {:else if field.inputElement === "checkbox"}
       <Checkbox formField={field} />
     {:else if field.inputElement === "imageInput"}

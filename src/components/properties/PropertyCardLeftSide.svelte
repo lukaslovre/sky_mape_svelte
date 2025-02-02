@@ -4,6 +4,7 @@
   import type { Property } from "../../types";
   import { getDefaultImageURL } from "../../utils/image";
   import { formatWithCommas } from "../../utils/numbers";
+  import { parsePaymentFrequency } from "../../utils/paymentFrequency";
 
   interface Props {
     property: Property;
@@ -12,7 +13,10 @@
   let { property }: Props = $props();
 
   let tags = $derived.by(() => {
-    const priceSuffix = property.action === "Rent" ? "/mj" : "";
+    const priceSuffix =
+      property.action === "Rent"
+        ? `/ ${parsePaymentFrequency(property.paymentFrequency).shortLabel}.`
+        : "";
     const price = property.price
       ? `€ ${formatWithCommas(property.price)} ${priceSuffix}`
       : "€ 0";

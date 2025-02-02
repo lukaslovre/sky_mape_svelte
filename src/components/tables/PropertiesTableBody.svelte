@@ -7,6 +7,7 @@
   import Checkbox from "./general/Checkbox.svelte";
   import CopyableBodyCell from "./general/CopyableBodyCell.svelte";
   import { trimText } from "../../utils/string";
+  import { parsePaymentFrequency } from "../../utils/paymentFrequency";
 
   interface Props {
     selectedPropertyIds?: Property["id"][];
@@ -36,7 +37,7 @@
   function parsePrice(property: Property): string {
     if (property.price) {
       if (property.action === "Rent") {
-        return `€ ${formatWithCommas(property.price)} / month`;
+        return `€ ${formatWithCommas(property.price)} / ${parsePaymentFrequency(property.paymentFrequency).label.toLocaleLowerCase()}`;
       } else {
         return `€ ${formatWithCommas(property.price)}`;
       }
