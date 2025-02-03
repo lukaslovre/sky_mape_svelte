@@ -2,6 +2,7 @@
   import { filtersStore } from "../../stores/filtersStore.svelte";
   import { uiStateStore } from "../../stores/uiStateStore.svelte";
   import { formatWithCommas } from "../../utils/numbers";
+  import ActivePolygonsReadonlyMap from "../common/ActivePolygonsReadonlyMap.svelte";
 
   let filters = $derived(filtersStore.filters);
 
@@ -34,6 +35,7 @@
 <div class="container">
   <div class="label-container">
     <p>Filteri</p>
+
     <div
       class="hover-container"
       onmouseover={() => handleQuestionmarkHover()}
@@ -51,10 +53,13 @@
     {#each Object.entries(parsedValues) as [key, value]}
       <div class="value-row">
         <p class="key">{key}</p>
-
         <p class="value" class:empty={value === "Any"}>{value}</p>
       </div>
     {/each}
+
+    <div class="polygon-map-container">
+      <ActivePolygonsReadonlyMap />
+    </div>
   </div>
 </div>
 
@@ -143,5 +148,12 @@
   }
   .value-row .value.empty {
     color: hsl(0, 0%, 66%);
+  }
+
+  .polygon-map-container {
+    margin-top: 1rem;
+    width: 100%;
+    height: 10rem;
+    border: 1px solid hsl(0, 0%, 75%);
   }
 </style>
