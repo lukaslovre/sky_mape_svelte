@@ -1,5 +1,6 @@
 <script lang="ts">
   import { dataStore } from "../../stores/store.svelte";
+  import PropertyRow from "../properties/propertyRow/PropertyRow.svelte";
 </script>
 
 <div class="container">
@@ -8,10 +9,8 @@
     <!-- <span class="icon">?</span> -->
   </div>
   <div class="values-container">
-    {#each dataStore.favoriteProperties as propertyId (propertyId)}
-      <div class="value-row">
-        <p>{propertyId}</p>
-      </div>
+    {#each dataStore.getPropertiesByIds(dataStore.favoriteProperties) as property (property.id)}
+      <PropertyRow {property} />
     {/each}
   </div>
 </div>
@@ -30,6 +29,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 0.5rem;
   }
   .label-container p {
     color: #262626;
@@ -60,13 +60,9 @@
     color: hsl(0, 0%, 90%);
   }
 
-  .value-row {
-    margin-top: 0.5rem;
+  .values-container {
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
-
-    font-size: 0.875rem;
-    color: hsl(0, 0%, 25%);
+    flex-direction: column;
+    gap: 1rem;
   }
 </style>

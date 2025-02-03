@@ -1,11 +1,6 @@
 import type { Property } from "../types";
-import { dataStore } from "../stores/store.svelte";
-
-export function getPropertyFromId(ids: Property["id"][]) {
-  return ids
-    .map((id) => dataStore.properties.find((property) => property.id === id))
-    .filter((property) => property != undefined);
-}
+import { formatWithCommas } from "./numbers";
+import { parsePaymentFrequency } from "./paymentFrequency";
 
 export function sortProperties(
   properties: Property[],
@@ -27,4 +22,34 @@ export function sortProperties(
       return 0;
     });
   }
+}
+
+type PropertyAttributes = {
+  price: string;
+  surfaceArea: string;
+  bedrooms: string;
+  bathrooms: string;
+};
+export function getAttributesForProperty(property: Property): PropertyAttributes {
+  const isRent = property.action === "Rent";
+
+  // Prepare price data
+  const formattedPrice = property.price ? formatWithCommas(property.price) : "0";
+  const paymentLabel = isRent
+    ? parsePaymentFrequency(property.paymentFrequency).shortLabel
+    : "";
+  const priceSuffix = isRent && paymentLabel ? `/ ${paymentLabel}.` : "";
+  const price = `€ ${formattedPrice} ${priceSuffix}`.trim();
+
+  // Prepare surface area data
+  const formattedSurfaceArea = property.surfaceArea
+    ? formatWithCommas(property.surfaceArea)
+    : "0";
+  const surfaceArea = `${formattedSurfaceArea} m²`;
+
+  // Prepare room information
+  const bedrooms = `${property.bedrooms} spavaće`;
+  const bathrooms = `${property.bathrooms} kupaonice`;
+
+  return { price, surfaceArea, bedrooms, bathrooms };
 }

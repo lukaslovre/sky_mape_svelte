@@ -5,6 +5,7 @@
   import { getDefaultImageURL } from "../../utils/image";
   import { formatWithCommas } from "../../utils/numbers";
   import { parsePaymentFrequency } from "../../utils/paymentFrequency";
+  import { getAttributesForProperty } from "../../utils/properties";
 
   interface Props {
     property: Property;
@@ -12,23 +13,7 @@
 
   let { property }: Props = $props();
 
-  let tags = $derived.by(() => {
-    const priceSuffix =
-      property.action === "Rent"
-        ? `/ ${parsePaymentFrequency(property.paymentFrequency).shortLabel}.`
-        : "";
-    const price = property.price
-      ? `€ ${formatWithCommas(property.price)} ${priceSuffix}`
-      : "€ 0";
-    const surfaceArea = property.surfaceArea
-      ? `${formatWithCommas(property.surfaceArea)} m²`
-      : "0 m²";
-
-    const bedrooms = `${property.bedrooms} spavaće`;
-    const bathrooms = `${property.bathrooms} kupaonice`;
-
-    return [price, surfaceArea, bedrooms, bathrooms];
-  });
+  let tags = $derived(Object.values(getAttributesForProperty(property)));
 
   const defaultImgUrl = getDefaultImageURL();
 </script>

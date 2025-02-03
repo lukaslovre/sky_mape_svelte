@@ -43,6 +43,8 @@ class DataStore {
   });
 
   filteredUsers = $derived.by<Client[]>(() => {
+    if (filtersStore.isEmpty()) return this.users;
+
     if (this.selectedPropertyIds.length > 0) {
       const selectedProperties: Property[] = this.getPropertiesByIds(
         this.selectedPropertyIds
