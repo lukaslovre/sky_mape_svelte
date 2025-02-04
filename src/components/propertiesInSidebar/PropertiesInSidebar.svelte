@@ -1,6 +1,8 @@
 <script lang="ts">
   import { dataStore } from "../../stores/store.svelte";
   import type { Property } from "../../types";
+  import Close from "../common/Close.svelte";
+  import UserContainer from "../common/UserContainer.svelte";
   import PropertyActionButtons from "./PropertyActionButtons.svelte";
   import PropertyInformation from "./PropertyInformation.svelte";
   import PropertyListNavigator from "./PropertyListNavigator.svelte";
@@ -36,9 +38,15 @@
       dataStore.focusedPropertyId = propertyList[newIndex].id;
     }
   }
+
+  function handleCloseClick() {
+    dataStore.setSelectedPropertyIds([]);
+  }
 </script>
 
 <section>
+  <Close text="Na filtere" onClose={handleCloseClick} />
+
   <PropertyListNavigator
     currentIndex={selectedPropertyIndex}
     totalPropertiesCount={propertyList.length}
@@ -47,10 +55,16 @@
 
   {#if property}
     <div class="agent-and-actions-container">
-      <div class="agent-container">
-        <img src={responsibleAgent?.avatar || "profile.png"} alt="agent pfp" />
-        <p>{responsibleAgent?.name}</p>
-      </div>
+      {#if responsibleAgent}
+        <UserContainer
+          imageUrl={responsibleAgent.avatar || "profile.png"}
+          name={responsibleAgent.name}
+          copyableFields={[
+            { label: "Email", value: responsibleAgent.email },
+            { label: "Telefon", value: responsibleAgent.phone as string | undefined },
+          ]}
+        />
+      {/if}
       <PropertyActionButtons {property} />
     </div>
 
@@ -68,24 +82,5 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
-  .agent-container {
-    padding: 0.25rem 0.75rem;
-    border-radius: 0.5rem;
-    border: 1px solid hsl(0, 0%, 90%);
-
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-  }
-  .agent-container p {
-    font-size: 0.875rem;
-    font-weight: 500;
-  }
-  .agent-container img {
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    object-fit: cover;
   }
 </style>

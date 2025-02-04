@@ -20,18 +20,19 @@
   import DrawnPolygons from "./DrawnPolygons.svelte";
   import UserPolygons from "./UserPolygons.svelte";
   import { filtersStore } from "../../stores/filtersStore.svelte";
-  import { onMount } from "svelte";
 
   let mapInstance: L.Map | undefined = $state();
   let drawingPolygonCoords: LatLng[] = $state([]);
   let userPolygonsVisibility: boolean = $state(false);
-  let eventListenersSet: boolean = $state(false);
 
-  // When mapInstance is ready, set event listeners
+  let mapInstanceHandled: boolean = $state(false);
+
+  // When mapInstance is ready, set event listeners and fit view to filtered properties
   $effect(() => {
-    if (mapInstance && !eventListenersSet) {
+    if (!mapInstanceHandled && mapInstance) {
       setEventListeners(mapInstance);
-      eventListenersSet = true;
+      fitViewToFilteredProperties(mapInstance);
+      mapInstanceHandled = true;
     }
   });
 
@@ -40,11 +41,6 @@
     mapInstance.on("mousemove", handleMouseMove); // For dynamic drawing
     mapInstance.on("keydown", handleKeyPress); // For keyboard shortcuts (Enter, c, d)
   }
-
-  $effect(() => {
-    // Fit map view to properties bounding box
-    fitViewToFilteredProperties(mapInstance, dataStore.propertiesBoundingBox);
-  });
 
   // Event Handlers
   function handleClick(e: L.LeafletMouseEvent) {
@@ -87,7 +83,7 @@
       drawingPolygonCoords = [];
       dataStore.isDrawing = false;
     } else if (key === "c") {
-      fitViewToFilteredProperties(mapInstance, dataStore.propertiesBoundingBox);
+      fitViewToFilteredProperties(mapInstance);
     } else if (key === "d") {
       dataStore.isDrawing = true;
     }

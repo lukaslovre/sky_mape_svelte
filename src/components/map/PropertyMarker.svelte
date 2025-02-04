@@ -43,8 +43,12 @@
 
   //   If this marker/property becomes focused programatically open popup
   $effect(() => {
-    if (markerInstance && dataStore.focusedPropertyId === property.id) {
-      markerInstance.openPopup();
+    if (markerInstance) {
+      if (dataStore.focusedPropertyId === property.id) {
+        markerInstance.openPopup();
+      } else if (markerInstance.isPopupOpen()) {
+        markerInstance.closePopup();
+      }
     }
   });
 

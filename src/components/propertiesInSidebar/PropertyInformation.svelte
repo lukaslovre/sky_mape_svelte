@@ -6,6 +6,8 @@
   import { formatWithCommas } from "../../utils/numbers";
   import { parsePaymentFrequency } from "../../utils/paymentFrequency";
   import { getIconForProperty } from "../../utils/propertyIcons";
+  import Label from "../common/Label.svelte";
+  import UserContainer from "../common/UserContainer.svelte";
   import InfoRow from "./PropertyInformationComponents/InfoRow.svelte";
   import Tag from "./PropertyInformationComponents/Tag.svelte";
   import Thumbnail from "./PropertyInformationComponents/Thumbnail.svelte";
@@ -18,6 +20,10 @@
 
   let { property }: Props = $props();
 
+  let owner: Client | undefined = $derived(
+    dataStore.users.find((user) => user.id === property.ownerId)
+  );
+
   const defaultImageUrl = getDefaultImageURL();
 
   let simpleFields: Record<string, string> = $derived.by(() => {
@@ -29,7 +35,6 @@
       Kupaonica: property.bathrooms + " kupaonica",
       "Spavaće sobe": property.bedrooms + " spavaća soba",
       "Bilješke o nekretnini": property.propertyNotes,
-      Vlasnik: dataStore.users.find((user) => user.id === property.ownerId)?.name,
       "Bilješke vlasnika": property.sellerNotes,
     };
 
@@ -103,6 +108,20 @@
     <InfoRow label={key} {value} isUndefined={value === "N/A"} />
   {/each}
 
+  {#if owner}
+    <div class="owner-container">
+      <Label text="Vlasnik" />
+      <UserContainer
+        imageUrl={owner.avatar}
+        name={owner.name}
+        copyableFields={[
+          { label: "Email", value: owner.email as string | undefined },
+          { label: "Telefon", value: owner.phone as string | undefined },
+        ]}
+      />
+    </div>
+  {/if}
+
   {#each Object.values(twoColumnFields) as twoColumns}
     <div class="two-column-container">
       {#each twoColumns as { label, value }}
@@ -118,6 +137,7 @@
   .property-information {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     gap: 1.25rem;
   }
 
@@ -134,8 +154,15 @@
   }
 
   .tags-container {
+    width: 100%;
     display: flex;
     justify-content: flex-end;
     gap: 0.5rem;
+  }
+  .owner-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    line-height: 150%;
   }
 </style>

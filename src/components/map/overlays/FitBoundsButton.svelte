@@ -9,7 +9,7 @@
   let { mapInstance }: Props = $props();
 
   function fitBounds() {
-    fitViewToFilteredProperties(mapInstance, dataStore.propertiesBoundingBox);
+    fitViewToFilteredProperties(mapInstance);
   }
 </script>
 

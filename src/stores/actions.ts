@@ -21,7 +21,7 @@ export function resetSelectedProperties(): void {
 // Fit the view to the bounds of the properties
 export function fitViewToFilteredProperties(
   mapInstance: L.Map | undefined,
-  propertiesBoundingBox: LatLngBounds | null
+  propertiesBoundingBox: LatLngBounds | null = dataStore.propertiesBoundingBox
 ) {
   if (!mapInstance || !propertiesBoundingBox) return;
 

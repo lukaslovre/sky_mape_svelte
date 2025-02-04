@@ -2,10 +2,11 @@
   import ChevronIcon from "../../assets/icons/ChevronIcon.svelte";
 
   interface Props {
+    text?: string;
     onClose: () => void;
   }
 
-  let { onClose }: Props = $props();
+  let { text = "Zatvori", onClose }: Props = $props();
 
   function close() {
     onClose();
@@ -14,7 +15,7 @@
 
 <button class="close-button" onclick={close}>
   <ChevronIcon size={32} color="#0B5EDA" rotation={180} />
-  <span>Zatvori</span>
+  <span>{text}</span>
 </button>
 
 <style>

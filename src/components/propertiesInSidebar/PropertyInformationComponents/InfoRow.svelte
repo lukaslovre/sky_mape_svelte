@@ -60,9 +60,9 @@
   } */
 
   .info-label {
+    color: hsl(0, 0%, 25%);
     font-size: 0.75rem;
-    font-weight: 600;
-    color: hsl(0, 0%, 40%);
+    font-weight: 500;
   }
   .info-value.h1 {
     font-size: 0.875rem;

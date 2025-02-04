@@ -23,7 +23,7 @@
 
     display: flex;
     flex-direction: column;
-    gap: 3rem;
+    gap: 2rem;
 
     overflow-y: scroll;
     overflow-x: hidden;
