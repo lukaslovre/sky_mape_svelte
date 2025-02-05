@@ -2,13 +2,12 @@
   import { deleteUser } from "../../models/Clients";
   import { clientFormStore } from "../../stores/clientsFormStore.svelte";
   import { dataStore } from "../../stores/store.svelte";
+  import { uiStateStore } from "../../stores/uiStateStore.svelte";
   import type { Client, MenuItem } from "../../types";
   import ClientForm from "../clients/ClientForm.svelte";
   import ClientsMenubar from "../clients/ClientsMenubar.svelte";
   import Header1 from "../common/Header1.svelte";
   import OwnersTable from "../tables/OwnersTable.svelte";
-
-  let showForm: boolean = $state(false);
 
   $effect(() => {
     removeUnfilteredOwnersFromSelection(dataStore.filteredOwners);
@@ -53,13 +52,9 @@
   }
 
   function handleAdd() {
-    const clientIdField = clientFormStore.fields.find(
-      (field) => field.databaseFieldName === "id"
-    )?.value;
-
-    const clientAgencyIdField = clientFormStore.fields.find(
-      (field) => field.databaseFieldName === "agency_id"
-    )?.value;
+    const clientIdField = clientFormStore.getFieldByDatabaseFieldName("id")?.value;
+    const clientAgencyIdField =
+      clientFormStore.getFieldByDatabaseFieldName("agency_id")?.value;
 
     if (clientIdField !== "" && clientIdField !== undefined) {
       // If id field is not empty, reset the form
@@ -70,7 +65,7 @@
     }
 
     clientFormStore.setFieldValue("userType", ["seller"]);
-    showForm = true;
+    uiStateStore.ownerFormVisible = true;
   }
 
   // Alerts that saving as table is not implemented
@@ -80,9 +75,7 @@
 
   // Handles editing of a selected owner
   function handleEdit() {
-    const clientIdField = clientFormStore.fields.find(
-      (field) => field.databaseFieldName === "id"
-    )?.value;
+    const clientIdField = clientFormStore.getFieldByDatabaseFieldName("id")?.value;
 
     const selectedClient = findSelectedOwner(dataStore.selectedOwnerIds[0]);
 
@@ -93,7 +86,7 @@
         clientFormStore.setFieldValuesFromClientObject(selectedClient);
       }
 
-      showForm = true;
+      uiStateStore.ownerFormVisible = true;
     }
   }
 
@@ -137,7 +130,7 @@
 <div class="owners-container">
   <Header1>Popis vlasnika</Header1>
 
-  {#if !showForm}
+  {#if !uiStateStore.ownerFormVisible}
     <ClientsMenubar
       selectedClientsLength={dataStore.selectedOwnerIds.length}
       onMenuItemClick={handleMenuItemClick}
@@ -150,7 +143,7 @@
       selectedOwnerIds={dataStore.selectedOwnerIds}
     />
   {:else}
-    <ClientForm close={() => (showForm = false)} />
+    <ClientForm close={() => (uiStateStore.ownerFormVisible = false)} />
   {/if}
 </div>
 

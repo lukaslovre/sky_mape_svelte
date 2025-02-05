@@ -116,6 +116,10 @@ const clientFormFields: FormFieldType<Client>[] = [
 class ClientFormStore {
   fields = $state(clientFormFields);
 
+  getFieldByDatabaseFieldName = (fieldName: keyof Client) => {
+    return this.fields.find((field) => field.databaseFieldName === fieldName);
+  };
+
   print = () => {
     console.log(
       "Fields:",
@@ -127,7 +131,7 @@ class ClientFormStore {
       })
     );
   };
-  // TODO: userType: "buyer" | "seller" = "buyer"
+
   resetForm = () => {
     this.fields.forEach((field) => {
       // 1. Set values to default values
@@ -173,7 +177,7 @@ class ClientFormStore {
   setFieldValue = (fieldName: keyof Client, value: any) => {
     console.log("Setting field value:", fieldName, value);
 
-    const field = this.fields.find((field) => field.databaseFieldName === fieldName);
+    const field = this.getFieldByDatabaseFieldName(fieldName);
     if (field) {
       field.value = value;
     }
@@ -188,7 +192,7 @@ class ClientFormStore {
       return;
     }
 
-    const field = this.fields.find((field) => field.databaseFieldName === fieldName);
+    const field = this.getFieldByDatabaseFieldName(fieldName);
     if (field) {
       field.error = error;
     }

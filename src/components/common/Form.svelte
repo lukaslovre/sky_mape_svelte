@@ -29,13 +29,8 @@
     getIconForProperty({
       id: "",
       hiddenOnWebsite:
-        propertyFormStore.fields.find(
-          (field) => field.databaseFieldName === "hiddenOnWebsite"
-        )?.value || false,
-      type:
-        propertyFormStore.fields
-          .find((field) => field.databaseFieldName === "type")
-          ?.value.at(0) || "House",
+        propertyFormStore.getFieldByDatabaseFieldName("hiddenOnWebsite")?.value || false,
+      type: propertyFormStore.getFieldByDatabaseFieldName("type")?.value.at(0) || "House",
     })
   );
 
@@ -43,9 +38,9 @@
   // Check if a property with the same lat and lng already exists
   // If it does, show a warning message
   let propertyOnSameLocationExists = $derived.by(() => {
-    const latLng = propertyFormStore.fields.find(
-      (field) => field.databaseFieldName === "lat"
-    )?.value as { lat: number; lng: number } | undefined;
+    const latLng = propertyFormStore.getFieldByDatabaseFieldName("latLng")?.value as
+      | { lat: number; lng: number }
+      | undefined;
 
     if (!latLng) return false;
 

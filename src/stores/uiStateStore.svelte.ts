@@ -7,10 +7,16 @@ const initialTab: Tabs = "Map";
 export const tabsList: Tabs[] = ["Map", "Properties", "Buyers", "Owners"];
 
 class UiStateStore {
-  activeTab = $state(initialTab);
-  highlightFiltersContainer = $state(false);
+  // State values
+  activeTab: Tabs = $state(initialTab);
+  highlightFiltersContainer: boolean = $state(false);
 
-  selectedSidebarCategory = $derived<SidebarCategory>(
+  propertyFormVisible: boolean = $state(false);
+  clientFormVisible: boolean = $state(false);
+  ownerFormVisible: boolean = $state(false);
+
+  // Derived values
+  selectedSidebarCategory: SidebarCategory = $derived<SidebarCategory>(
     dataStore.selectedPropertyIds.length > 0 ? "selectedProperty" : "filters"
   );
 }

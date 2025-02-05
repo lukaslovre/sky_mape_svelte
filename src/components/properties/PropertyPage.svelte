@@ -8,10 +8,11 @@
   import { propertyFormStore } from "../../stores/propertiesFormStore.svelte";
   import { deleteProperty } from "../../models/Properties";
   import PropertiesTable from "../tables/PropertiesTable.svelte";
+  import { uiStateStore } from "../../stores/uiStateStore.svelte";
+
+  // uiStateStore.propertyFormVisible
 
   // Property sorting
-  let showForm: boolean = $state(false);
-
   const sortOptions: (keyof Property)[] = [
     "created",
     "surfaceArea",
@@ -80,13 +81,9 @@
 
   // Shows the form for adding a new property
   function handleAdd() {
-    const propertyIdField = propertyFormStore.fields.find(
-      (field) => field.databaseFieldName === "id"
-    )?.value;
-
-    const propertyAgentField = propertyFormStore.fields.find(
-      (field) => field.databaseFieldName === "agent_id"
-    )?.value;
+    const propertyIdField = propertyFormStore.getFieldByDatabaseFieldName("id")?.value;
+    const propertyAgentField =
+      propertyFormStore.getFieldByDatabaseFieldName("agent_id")?.value;
 
     if (propertyIdField !== "" && propertyIdField !== undefined) {
       // If id field is not empty, reset the form
@@ -99,7 +96,7 @@
       propertyFormStore.resetForm();
     }
 
-    showForm = true;
+    uiStateStore.propertyFormVisible = true;
   }
 
   // Alerts that saving as table is not implemented
@@ -114,7 +111,7 @@
     if (selectedProperty) {
       propertyFormStore.resetForm();
       propertyFormStore.setFieldValuesFromPropertyObject(selectedProperty);
-      showForm = true;
+      uiStateStore.propertyFormVisible = true;
     }
   }
 
@@ -180,7 +177,7 @@
 <div class="properties-container">
   <Header1>Popis nekretnina</Header1>
 
-  {#if !showForm}
+  {#if !uiStateStore.propertyFormVisible}
     <PropertyMenubar
       selectedPropertiesLength={dataStore.selectedPropertyIds.length}
       onMenuItemClick={handleMenuItemClick}
@@ -197,7 +194,7 @@
       sortOptionField={sortOptions[sortOptionIndex]}
     />
   {:else}
-    <PropertyForm close={() => (showForm = false)} />
+    <PropertyForm close={() => (uiStateStore.propertyFormVisible = false)} />
   {/if}
 </div>
 

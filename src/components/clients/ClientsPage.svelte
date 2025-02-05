@@ -7,8 +7,7 @@
   import ClientsMenubar from "./ClientsMenubar.svelte";
   import ClientsTable from "../tables/ClientsTable.svelte";
   import { clientFormStore } from "../../stores/clientsFormStore.svelte";
-
-  let showForm: boolean = $state(false);
+  import { uiStateStore } from "../../stores/uiStateStore.svelte";
 
   $effect(() => {
     removeUnfilteredClientsFromSelection(dataStore.filteredUsers);
@@ -53,13 +52,10 @@
   }
 
   function handleAdd() {
-    const clientIdField = clientFormStore.fields.find(
-      (field) => field.databaseFieldName === "id"
-    )?.value;
+    const clientIdField = clientFormStore.getFieldByDatabaseFieldName("id")?.value;
 
-    const clientAgencyIdField = clientFormStore.fields.find(
-      (field) => field.databaseFieldName === "agency_id"
-    )?.value;
+    const clientAgencyIdField =
+      clientFormStore.getFieldByDatabaseFieldName("agency_id")?.value;
 
     if (clientIdField !== "" && clientIdField !== undefined) {
       // If id field is not empty, reset the form
@@ -70,7 +66,7 @@
     }
 
     clientFormStore.setFieldValue("userType", ["buyer"]);
-    showForm = true;
+    uiStateStore.clientFormVisible = true;
   }
 
   // Alerts that saving as table is not implemented
@@ -80,9 +76,7 @@
 
   // Handles editing of a selected property
   function handleEdit() {
-    const clientIdField = clientFormStore.fields.find(
-      (field) => field.databaseFieldName === "id"
-    )?.value;
+    const clientIdField = clientFormStore.getFieldByDatabaseFieldName("id")?.value;
 
     const selectedClient = findSelectedClient(dataStore.selectedClientIds[0]);
 
@@ -93,7 +87,7 @@
         clientFormStore.setFieldValuesFromClientObject(selectedClient);
       }
 
-      showForm = true;
+      uiStateStore.clientFormVisible = true;
     }
   }
 
@@ -137,7 +131,7 @@
 <div class="buyers-container">
   <Header1>Popis kupaca</Header1>
 
-  {#if !showForm}
+  {#if !uiStateStore.clientFormVisible}
     <ClientsMenubar
       selectedClientsLength={dataStore.selectedClientIds.length}
       onMenuItemClick={handleMenuItemClick}
@@ -150,7 +144,7 @@
       selectedClientIds={dataStore.selectedClientIds}
     />
   {:else}
-    <ClientForm close={() => (showForm = false)} />
+    <ClientForm close={() => (uiStateStore.clientFormVisible = false)} />
   {/if}
 </div>
 
