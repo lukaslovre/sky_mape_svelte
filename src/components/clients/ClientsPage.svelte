@@ -144,7 +144,11 @@
       selectedClientIds={dataStore.selectedClientIds}
     />
   {:else}
-    <ClientForm close={() => (uiStateStore.clientFormVisible = false)} />
+    <ClientForm
+      close={() => {
+        uiStateStore.clientFormVisible = false;
+      }}
+    />
   {/if}
 </div>
 

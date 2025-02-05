@@ -89,13 +89,12 @@
 
   // Handle applying filters
   const handleApplyFilters = (user: Client) => {
-    console.log("handleApplyFilters called with user:", user);
     filtersStore.loadFiltersFromClient(user);
-    if (user.favoriteProperties.length > 0) {
-      user.favoriteProperties.forEach((propertyId) => {
-        dataStore.addPropertyToFavorites(propertyId);
-      });
-    }
+
+    dataStore.resetFavoriteProperties();
+    user.favoriteProperties.forEach((propertyId) => {
+      dataStore.addPropertyToFavorites(propertyId);
+    });
   };
 </script>
 

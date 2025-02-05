@@ -22,10 +22,9 @@ class DataStore {
   agents = $state<Agent[]>([]);
 
   selectedPropertyIds = $state<Property["id"][]>([]);
-  focusedPropertyId = $state<Property["id"] | null>(null);
-
   selectedClientIds = $state<Client["id"][]>([]);
   selectedOwnerIds = $state<Client["id"][]>([]);
+  focusedPropertyId = $state<Property["id"] | null>(null);
 
   favoriteProperties = $state<Property["id"][]>([]);
   isDrawing = $state<boolean>(false);
@@ -43,8 +42,6 @@ class DataStore {
   });
 
   filteredUsers = $derived.by<Client[]>(() => {
-    if (filtersStore.isEmpty()) return this.users;
-
     if (this.selectedPropertyIds.length > 0) {
       const selectedProperties: Property[] = this.getPropertiesByIds(
         this.selectedPropertyIds
@@ -56,6 +53,9 @@ class DataStore {
 
       return usersMatchingProperties(this.users, selectedProperties);
     } else {
+      if (filtersStore.isEmpty())
+        return this.users.filter((user) => user.userType === "buyer");
+
       return usersMatchingProperties(this.users, this.filteredProperties);
     }
   });

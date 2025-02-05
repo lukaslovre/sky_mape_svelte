@@ -44,6 +44,7 @@ const emptyFilters: Filter = {
 
 class FiltersStore {
   filters = $state<Filter>(emptyFilters);
+  // belongsToClientId = $state<Client["id"] | undefined>();
 
   ////////
   // General methods
@@ -85,6 +86,7 @@ class FiltersStore {
     console.log(zodResult);
     if (zodResult.success) {
       this.filters = zodResult.data;
+      // this.belongsToClientId = client.id;
     } else {
       console.log(zodResult.error);
     }

@@ -198,7 +198,6 @@ class ClientFormStore {
     }
   };
 
-  //   TODO: postavit i filter i favorite properties?? (razmislit)
   setFieldValuesFromClientObject = (client: Client) => {
     this.fields.forEach((field) => {
       if (Array.isArray(field.value)) {
@@ -212,13 +211,7 @@ class ClientFormStore {
     console.log("Fields after setting values from client object:", this.fields);
 
     // Set filters and favorite properties
-    const zodResponse = FiltersSchemaWithDefaults.safeParse(client.filters);
-    if (zodResponse.success) {
-      filtersStore.filters = zodResponse.data;
-    } else {
-      console.log(zodResponse.error);
-    }
-
+    filtersStore.loadFiltersFromClient(client);
     dataStore.favoriteProperties = [...client.favoriteProperties];
   };
 }
