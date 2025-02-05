@@ -8,6 +8,11 @@
   import CopyableBodyCell from "./general/CopyableBodyCell.svelte";
   import { trimText } from "../../utils/string";
   import { parsePaymentFrequency } from "../../utils/paymentFrequency";
+  import {
+    parsePropertyAction,
+    parsePropertyStatus,
+    parsePropertyType,
+  } from "../../utils/properties";
 
   interface Props {
     selectedPropertyIds?: Property["id"][];
@@ -101,6 +106,12 @@
             {parseDate(property[column])}
           {:else if ["propertyNotes", "sellerNotes"].includes(column as string)}
             {trimText(property[column], 100)}
+          {:else if column === "type"}
+            {parsePropertyType(property[column])}
+          {:else if column === "action"}
+            {parsePropertyAction(property[column])}
+          {:else if column === "status"}
+            {parsePropertyStatus(property[column])}
           {:else if column === "imgUrl"}
             {#if property[column].length > 0}
               <a

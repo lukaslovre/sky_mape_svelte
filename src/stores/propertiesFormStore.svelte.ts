@@ -4,6 +4,14 @@ import { z } from "zod";
 import { parseValueWithSuffix } from "../utils/numbers";
 import { validators } from "./utils/validators";
 import { paymentFrequencyDropdownOptions } from "../utils/paymentFrequency";
+import {
+  parsePropertyAction,
+  parsePropertyStatus,
+  parsePropertyType,
+  propertyActionDropdownOptions,
+  propertyStatusDropdownOptions,
+  propertyTypeDropdownOptions,
+} from "../utils/properties";
 
 // type FormFieldType<T> = {
 //   label: string;
@@ -83,12 +91,7 @@ const propertyFormFields: FormFieldType<Property>[] = [
     databaseFieldName: "type",
     value: ["House"],
     defaultValue: ["House"],
-    options: [
-      { value: "House", label: "House" },
-      { value: "Apartment", label: "Apartment" },
-      { value: "Land", label: "Land" },
-      { value: "Commercial", label: "Commercial" },
-    ],
+    options: propertyTypeDropdownOptions,
     validators: [],
     required: true,
   },
@@ -98,10 +101,7 @@ const propertyFormFields: FormFieldType<Property>[] = [
     databaseFieldName: "action",
     value: ["Sale"],
     defaultValue: ["Sale"],
-    options: [
-      { value: "Sale", label: "Sale" },
-      { value: "Rent", label: "Rent" },
-    ],
+    options: propertyActionDropdownOptions,
     validators: [],
     required: true,
   },
@@ -145,7 +145,7 @@ const propertyFormFields: FormFieldType<Property>[] = [
     placeholder: "https://example.com",
   },
   {
-    label: "Sakriveno",
+    label: "Off-market",
     inputElement: "checkbox",
     databaseFieldName: "hiddenOnWebsite",
     value: false,
@@ -210,11 +210,7 @@ const propertyFormFields: FormFieldType<Property>[] = [
     databaseFieldName: "status",
     value: ["available"],
     defaultValue: ["available"],
-    options: [
-      { value: "available", label: "Available" },
-      { value: "processing", label: "Processing" },
-      { value: "sold", label: "Sold" },
-    ],
+    options: propertyStatusDropdownOptions,
     validators: [],
     required: true,
   },

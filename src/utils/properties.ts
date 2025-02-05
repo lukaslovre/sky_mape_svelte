@@ -53,3 +53,67 @@ export function getAttributesForProperty(property: Property): PropertyAttributes
 
   return { price, surfaceArea, bedrooms, bathrooms };
 }
+
+///////
+// Parse property field values (from value to label)
+///////
+
+// Property type
+export function parsePropertyType(type: Property["type"]): string {
+  switch (type) {
+    case "Apartment":
+      return "Stan";
+    case "House":
+      return "Kuća";
+    case "Land":
+      return "Zemljište";
+    case "Commercial":
+      return "Poslovni prostor";
+  }
+}
+
+export const propertyTypeDropdownOptions: { value: Property["type"]; label: string }[] = [
+  { value: "House", label: parsePropertyType("House") },
+  { value: "Apartment", label: parsePropertyType("Apartment") },
+  { value: "Commercial", label: parsePropertyType("Commercial") },
+  { value: "Land", label: parsePropertyType("Land") },
+];
+
+// Property action
+export function parsePropertyAction(action: Property["action"]): string {
+  switch (action) {
+    case "Rent":
+      return "Najam";
+    case "Sale":
+      return "Prodaja";
+  }
+}
+
+export const propertyActionDropdownOptions: {
+  value: Property["action"];
+  label: string;
+}[] = [
+  { value: "Sale", label: parsePropertyAction("Sale") },
+  { value: "Rent", label: parsePropertyAction("Rent") },
+];
+
+// Property status
+export function parsePropertyStatus(status: Property["status"]): string {
+  switch (status) {
+    case "available":
+      return "Dostupno";
+    case "processing":
+      return "U obradi";
+    case "sold":
+      return "Prodano";
+  }
+}
+
+export const propertyStatusDropdownOptions: {
+  value: Property["status"];
+  label: string;
+}[] = [
+  { value: "available", label: parsePropertyStatus("available") },
+  { value: "processing", label: parsePropertyStatus("processing") },
+  { value: "sold", label: parsePropertyStatus("sold") },
+];

@@ -7,6 +7,11 @@
   import { filtersStore, type Filter } from "../../stores/filtersStore.svelte";
   import { parseValueWithSuffix } from "../../utils/numbers";
   import { uiStateStore } from "../../stores/uiStateStore.svelte";
+  import {
+    propertyActionDropdownOptions,
+    propertyStatusDropdownOptions,
+    propertyTypeDropdownOptions,
+  } from "../../utils/properties";
 
   $inspect(filtersStore.filters);
 
@@ -51,21 +56,13 @@
       type: "dropdown",
       label: "Tip nekretnine",
       id: "type",
-      options: [
-        { label: "Stan", value: "Apartment" },
-        { label: "Kuća", value: "House" },
-        { label: "Poslovni prostor", value: "Commercial" },
-        { label: "Zemljište", value: "Land" },
-      ],
+      options: propertyTypeDropdownOptions,
     },
     {
       type: "dropdown",
       label: "Akcija",
       id: "action",
-      options: [
-        { label: "Prodaja", value: "Sale" },
-        { label: "Najam", value: "Rent" },
-      ],
+      options: propertyActionDropdownOptions,
     },
     {
       type: "min-max",
@@ -87,22 +84,15 @@
       label: "Vidljivost",
       id: "visibility",
       options: [
-        { label: "Vidljivo", value: "Visible" },
-        { label: "Sakriveno", value: "Hidden" },
+        { label: "Javno", value: "Visible" },
+        { label: "Off-market", value: "Hidden" },
       ],
     },
     {
       type: "dropdown",
       label: "Status",
       id: "status",
-      options: [
-        { label: "Dostupno", value: "available" },
-        {
-          label: "U obradi",
-          value: "processing",
-        },
-        { label: "Prodano", value: "sold" },
-      ],
+      options: propertyStatusDropdownOptions,
     },
     {
       type: "dropdown",
