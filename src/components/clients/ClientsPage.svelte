@@ -77,7 +77,6 @@
   // Handles editing of a selected property
   function handleEdit() {
     const clientIdField = clientFormStore.getFieldByDatabaseFieldName("id")?.value;
-
     const selectedClient = findSelectedClient(dataStore.selectedClientIds[0]);
 
     if (selectedClient) {

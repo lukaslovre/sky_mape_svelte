@@ -12,6 +12,7 @@
     propertyStatusDropdownOptions,
     propertyTypeDropdownOptions,
   } from "../../utils/properties";
+  import FiltersBelongingToUser from "./FiltersBelongingToUser.svelte";
 
   $inspect(filtersStore.filters);
 
@@ -104,14 +105,11 @@
 </script>
 
 <div class="filters-container" class:highlight={uiStateStore.highlightFiltersContainer}>
-  <!-- {#if filtersStore.belongsToClientId}
-    <div class="filters-belonging-to-user-container">
-      {dataStore.users.find((user) => user.id === filtersStore.belongsToClientId)?.name ||
-        "Nepoznati korisnik"}
-    </div>
-  {:else}
-    <div class="filters-belonging-to-user-container">Svi korisnici</div>
-  {/if} -->
+  <FiltersBelongingToUser
+    user={filtersStore.belongsToClientId
+      ? dataStore.users.find((user) => user.id === filtersStore.belongsToClientId)
+      : undefined}
+  />
 
   <div class="buttons-container">
     <button
@@ -189,11 +187,6 @@
     50% {
       background-color: hsl(60, 65%, 80%);
     }
-  }
-
-  .filters-belonging-to-user-container {
-    padding: 1rem;
-    border: 1px solid hsl(0, 0%, 50%);
   }
 
   .inputs-container {

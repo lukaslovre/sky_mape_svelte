@@ -118,6 +118,8 @@
           { label: "Email", value: owner.email as string | undefined },
           { label: "Telefon", value: owner.phone as string | undefined },
         ]}
+        padding="0.125rem"
+        borderColor="transparent"
       />
     </div>
   {/if}

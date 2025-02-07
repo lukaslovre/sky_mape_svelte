@@ -63,6 +63,8 @@
             { label: "Email", value: responsibleAgent.email },
             { label: "Telefon", value: responsibleAgent.phone as string | undefined },
           ]}
+          padding="0.125rem 0.75rem"
+          borderColor="transparent"
         />
       {/if}
       <PropertyActionButtons {property} />

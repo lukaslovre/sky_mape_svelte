@@ -27,6 +27,7 @@ export const FiltersSchemaWithDefaults = FiltersSchema.partial().transform((data
 }));
 
 export type Filter = z.infer<typeof FiltersSchema>;
+export type FilterDifferences = Record<keyof Filter, { removed: any[]; added: any[] }>;
 
 // TODO: maybe make this a function that returns a new object
 const emptyFilters: Filter = {
@@ -44,7 +45,7 @@ const emptyFilters: Filter = {
 
 class FiltersStore {
   filters = $state<Filter>(emptyFilters);
-  // belongsToClientId = $state<Client["id"] | undefined>();
+  belongsToClientId = $state<Client["id"] | undefined>();
 
   ////////
   // General methods
@@ -86,10 +87,69 @@ class FiltersStore {
     console.log(zodResult);
     if (zodResult.success) {
       this.filters = zodResult.data;
-      // this.belongsToClientId = client.id;
+      this.belongsToClientId = client.id;
     } else {
       console.log(zodResult.error);
     }
+  };
+
+  // A method to get the differences between two filters. Like a diff method.
+  // It should return an object with the differences between the two filters, where the key is the field name and the value is an array with the differences in the form of {removed: [], added: []}
+  // The method should be able to compare two filters and return the differences between them
+
+  getFilterDifferences = (
+    baselineFilter: Filter,
+    newFilter: Filter
+  ): FilterDifferences => {
+    const differences = {} as FilterDifferences;
+
+    // Simple deep equality check. TODO: Consider using a proper deep equality library if needed.
+    const deepEqual = (a: any, b: any): boolean => {
+      return JSON.stringify(a) === JSON.stringify(b);
+    };
+
+    // Computes differences between two arrays using deep equality.
+    const arrayDifference = (
+      current: any[],
+      newArr: any[]
+    ): { removed: any[]; added: any[] } => {
+      const removed = current.filter((item) => !newArr.some((x) => deepEqual(x, item)));
+      const added = newArr.filter((item) => !current.some((x) => deepEqual(x, item)));
+      return { removed, added };
+    };
+
+    for (const key in baselineFilter) {
+      const currentValue = baselineFilter[key as keyof Filter];
+      const newValue = newFilter[key as keyof Filter];
+
+      // If both are numbers.
+      if (typeof currentValue === "number" && typeof newValue === "number") {
+        if (currentValue !== newValue) {
+          differences[key as keyof Filter] = {
+            removed: [currentValue],
+            added: [newValue],
+          };
+        }
+      }
+      // If both are arrays.
+      else if (Array.isArray(currentValue) && Array.isArray(newValue)) {
+        const diff = arrayDifference(currentValue, newValue);
+        if (diff.removed.length > 0 || diff.added.length > 0) {
+          differences[key as keyof Filter] = diff;
+        }
+      }
+      // For other types, using deep equality.
+      else {
+        if (!deepEqual(currentValue, newValue)) {
+          differences[key as keyof Filter] = {
+            removed: [currentValue],
+            added: [newValue],
+          };
+        }
+      }
+    }
+
+    return differences;
   };
 
   ////////

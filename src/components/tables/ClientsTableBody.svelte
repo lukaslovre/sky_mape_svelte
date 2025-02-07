@@ -7,6 +7,7 @@
   import { filtersStore } from "../../stores/filtersStore.svelte";
   import { dataStore } from "../../stores/store.svelte";
   import { trimText } from "../../utils/string";
+  import { uiStateStore } from "../../stores/uiStateStore.svelte";
 
   interface Props {
     selectedIds?: Client["id"][];
@@ -89,6 +90,7 @@
 
   // Handle applying filters
   const handleApplyFilters = (user: Client) => {
+    dataStore.selectedClientIds = [user.id];
     filtersStore.loadFiltersFromClient(user);
 
     dataStore.resetFavoriteProperties();
