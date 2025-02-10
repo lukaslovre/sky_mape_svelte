@@ -7,6 +7,7 @@
   import DropdownFormFieldWrapped from "./DropdownFormFieldWrapped.svelte";
   import ActiveFiltersDisplayInForm from "../clients/ActiveFiltersDisplayInForm.svelte";
   import ActiveFavoritedPropertiesDisplayInForm from "../clients/ActiveFavoritedPropertiesDisplayInForm.svelte";
+  import { filtersStore } from "../../stores/filtersStore.svelte";
 
   interface Props {
     onSubmit: () => Promise<boolean>;
@@ -41,6 +42,7 @@
       setTimeout(() => {
         close();
         clientFormStore.resetForm();
+        filtersStore.resetFilters();
       }, 2000);
     }
   }}

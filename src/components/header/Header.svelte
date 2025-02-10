@@ -30,6 +30,6 @@
 
     background-color: #f5f5f5;
     padding: 1.5rem;
-    box-shadow: 0 0rem 1rem rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.75);
   }
 </style>

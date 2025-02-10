@@ -98,7 +98,7 @@
   nav {
     padding: 1rem 2rem;
     background-color: #e6e6e6;
-    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.75);
     z-index: 401;
     position: relative;
     overflow-x: auto;
@@ -106,9 +106,7 @@
 
   nav ul {
     list-style: none;
-
     display: flex;
-    /* flex-direction: column; */
     gap: 1rem;
   }
 

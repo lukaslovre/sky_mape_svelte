@@ -1,6 +1,7 @@
 <script lang="ts">
   import SaveIcon from "../../assets/icons/SaveIcon.svelte";
   import XIcon from "../../assets/icons/xIcon.svelte";
+  import { clientFormStore } from "../../stores/clientsFormStore.svelte";
   import { filtersStore } from "../../stores/filtersStore.svelte";
   import { uiStateStore } from "../../stores/uiStateStore.svelte";
   import type { Client } from "../../types";
@@ -13,6 +14,7 @@
   let { user }: Props = $props();
 
   function handleAddUserClick() {
+    clientFormStore.resetForm();
     uiStateStore.activeTab = "Buyers";
     uiStateStore.clientFormVisible = true;
   }

@@ -143,7 +143,12 @@
       selectedOwnerIds={dataStore.selectedOwnerIds}
     />
   {:else}
-    <ClientForm close={() => (uiStateStore.ownerFormVisible = false)} />
+    <ClientForm
+      close={() => {
+        uiStateStore.ownerFormVisible = false;
+        clientFormStore.resetForm();
+      }}
+    />
   {/if}
 </div>
 

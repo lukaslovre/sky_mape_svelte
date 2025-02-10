@@ -194,7 +194,12 @@
       sortOptionField={sortOptions[sortOptionIndex]}
     />
   {:else}
-    <PropertyForm close={() => (uiStateStore.propertyFormVisible = false)} />
+    <PropertyForm
+      close={() => {
+        uiStateStore.propertyFormVisible = false;
+        propertyFormStore.resetForm();
+      }}
+    />
   {/if}
 </div>
 

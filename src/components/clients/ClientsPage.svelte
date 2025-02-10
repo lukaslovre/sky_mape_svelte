@@ -146,6 +146,7 @@
     <ClientForm
       close={() => {
         uiStateStore.clientFormVisible = false;
+        clientFormStore.resetForm();
       }}
     />
   {/if}
