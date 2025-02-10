@@ -1,6 +1,8 @@
 <script lang="ts">
+  import CheckmarkIcon from "../../assets/icons/CheckmarkIcon.svelte";
   import SaveIcon from "../../assets/icons/SaveIcon.svelte";
   import XIcon from "../../assets/icons/xIcon.svelte";
+  import { createUser } from "../../models/Clients";
   import { clientFormStore } from "../../stores/clientsFormStore.svelte";
   import { filtersStore } from "../../stores/filtersStore.svelte";
   import { uiStateStore } from "../../stores/uiStateStore.svelte";
@@ -12,6 +14,8 @@
   }
 
   let { user }: Props = $props();
+
+  let userUpdateResponseSuccess: number = $state(0); // -1 for error, 0 default, 1 for success
 
   function handleAddUserClick() {
     clientFormStore.resetForm();
@@ -32,7 +36,27 @@
     !filterDiferences || Object.keys(filterDiferences).length === 0
   );
 
-  function handleUpdateFiltersClick() {}
+  function handleUpdateFiltersClick() {
+    if (!user) return;
+
+    const partialUserObject: Pick<Client, "filters" | "favoriteProperties" | "id"> = {
+      id: user.id,
+      filters: filtersStore.filters,
+      favoriteProperties: user.favoriteProperties,
+    };
+
+    try {
+      createUser(partialUserObject);
+      userUpdateResponseSuccess = 1;
+    } catch (error) {
+      console.error(error);
+      userUpdateResponseSuccess = -1;
+    }
+
+    setTimeout(() => {
+      userUpdateResponseSuccess = 0;
+    }, 2000);
+  }
 </script>
 
 <!-- 
@@ -41,7 +65,6 @@ SPECIFICATION:
 - If no user is selected, it should display a button to add a new user with the currently selected filters.
 - If a user is selected, it should display the name of the user and a button to remove the selected user.
 - If the filters change from the ones belonging to selected user, have some visual feedback and give the user an option to save (update) the new filters to the selected user.
-- If the user container is clicked, it goes to the ClientForm.
 -->
 {#if user}
   <div class="filters-belonging-to-user-container">
@@ -54,7 +77,13 @@ SPECIFICATION:
         disabled={noDifference}
         title="Update filters"
       >
-        <SaveIcon color={noDifference ? "hsl(0, 0%, 75%)" : "hsl(0, 0%, 20%)"} />
+        {#if userUpdateResponseSuccess === 0}
+          <SaveIcon color={noDifference ? "hsl(0, 0%, 75%)" : "hsl(0, 0%, 20%)"} />
+        {:else if userUpdateResponseSuccess === 1}
+          <CheckmarkIcon color={"hsl(120, 100%, 25%)"} />
+        {:else}
+          <XIcon color={"hsl(0, 100%, 50%)"} />
+        {/if}
       </button>
 
       <div class="hover-filter-diffs">

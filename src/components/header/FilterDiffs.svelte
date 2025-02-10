@@ -7,7 +7,7 @@
 
   let { filterDiffs }: Props = $props();
 
-  //   TODO: implement the update, parse the filter keys and values to match the rest of app, add diff to the client form
+  //   TODO: parse the filter keys and values to match the rest of app, add diff to the client form, incorporate favoriteProperties
 </script>
 
 <div class="filter-diffs-container">
