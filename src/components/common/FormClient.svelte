@@ -15,7 +15,12 @@
     submitButtonText?: string;
   }
 
-  let { onSubmit, close, formErrorString, submitButtonText = "Submit" }: Props = $props();
+  let {
+    onSubmit,
+    close,
+    formErrorString,
+    submitButtonText = "Kreiraj korisnika",
+  }: Props = $props();
 
   let successState: boolean = $state(false);
 
@@ -72,9 +77,10 @@
   {/if}
 
   <button type="submit" class:success={successState}>
-    {successState ? "Success!" : submitButtonText}
+    {successState ? "Uspjeh!" : submitButtonText}
   </button>
-  <button type="button" class="clear-button" onclick={handleClear}>Reset form</button>
+  <button type="button" class="clear-button" onclick={handleClear}>Resetiraj formu</button
+  >
 </form>
 
 <style>

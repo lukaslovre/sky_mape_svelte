@@ -1,6 +1,5 @@
 <script lang="ts">
   import { fitViewToFilteredProperties } from "../../../stores/actions";
-  import { dataStore } from "../../../stores/store.svelte";
 
   interface Props {
     mapInstance: L.Map | undefined;
@@ -14,7 +13,7 @@
 </script>
 
 <button class="fit-bounds-button" onclick={fitBounds}>
-  Center <span class="fit-bounds-button-shortcut">[C]</span>
+  Centriraj <span class="fit-bounds-button-shortcut">[C]</span>
 </button>
 
 <style>
