@@ -9,6 +9,12 @@
 
   let { formField = $bindable() }: Props = $props();
 
+  let fileInputEl: HTMLInputElement | undefined = $state();
+
+  function triggerFileInput() {
+    fileInputEl?.click();
+  }
+
   function handleFileChange(event: Event) {
     const target = event.target as HTMLInputElement;
     const files = target.files;
@@ -22,8 +28,6 @@
   }
 
   function handlePaste(event: ClipboardEvent) {
-    console.log(event.clipboardData);
-
     const items = event.clipboardData?.items;
     if (!items) return;
 
@@ -52,82 +56,66 @@
 
     formField.error = error || undefined;
     formField.value = error ? null : file;
-
     console.log(`${formField.databaseFieldName} input parsed:`, formField.value);
   }
 </script>
 
 <svelte:document onpaste={handlePaste} />
 
-<div class="image-input">
+<div class="custom-image-input">
   <Label
     forId={formField.databaseFieldName}
-    text={`${formField.label} ${formField.required ? "(required)" : ""} `}
+    text={`${formField.label} ${formField.required ? "(required)" : ""}`}
   />
 
   {#if formField.error}
     <p class="error">{formField.error}</p>
   {/if}
 
+  <button class="preview-area" onclick={triggerFileInput} type="button">
+    {#if formField.value}
+      {#if formField.value instanceof File}
+        <img
+          src={URL.createObjectURL(formField.value)}
+          alt="Selected image preview"
+          class="img-preview"
+        />
+        <div class="metadata">
+          <span class="pill">{formField.value.name}</span>
+          {#if formField.value.size}
+            <span class="pill">{bytesToHumanReadable(formField.value.size)}</span>
+          {/if}
+          {#if formField.value.type}
+            <span class="pill">{formField.value.type}</span>
+          {/if}
+        </div>
+      {:else if formField.value.url}
+        <img src={formField.value.url} alt="Selected image preview" class="img-preview" />
+      {/if}
+    {:else}
+      <div class="placeholder">
+        <p>📷 Klikni za odabir slike</p>
+      </div>
+    {/if}
+  </button>
+
   <input
+    bind:this={fileInputEl}
     type="file"
     accept="image/*"
     name={formField.databaseFieldName}
     id={formField.databaseFieldName}
     onchange={handleFileChange}
     required={formField.required}
+    style="display:none;"
   />
-
-  {#if formField.value}
-    <div class="pill-container">
-      <!-- if its File type -->
-      {#if formField.value instanceof File}
-        <div class="img-preview-pill">
-          <img src={URL.createObjectURL(formField.value)} alt="Selected image preview" />
-        </div>
-        <span class="pill">{formField.value.name}</span>
-        <span class="pill">{bytesToHumanReadable(formField.value.size)}</span>
-        <span class="pill">{formField.value.type}</span>
-        <!-- If its an object with a .url property -->
-      {:else if formField.value.url}
-        <div class="img-preview-pill">
-          <img src={formField.value.url} alt="Selected image preview" />
-        </div>
-      {/if}
-    </div>
-  {/if}
 </div>
 
 <style>
-  .image-input {
+  .custom-image-input {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-  }
-
-  input[type="file"] {
-    position: relative;
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #cccccc;
-    border-radius: 0.5rem;
-    box-shadow: 0 2px 1px rgba(0, 0, 0, 0.05);
-    background-color: #ffffff;
-    font-size: 0.875rem;
-    color: #1a1a1a;
-    transition:
-      border 75ms ease-out,
-      box-shadow 75ms ease-out;
-  }
-
-  input[type="file"]:hover {
-    border: 1px solid hsl(0, 0%, 50%);
-  }
-
-  input[type="file"]:focus {
-    box-shadow: 0 0 0 2px #0d65d9;
-    outline: none;
-    z-index: 1;
   }
 
   .error {
@@ -136,39 +124,56 @@
     font-weight: 400;
   }
 
-  .pill-container {
+  .preview-area {
     display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-  .pill {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: hsl(214, 89%, 40%);
-    font-family: monospace;
+    gap: 1rem;
 
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    background-color: hsla(214, 89%, 75%, 0.25);
+    background-color: #ffffff;
+    padding: 1rem;
+    border: 1px solid #cccccc;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 1px rgba(0, 0, 0, 0.05);
+
+    overflow: hidden;
+    transition:
+      border-color 0.2s ease-in-out,
+      background-color 0.2s ease-in-out;
+  }
+  .preview-area:hover {
+    border-color: hsl(0, 0%, 50%);
+  }
+  .preview-area:focus {
+    box-shadow: 0 0 0 2px #0d65d9;
+    outline: none;
+    z-index: 1;
   }
 
-  .pill-container .img-preview-pill {
+  .placeholder p {
+    color: #888888;
+    font-size: 0.875rem;
+  }
+
+  .img-preview {
     width: 5rem;
     height: 5rem;
     border-radius: 0.5rem;
-    overflow: hidden;
-    padding: 0.25rem;
-    background-color: hsla(214, 89%, 75%, 0.25);
-    border: hsla(214, 89%, 75%, 0.5) 1px solid;
-  }
-  .pill-container .img-preview-pill img {
-    width: 100%;
-    height: 100%;
     object-fit: cover;
-    /* What is the formula to make an inside border radius feel natural compared to parent border radius? It depends on parent border radius and gap/padding */
-    /* A common approach: subtract the inner gap or padding from the parent’s radius */
-    /* border-radius: calc(var(--parent-radius) - var(--gap)); */
-    border-radius: calc(0.5rem - 0.25rem);
+    border: 1px solid hsl(0, 0%, 90%);
+  }
+
+  .metadata {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+
+  .pill {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: hsl(0, 0%, 10%);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    background-color: hsl(0, 0%, 90%);
   }
 </style>
