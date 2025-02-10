@@ -36,7 +36,9 @@ import {
 
 export async function getUsers(): Promise<Client[]> {
   try {
-    const data = await pb.collection<Client>("Clients").getFullList();
+    const data = await pb
+      .collection<Client>("Clients")
+      .getFullList({ batch: 1000, sort: "-updated" });
     console.log(data);
     return data;
   } catch (err) {

@@ -30,7 +30,7 @@ export function fitViewToFilteredProperties(
 
 // Property actions
 export function addPropertyToStore(property: Property) {
-  dataStore.properties.push(property);
+  dataStore.properties = [property, ...dataStore.properties];
 }
 export function updatePropertyInStore(property: Property) {
   dataStore.properties = dataStore.properties.map((currentProperty) =>
@@ -45,7 +45,7 @@ export function removePropertyFromStore(propertyId: Property["id"]) {
 
 // Client actions
 export function addClientToStore(client: Client) {
-  dataStore.users.push(client);
+  dataStore.users = [client, ...dataStore.users];
 
   if (client.userType === "seller") {
     setOwnerDropdownOptions();
