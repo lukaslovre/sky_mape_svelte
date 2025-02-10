@@ -65,9 +65,13 @@ SPECIFICATION:
     </div>
   </div>
 {:else}
-  <button class="no-user-selected" onclick={handleAddUserClick}>
+  <button
+    class="no-user-selected"
+    onclick={handleAddUserClick}
+    disabled={filtersStore.isEmpty()}
+  >
     <SaveIcon color="hsl(0, 0%, 20%)" />
-    Dodaj kupca
+    Spremi filtere
   </button>
 {/if}
 
@@ -96,10 +100,16 @@ SPECIFICATION:
     justify-content: center;
     background-color: hsl(0, 0%, 85%);
   }
+  .no-user-selected[disabled] {
+    opacity: 0.5;
+    pointer-events: none;
+  }
 
   /* User selected */
   .filters-belonging-to-user-container {
     box-shadow: 0 0.125rem 0.25rem hsla(0, 0%, 0%, 0.075);
+    /* -8px total, -4px top and bottom, to be same height as no-user-selected */
+    padding: 0.25rem 1rem;
   }
 
   .filters-belonging-to-user-container > * {
