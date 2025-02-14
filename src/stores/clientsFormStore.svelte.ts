@@ -69,7 +69,7 @@ const clientFormFields: FormFieldType<Client>[] = [
     placeholder: "John Doe",
   },
   {
-    label: "Email",
+    label: "Email ('Enter' dodaje '@gmail.com')",
     inputElement: "input",
     databaseFieldName: "email",
     value: "",

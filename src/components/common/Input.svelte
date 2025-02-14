@@ -8,11 +8,42 @@
 
   let { formField = $bindable() }: Props = $props();
 
+  type KeyboardShortcut = {
+    onKey: string;
+    appliesToFields: string[];
+    transformValue: (value: string) => string;
+  };
+  const keyboardShortcuts: KeyboardShortcut[] = [
+    {
+      onKey: "Enter",
+      appliesToFields: ["email"],
+      transformValue: (value: string) => value + "@gmail.com",
+    },
+  ];
+
+  function handleKeyDown(e: KeyboardEvent) {
+    const shortcut = keyboardShortcuts.find((shortcut) => shortcut.onKey === e.key);
+    const appliesToCurrentField = shortcut?.appliesToFields.includes(
+      formField.databaseFieldName
+    );
+
+    if (shortcut && appliesToCurrentField) {
+      e.preventDefault(); // Prevent default action for the key (eg. enter key submits the form)
+      const newValue = shortcut.transformValue(formField.value);
+      parseAndValidateInput(newValue);
+    }
+  }
+
   function handleInput(e: Event) {
     const rawValue = (e.target as HTMLInputElement).value;
 
     console.log(`${formField.databaseFieldName} input raw:`, rawValue);
 
+    parseAndValidateInput(rawValue);
+  }
+
+  // Extract the formField logic from the handleInput into separate function to also be able to call it from onkeydown
+  function parseAndValidateInput(rawValue: string) {
     // If empty and not required
     if (rawValue === "" && !formField.required) {
       formField.value = "";
@@ -48,7 +79,6 @@
     <p class="error">{formField.error}</p>
   {/if}
 
-  <!-- TOOD: disabled može se čitat s elementa [disabled] -->
   <input
     type="text"
     name={formField.databaseFieldName}
@@ -56,8 +86,8 @@
     value={formField.value}
     placeholder={formField.placeholder}
     disabled={formField.disabled}
-    class:disabled={formField.disabled}
     oninput={handleInput}
+    onkeydown={handleKeyDown}
     autocomplete="off"
   />
 </div>
@@ -67,11 +97,6 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-  }
-
-  .disabled {
-    opacity: 0.5;
-    pointer-events: none;
   }
 
   input {
@@ -94,6 +119,10 @@
     transition:
       outline 75ms ease-out,
       border 75ms ease-out;
+  }
+  input[disabled] {
+    opacity: 0.5;
+    pointer-events: none;
   }
 
   input::placeholder {
