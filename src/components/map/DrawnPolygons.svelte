@@ -2,6 +2,7 @@
   import type { LatLng } from "leaflet";
   import { Polygon } from "sveaflet";
   import { filtersStore } from "../../stores/filtersStore.svelte";
+  import CirclesOnPolygonEdges from "./CirclesOnPolygonEdges.svelte";
 
   interface Props {
     drawingPolygonCoords: LatLng[];
@@ -12,6 +13,7 @@
 
 <!-- Draw the polygon that is currently being drawn -->
 <Polygon latLngs={drawingPolygonCoords} />
+<CirclesOnPolygonEdges {drawingPolygonCoords} />
 
 <!-- Draw all polygons -->
 {#each filtersStore.filters.polygons as polygon}

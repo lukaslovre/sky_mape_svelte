@@ -118,7 +118,7 @@
         (userPolygonsVisibility = !userPolygonsVisibility)}
     />
   </div>
-  <!-- List of drawn polygons (overlay) -->
+  <!-- List of drawn polygons (overlay, SVG's) -->
   <DrawnPolygonsList polygons={filtersStore.filters.polygons} />
 
   <!-- Leaflet Map Component -->
@@ -132,7 +132,7 @@
     <!-- Drawn Polygons Component -->
     <DrawnPolygons {drawingPolygonCoords} />
 
-    <!-- User Polygons Component -->
+    <!-- User Polygons Component (all users overlayed, heatmap kindof) -->
     {#if userPolygonsVisibility}
       <UserPolygons />
     {/if}
