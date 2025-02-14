@@ -41,7 +41,7 @@
     disabled={formField.disabled}
   />
   <label for={formField.databaseFieldName}>
-    {`${formField.label} ${formField.required ? "(required)" : ""}`}
+    {`${formField.label} ${formField.required ? "(obavezno)" : ""}`}
   </label>
   {#if formField.error}
     <p class="error">{formField.error}</p>

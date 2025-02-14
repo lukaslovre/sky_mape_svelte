@@ -65,7 +65,7 @@
 <div class="custom-image-input">
   <Label
     forId={formField.databaseFieldName}
-    text={`${formField.label} ${formField.required ? "(required)" : ""}`}
+    text={`${formField.label} ${formField.required ? "(obavezno)" : ""}`}
   />
 
   {#if formField.error}

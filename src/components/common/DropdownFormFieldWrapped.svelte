@@ -13,7 +13,7 @@
   options={formField.options}
   selectedValues={formField.value}
   onValueChange={(newValues) => (formField.value = newValues)}
-  label={`${formField.label} ${formField.required ? "(required)" : ""}`}
+  label={`${formField.label} ${formField.required ? "(obavezno)" : ""}`}
   id={formField.databaseFieldName}
   error={formField.error}
   disabled={formField.disabled}

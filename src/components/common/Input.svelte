@@ -42,7 +42,7 @@
 <div class="input">
   <Label
     forId={formField.databaseFieldName}
-    text={`${formField.label} ${formField.required ? "(required)" : ""} `}
+    text={`${formField.label} ${formField.required ? "(obavezno)" : ""} `}
   />
   {#if formField.error}
     <p class="error">{formField.error}</p>
