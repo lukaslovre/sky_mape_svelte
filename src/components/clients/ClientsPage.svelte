@@ -8,6 +8,7 @@
   import ClientsTable from "../tables/ClientsTable.svelte";
   import { clientFormStore } from "../../stores/clientsFormStore.svelte";
   import { uiStateStore } from "../../stores/uiStateStore.svelte";
+  import { filtersStore } from "../../stores/filtersStore.svelte";
 
   $effect(() => {
     removeUnfilteredClientsFromSelection(dataStore.filteredUsers);
@@ -53,7 +54,6 @@
 
   function handleAdd() {
     const clientIdField = clientFormStore.getFieldByDatabaseFieldName("id")?.value;
-
     const clientAgencyIdField =
       clientFormStore.getFieldByDatabaseFieldName("agency_id")?.value;
 
@@ -64,7 +64,7 @@
       // If agency_id field is not empty, reset the form
       clientFormStore.resetForm();
     }
-
+    filtersStore.belongsToClientId = undefined;
     clientFormStore.setFieldValue("userType", ["buyer"]);
     uiStateStore.clientFormVisible = true;
   }
