@@ -1,6 +1,6 @@
 <script lang="ts">
   import TrashIcon from "../../../assets/icons/TrashIcon.svelte";
-  import { filtersStore, type Filter } from "../../../stores/filtersStore.svelte";
+  import { filtersStore, type Filter } from "../../../lib/stores/filtersStore.svelte";
   import PolygonThumbnail from "./PolygonThumbnail.svelte";
 
   interface Props {

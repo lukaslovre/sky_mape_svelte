@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { dataStore } from "../../stores/store.svelte";
+  import { dataStore } from "../../lib/stores/store.svelte";
   import PropertyMarker from "./PropertyMarker.svelte";
 </script>
 

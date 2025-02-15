@@ -1,13 +1,13 @@
 <script lang="ts">
   import type { Client } from "../../types";
-  import { formatDateAndAgo } from "../../utils/datetime";
+  import { formatDateAndAgo } from "../../lib/utils/datetime";
   import Popup from "../common/Popup.svelte";
   import Checkbox from "./general/Checkbox.svelte";
   import CopyableBodyCell from "./general/CopyableBodyCell.svelte";
-  import { filtersStore } from "../../stores/filtersStore.svelte";
-  import { dataStore } from "../../stores/store.svelte";
-  import { trimText } from "../../utils/string";
-  import { uiStateStore } from "../../stores/uiStateStore.svelte";
+  import { filtersStore } from "../../lib/stores/filtersStore.svelte";
+  import { dataStore } from "../../lib/stores/store.svelte";
+  import { trimText } from "../../lib/utils/string";
+  import { uiStateStore } from "../../lib/stores/uiStateStore.svelte";
 
   interface Props {
     selectedIds?: Client["id"][];

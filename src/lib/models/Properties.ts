@@ -1,6 +1,6 @@
-import type { Property } from "../types";
+import type { Property } from "../../types";
 
-import { pb } from "../PocketBaseInit";
+import { pb } from "../services/pocketbase/client";
 import { handlePocketbaseError } from "./errorHandling";
 import {
   addPropertyToStore,

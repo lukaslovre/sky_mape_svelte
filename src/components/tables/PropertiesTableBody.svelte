@@ -1,18 +1,18 @@
 <script lang="ts">
   import type { Property } from "../../types";
-  import { dataStore } from "../../stores/store.svelte";
-  import { removeThumbFromUrl } from "../../models/Properties";
-  import { formatDateAndAgo } from "../../utils/datetime";
-  import { formatWithCommas } from "../../utils/numbers";
+  import { dataStore } from "../../lib/stores/store.svelte";
+  import { removeThumbFromUrl } from "../../lib/models/Properties";
+  import { formatDateAndAgo } from "../../lib/utils/datetime";
+  import { formatWithCommas } from "../../lib/utils/numbers";
   import Checkbox from "./general/Checkbox.svelte";
   import CopyableBodyCell from "./general/CopyableBodyCell.svelte";
-  import { trimText } from "../../utils/string";
-  import { parsePaymentFrequency } from "../../utils/paymentFrequency";
+  import { trimText } from "../../lib/utils/string";
+  import { parsePaymentFrequency } from "../../lib/utils/paymentFrequency";
   import {
     parsePropertyAction,
     parsePropertyStatus,
     parsePropertyType,
-  } from "../../utils/properties";
+  } from "../../lib/utils/properties";
 
   interface Props {
     selectedPropertyIds?: Property["id"][];

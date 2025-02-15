@@ -1,7 +1,7 @@
 import L from "leaflet";
 import type { Property } from "../../../types";
-import { markerOptions } from "../../../assets/mapConfigValues";
-import { getIconForProperty } from "../../../utils/propertyIcons";
+import { markerOptions } from "../../../lib/config/map";
+import { getIconForProperty } from "../../../lib/utils/propertyIcons";
 
 export function setAppropriateMarkerIcon(
   marker: L.Marker,

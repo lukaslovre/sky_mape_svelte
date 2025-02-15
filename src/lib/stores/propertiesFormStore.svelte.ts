@@ -1,13 +1,10 @@
-import { getCurrentUser } from "../auth";
-import type { FormFieldType, Property } from "../types";
+import { getCurrentUser } from "../services/pocketbase/auth";
+import type { FormFieldType, Property } from "../../types";
 import { z } from "zod";
 import { parseValueWithSuffix } from "../utils/numbers";
-import { validators } from "./utils/validators";
+import { validators } from "../utils/validators";
 import { paymentFrequencyDropdownOptions } from "../utils/paymentFrequency";
 import {
-  parsePropertyAction,
-  parsePropertyStatus,
-  parsePropertyType,
   propertyActionDropdownOptions,
   propertyStatusDropdownOptions,
   propertyTypeDropdownOptions,

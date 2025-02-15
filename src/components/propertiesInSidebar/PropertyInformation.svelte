@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { dataStore } from "../../stores/store.svelte";
+  import { dataStore } from "../../lib/stores/store.svelte";
   import type { Agent, Property, Client } from "../../types";
-  import { formatDateAndAgo } from "../../utils/datetime";
-  import { getDefaultImageURL } from "../../utils/image";
-  import { formatWithCommas } from "../../utils/numbers";
-  import { parsePaymentFrequency } from "../../utils/paymentFrequency";
-  import { getIconForProperty } from "../../utils/propertyIcons";
+  import { formatDateAndAgo } from "../../lib/utils/datetime";
+  import { getDefaultImageURL } from "../../lib/utils/image";
+  import { formatWithCommas } from "../../lib/utils/numbers";
+  import { parsePaymentFrequency } from "../../lib/utils/paymentFrequency";
+  import { getIconForProperty } from "../../lib/utils/propertyIcons";
   import Label from "../common/Label.svelte";
   import UserContainer from "../common/UserContainer.svelte";
   import InfoRow from "./PropertyInformationComponents/InfoRow.svelte";

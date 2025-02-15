@@ -1,7 +1,7 @@
 import { LatLng } from "leaflet";
-import type { Property, Client } from "../types";
+import type { Property, Client } from "../../types";
 import { latLngIsInPolygon } from "./geo";
-import { FiltersSchema, type Filter } from "../stores/filtersStore.svelte";
+import type { Filter } from "../stores/filtersStore.svelte";
 
 // TODO: napravit lijepo typescript da kad se promjeni u filters nešto da mi svugdje kaže gdje treba promjeniti
 // TODO: Ova cijela datoteka vidjet di se još koristi

@@ -1,11 +1,11 @@
 <script lang="ts">
   import Header from "./components/header/Header.svelte";
-  import Map from "./components/map/Map.svelte";
-  import PropertyPage from "./components/properties/PropertyPage.svelte";
-  import ClientsPage from "./components/clients/ClientsPage.svelte";
-  import OwnersPage from "./components/owners/OwnersPage.svelte";
+  import Map from "./components/pages/Map.svelte";
+  import PropertyPage from "./components/pages/PropertyPage.svelte";
+  import ClientsPage from "./components/pages/ClientsPage.svelte";
+  import OwnersPage from "./components/pages/OwnersPage.svelte";
   import TabMenu from "./components/header/TabMenu.svelte";
-  import { uiStateStore } from "./stores/uiStateStore.svelte";
+  import { uiStateStore } from "./lib/stores/uiStateStore.svelte";
 </script>
 
 <main>

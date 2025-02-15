@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { FormFieldType } from "../../types";
-  import { bytesToHumanReadable } from "../../utils/numbers";
+  import { bytesToHumanReadable } from "../../lib/utils/numbers";
   import Label from "./Label.svelte";
 
   interface Props {

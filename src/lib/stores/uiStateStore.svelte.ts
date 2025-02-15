@@ -1,4 +1,4 @@
-import type { Tabs } from "../types";
+import type { Tabs } from "../../types";
 import { dataStore } from "./store.svelte";
 
 type SidebarCategory = "filters" | "selectedProperty";

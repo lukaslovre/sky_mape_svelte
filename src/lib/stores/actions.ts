@@ -1,6 +1,6 @@
 // actions.js
 import type { LatLngBounds } from "leaflet";
-import type { Property, Client } from "../types";
+import type { Property, Client } from "../../types";
 import { dataStore } from "./store.svelte";
 import { propertyFormStore } from "./propertiesFormStore.svelte";
 

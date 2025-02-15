@@ -1,7 +1,7 @@
 <script lang="ts">
   import DrawIcon from "../../assets/icons/DrawIcon.svelte";
   import Label from "../common/Label.svelte";
-  import { dataStore } from "../../stores/store.svelte";
+  import { dataStore } from "../../lib/stores/store.svelte";
 
   function handleDrawButtonClick() {
     dataStore.isDrawing = !dataStore.isDrawing;

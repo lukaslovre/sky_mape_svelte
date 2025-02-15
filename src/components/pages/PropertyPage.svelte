@@ -1,14 +1,14 @@
 <script lang="ts">
   import type { MenuItem, Property } from "../../types";
-  import { dataStore } from "../../stores/store.svelte";
-  import { sortProperties } from "../../utils/properties";
-  import PropertyForm from "./PropertyForm/PropertyForm.svelte";
+  import { dataStore } from "../../lib/stores/store.svelte";
+  import { sortProperties } from "../../lib/utils/properties";
+  import PropertyForm from "../properties/PropertyForm/PropertyForm.svelte";
   import Header1 from "../common/Header1.svelte";
-  import PropertyMenubar from "./PropertyMenubar.svelte";
-  import { propertyFormStore } from "../../stores/propertiesFormStore.svelte";
-  import { deleteProperty } from "../../models/Properties";
+  import PropertyMenubar from "../properties/PropertyMenubar.svelte";
+  import { propertyFormStore } from "../../lib/stores/propertiesFormStore.svelte";
+  import { deleteProperty } from "../../lib/models/Properties";
   import PropertiesTable from "../tables/PropertiesTable.svelte";
-  import { uiStateStore } from "../../stores/uiStateStore.svelte";
+  import { uiStateStore } from "../../lib/stores/uiStateStore.svelte";
 
   // uiStateStore.propertyFormVisible
 

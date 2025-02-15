@@ -4,11 +4,11 @@
   import ImageInput from "./ImageInput.svelte";
   import Input from "./Input.svelte";
   import Textarea from "./Textarea.svelte";
-  import { propertyFormStore } from "../../stores/propertiesFormStore.svelte";
+  import { propertyFormStore } from "../../lib/stores/propertiesFormStore.svelte";
   import CoordinateSelectionMap from "./CoordinateSelectionMap.svelte";
-  import { getIconForProperty } from "../../utils/propertyIcons";
+  import { getIconForProperty } from "../../lib/utils/propertyIcons";
   import DropdownFormFieldWrapped from "./DropdownFormFieldWrapped.svelte";
-  import { dataStore } from "../../stores/store.svelte";
+  import { dataStore } from "../../lib/stores/store.svelte";
 
   interface Props {
     onSubmit: () => Promise<boolean>;

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { removeThumbFromUrl } from "../../../models/Properties";
+  import { removeThumbFromUrl } from "../../../lib/models/Properties";
 
   interface Props {
     imageUrl: string;

@@ -3,11 +3,11 @@ import {
   propertyMatchesFilter,
   usersMatchingProperties,
 } from "../utils/filter";
-import type { Property, Client, Agent } from "../types";
+import type { Property, Client, Agent } from "../../types";
 import { LatLngBounds } from "leaflet";
 import { getProperties } from "../models/Properties";
 import { getUsers } from "../models/Clients";
-import { emptyBoundsObject, getBoundsReducer } from "./utils/bounds";
+import { emptyBoundsObject, getBoundsReducer } from "../utils/bounds";
 import { getAgentsFromDb } from "../models/Agents";
 import { FiltersSchemaWithDefaults, filtersStore } from "./filtersStore.svelte";
 import { propertyFormStore } from "./propertiesFormStore.svelte";

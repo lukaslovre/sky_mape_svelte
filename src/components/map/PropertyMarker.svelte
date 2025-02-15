@@ -2,11 +2,11 @@
   import { Marker, Popup } from "sveaflet";
   import type { Property } from "../../types";
   import { Icon, LatLng } from "leaflet";
-  import { dataStore } from "../../stores/store.svelte";
-  import { markerOptions } from "../../assets/mapConfigValues";
+  import { dataStore } from "../../lib/stores/store.svelte";
+  import { markerOptions } from "../../lib/config/map";
   import PropertyCard from "../properties/PropertyCard.svelte";
-  import { getIconForProperty } from "../../utils/propertyIcons";
-  import { toggleSelectedProperty } from "../../stores/actions";
+  import { getIconForProperty } from "../../lib/utils/propertyIcons";
+  import { toggleSelectedProperty } from "../../lib/stores/actions";
 
   interface Props {
     property: Property;

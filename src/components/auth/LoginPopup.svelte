@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { authorizeWithUserAndPass } from "../../auth";
+  import { authorizeWithUserAndPass } from "../../lib/services/pocketbase/auth";
   import ButtonPrimary from "../common/ButtonPrimary.svelte";
 
   let username: string = $state("");

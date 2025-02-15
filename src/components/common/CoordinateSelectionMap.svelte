@@ -10,7 +10,7 @@
 
 <script lang="ts">
   import { Map, Marker, TileLayer } from "sveaflet";
-  import { mapOptions, markerOptions } from "../../assets/mapConfigValues";
+  import { mapOptions, markerOptions } from "../../lib/config/map";
   import L from "leaflet";
 
   interface Props {

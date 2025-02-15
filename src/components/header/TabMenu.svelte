@@ -1,14 +1,14 @@
 <script lang="ts">
   import type { Tabs } from "../../types";
-  import { userIsAuthenticated } from "../../auth";
-  import { uiStateStore, tabsList } from "../../stores/uiStateStore.svelte";
+  import { userIsAuthenticated } from "../../lib/services/pocketbase/auth";
+  import { uiStateStore, tabsList } from "../../lib/stores/uiStateStore.svelte";
 
   import MapIcon from "../../assets/icons/MapIcon.svelte";
   import HouseIcon from "../../assets/icons/HouseIcon.svelte";
   import PeopleIcon from "../../assets/icons/PeopleIcon.svelte";
   // import MessageIcon from "../../assets/icons/MessageIcon.svelte";
   import KeyIcon from "../../assets/icons/KeyIcon.svelte";
-  import { dataStore } from "../../stores/store.svelte";
+  import { dataStore } from "../../lib/stores/store.svelte";
 
   // Define the structure for each tab's configuration
   type TabConfig = {

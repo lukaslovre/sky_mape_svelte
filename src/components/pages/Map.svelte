@@ -5,21 +5,21 @@
     addTemporaryProperty,
     saveLatLngToClipboard,
     isClickNearStart,
-  } from "./utils/mapUtils";
-  import { dataStore } from "../../stores/store.svelte";
-  import DrawnPolygonsList from "./overlays/DrawnPolygonsList.svelte";
+  } from "../map/utils/mapUtils";
+  import { dataStore } from "../../lib/stores/store.svelte";
+  import DrawnPolygonsList from "../map/overlays/DrawnPolygonsList.svelte";
   import { Map, TileLayer } from "sveaflet";
-  import { mapOptions } from "../../assets/mapConfigValues";
+  import { mapOptions } from "../../lib/config/map";
   import {
     fitViewToFilteredProperties,
     resetSelectedProperties,
-  } from "../../stores/actions";
-  import FitBoundsButton from "./overlays/FitBoundsButton.svelte";
-  import ShowUserPolygonsButton from "./overlays/ShowUserPolygonsButton.svelte";
-  import PropertyMarkers from "./PropertyMarkers.svelte";
-  import DrawnPolygons from "./DrawnPolygons.svelte";
-  import UserPolygons from "./UserPolygons.svelte";
-  import { filtersStore } from "../../stores/filtersStore.svelte";
+  } from "../../lib/stores/actions";
+  import FitBoundsButton from "../map/overlays/FitBoundsButton.svelte";
+  import ShowUserPolygonsButton from "../map/overlays/ShowUserPolygonsButton.svelte";
+  import PropertyMarkers from "../map/PropertyMarkers.svelte";
+  import DrawnPolygons from "../map/DrawnPolygons.svelte";
+  import UserPolygons from "../map/UserPolygons.svelte";
+  import { filtersStore } from "../../lib/stores/filtersStore.svelte";
 
   let mapInstance: L.Map | undefined = $state();
   let drawingPolygonCoords: LatLng[] = $state([]);

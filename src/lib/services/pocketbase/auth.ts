@@ -1,5 +1,5 @@
-import { pb } from "../PocketBaseInit";
-import type { Agent } from "../types";
+import { pb } from "./client";
+import type { Agent } from "../../../types";
 
 export function userIsAuthenticated(): boolean {
   return pb.authStore.isValid;

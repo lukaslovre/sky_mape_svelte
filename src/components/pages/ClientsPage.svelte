@@ -1,27 +1,28 @@
 <script lang="ts">
-  import { deleteUser } from "../../models/Clients";
-  import { clientFormStore } from "../../stores/clientsFormStore.svelte";
-  import { dataStore } from "../../stores/store.svelte";
-  import { uiStateStore } from "../../stores/uiStateStore.svelte";
   import type { Client, MenuItem } from "../../types";
-  import ClientForm from "../clients/ClientForm.svelte";
-  import ClientsMenubar from "../clients/ClientsMenubar.svelte";
+  import { dataStore } from "../../lib/stores/store.svelte";
   import Header1 from "../common/Header1.svelte";
-  import OwnersTable from "../tables/OwnersTable.svelte";
+  import ClientForm from "../clients/ClientForm.svelte";
+  import { deleteUser } from "../../lib/models/Clients";
+  import ClientsMenubar from "../clients/ClientsMenubar.svelte";
+  import ClientsTable from "../tables/ClientsTable.svelte";
+  import { clientFormStore } from "../../lib/stores/clientsFormStore.svelte";
+  import { uiStateStore } from "../../lib/stores/uiStateStore.svelte";
+  import { filtersStore } from "../../lib/stores/filtersStore.svelte";
 
   $effect(() => {
-    removeUnfilteredOwnersFromSelection(dataStore.filteredOwners);
+    removeUnfilteredClientsFromSelection(dataStore.filteredUsers);
   });
 
-  function removeUnfilteredOwnersFromSelection(filteredUsers: Client[]) {
-    // Remove owners that are no longer in the filteredOwners store
-    const newSelectedOwnerIds = dataStore.selectedOwnerIds.filter((id) => {
-      return filteredUsers.some((client) => client.id === id);
+  function removeUnfilteredClientsFromSelection(filteredClients: Client[]) {
+    // Remove clients that are no longer in the filteredUsers store
+    const newSelectedClientIds = dataStore.selectedClientIds.filter((id) => {
+      return filteredClients.some((client) => client.id === id);
     });
 
     // Check if actually changed
-    if (newSelectedOwnerIds.length !== dataStore.selectedOwnerIds.length) {
-      dataStore.selectedOwnerIds = newSelectedOwnerIds;
+    if (newSelectedClientIds.length !== dataStore.selectedClientIds.length) {
+      dataStore.selectedClientIds = newSelectedClientIds;
     }
   }
 
@@ -64,8 +65,9 @@
       clientFormStore.resetForm();
     }
 
-    clientFormStore.setFieldValue("userType", ["seller"]);
-    uiStateStore.ownerFormVisible = true;
+    filtersStore.belongsToClientId = undefined;
+    clientFormStore.setFieldValue("userType", ["buyer"]);
+    uiStateStore.clientFormVisible = true;
   }
 
   // Alerts that saving as table is not implemented
@@ -73,11 +75,10 @@
     alert(`"Spremi kao tablicu" još nije implementirano.`);
   }
 
-  // Handles editing of a selected owner
+  // Handles editing of a selected property
   function handleEdit() {
     const clientIdField = clientFormStore.getFieldByDatabaseFieldName("id")?.value;
-
-    const selectedClient = findSelectedOwner(dataStore.selectedOwnerIds[0]);
+    const selectedClient = findSelectedClient(dataStore.selectedClientIds[0]);
 
     if (selectedClient) {
       if (clientIdField !== selectedClient.id) {
@@ -86,66 +87,66 @@
         clientFormStore.setFieldValuesFromClientObject(selectedClient);
       }
 
-      uiStateStore.ownerFormVisible = true;
+      uiStateStore.clientFormVisible = true;
     }
   }
 
-  // Deletes selected owners
+  // Deletes selected properties
   function handleDelete() {
     const confirmDeletion = window.confirm(
-      `Are you sure you want to delete ${dataStore.selectedOwnerIds.length} selected clients?`
+      `Are you sure you want to delete ${dataStore.selectedClientIds.length} selected clients?`
     );
     if (!confirmDeletion) return;
 
-    const promises = dataStore.selectedOwnerIds.map((id) => deleteUser(id));
+    const promises = dataStore.selectedClientIds.map((id) => deleteUser(id));
 
     Promise.all(promises)
       .then(() => {
-        alert("Svi odabrani vlasnici su uspješno obrisani.");
+        alert("Svi odabrani kupci su uspješno obrisani.");
       })
       .catch((err) => {
         console.error("Error deleting clients:", err);
-        alert("Barem jedan odabrani vlasnik NIJE obrisan.");
+        alert("Barem jedan odabrani kupac nije obrisan.");
       });
   }
 
-  function findSelectedOwner(id: string) {
-    return dataStore.filteredOwners.find((owner) => owner.id === id);
+  function findSelectedClient(id: string) {
+    return dataStore.filteredUsers.find((user) => user.id === id);
   }
 
-  function handleCheckboxClick(ownerid: Client["id"], newState: boolean): void {
+  function handleCheckboxClick(clientId: Client["id"], newState: boolean): void {
     // True = ON, False = OFF
     if (newState) {
-      if (!dataStore.selectedOwnerIds.includes(ownerid)) {
-        dataStore.selectedOwnerIds.push(ownerid);
+      if (!dataStore.selectedClientIds.includes(clientId)) {
+        dataStore.selectedClientIds.push(clientId);
       }
     } else {
-      dataStore.selectedOwnerIds = dataStore.selectedOwnerIds.filter(
-        (id) => id !== ownerid
+      dataStore.selectedClientIds = dataStore.selectedClientIds.filter(
+        (id) => id !== clientId
       );
     }
   }
 </script>
 
-<div class="owners-container">
-  <Header1>Popis vlasnika</Header1>
+<div class="buyers-container">
+  <Header1>Popis kupaca</Header1>
 
-  {#if !uiStateStore.ownerFormVisible}
+  {#if !uiStateStore.clientFormVisible}
     <ClientsMenubar
-      selectedClientsLength={dataStore.selectedOwnerIds.length}
+      selectedClientsLength={dataStore.selectedClientIds.length}
       onMenuItemClick={handleMenuItemClick}
     />
 
-    <OwnersTable
+    <ClientsTable
       showHeader={true}
-      data={dataStore.filteredOwners}
+      data={dataStore.filteredUsers}
       {handleCheckboxClick}
-      selectedOwnerIds={dataStore.selectedOwnerIds}
+      selectedClientIds={dataStore.selectedClientIds}
     />
   {:else}
     <ClientForm
       close={() => {
-        uiStateStore.ownerFormVisible = false;
+        uiStateStore.clientFormVisible = false;
         clientFormStore.resetForm();
       }}
     />
@@ -153,7 +154,7 @@
 </div>
 
 <style>
-  .owners-container {
+  .buyers-container {
     padding: 2.5rem;
 
     display: flex;

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { fitViewToFilteredProperties } from "../../../stores/actions";
+  import { fitViewToFilteredProperties } from "../../../lib/stores/actions";
 
   interface Props {
     mapInstance: L.Map | undefined;

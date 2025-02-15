@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Property } from "../../../types";
-  import { getDefaultImageURL } from "../../../utils/image";
-  import { getAttributesForProperty } from "../../../utils/properties";
+  import { getDefaultImageURL } from "../../../lib/utils/image";
+  import { getAttributesForProperty } from "../../../lib/utils/properties";
 
   interface Props {
     property: Property;

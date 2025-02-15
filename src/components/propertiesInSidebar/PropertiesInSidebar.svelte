@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { dataStore } from "../../stores/store.svelte";
+  import { dataStore } from "../../lib/stores/store.svelte";
   import type { Property } from "../../types";
   import Close from "../common/Close.svelte";
   import UserContainer from "../common/UserContainer.svelte";

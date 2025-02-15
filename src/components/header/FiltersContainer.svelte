@@ -2,16 +2,16 @@
   import MinMaxInput from "./MinMaxInput.svelte";
   import ResetIcon from "../../assets/icons/ResetIcon.svelte";
   import LocationInput from "./LocationInput.svelte";
-  import { dataStore } from "../../stores/store.svelte";
+  import { dataStore } from "../../lib/stores/store.svelte";
   import Dropdown from "../common/Dropdown.svelte";
-  import { filtersStore, type Filter } from "../../stores/filtersStore.svelte";
-  import { parseValueWithSuffix } from "../../utils/numbers";
-  import { uiStateStore } from "../../stores/uiStateStore.svelte";
+  import { filtersStore, type Filter } from "../../lib/stores/filtersStore.svelte";
+  import { parseValueWithSuffix } from "../../lib/utils/numbers";
+  import { uiStateStore } from "../../lib/stores/uiStateStore.svelte";
   import {
     propertyActionDropdownOptions,
     propertyStatusDropdownOptions,
     propertyTypeDropdownOptions,
-  } from "../../utils/properties";
+  } from "../../lib/utils/properties";
   import FiltersBelongingToUser from "./FiltersBelongingToUser.svelte";
   import SegmentedButton from "../common/SegmentedButton.svelte";
   import HomeCircle from "../../assets/icons/mapMarkerCircles/HouseCircle.svelte";

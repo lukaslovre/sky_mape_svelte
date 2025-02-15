@@ -1,5 +1,5 @@
-import type { Client } from "../types";
-import { pb } from "../PocketBaseInit";
+import type { Client } from "../../types";
+import { pb } from "../services/pocketbase/client";
 import { handlePocketbaseError } from "./errorHandling";
 import {
   addClientToStore,

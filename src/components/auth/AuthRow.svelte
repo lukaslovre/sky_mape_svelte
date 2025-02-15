@@ -1,5 +1,8 @@
 <script lang="ts">
-  import { getCurrentUser, userIsAuthenticated } from "../../auth";
+  import {
+    getCurrentUser,
+    userIsAuthenticated,
+  } from "../../lib/services/pocketbase/auth";
   import LoginPopup from "./LoginPopup.svelte";
   import UserDisplay from "./UserDisplay.svelte";
 

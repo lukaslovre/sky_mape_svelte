@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { logOut } from "../../auth";
+  import { logOut } from "../../lib/services/pocketbase/auth";
   import type { Agent } from "../../types";
 
   interface Props {

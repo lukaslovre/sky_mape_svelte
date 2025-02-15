@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { uiStateStore } from "../../stores/uiStateStore.svelte";
+  import { uiStateStore } from "../../lib/stores/uiStateStore.svelte";
   import AuthRow from "../auth/AuthRow.svelte";
   import PropertiesInSidebar from "../propertiesInSidebar/PropertiesInSidebar.svelte";
   import FiltersContainer from "./FiltersContainer.svelte";

@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { ParsedError } from "../../../models/errorHandling";
-  import { addProperty } from "../../../models/Properties";
-  import { propertyFormStore } from "../../../stores/propertiesFormStore.svelte";
+  import type { ParsedError } from "../../../lib/models/errorHandling";
+  import { addProperty } from "../../../lib/models/Properties";
+  import { propertyFormStore } from "../../../lib/stores/propertiesFormStore.svelte";
   import Form from "../../common/Form.svelte";
 
   interface Props {

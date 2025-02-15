@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { createUser } from "../../models/Clients";
+  import { createUser } from "../../lib/models/Clients";
   import FormClient from "../common/FormClient.svelte";
-  import { clientFormStore } from "../../stores/clientsFormStore.svelte";
-  import type { ParsedError } from "../../models/errorHandling";
+  import { clientFormStore } from "../../lib/stores/clientsFormStore.svelte";
+  import type { ParsedError } from "../../lib/models/errorHandling";
 
   interface Props {
     close: () => void;

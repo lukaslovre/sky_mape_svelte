@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { parseValueWithSuffix } from "../../utils/numbers";
+  import { parseValueWithSuffix } from "../../lib/utils/numbers";
   import Label from "../common/Label.svelte";
 
   interface Props {

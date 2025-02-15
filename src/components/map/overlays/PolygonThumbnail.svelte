@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Filter } from "../../../stores/filtersStore.svelte";
+  import type { Filter } from "../../../lib/stores/filtersStore.svelte";
 
   interface Props {
     polygon?: Filter["polygons"][0];

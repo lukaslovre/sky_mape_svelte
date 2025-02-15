@@ -3,11 +3,11 @@
   import Close from "./Close.svelte";
   import Input from "./Input.svelte";
   import Textarea from "./Textarea.svelte";
-  import { clientFormStore } from "../../stores/clientsFormStore.svelte";
+  import { clientFormStore } from "../../lib/stores/clientsFormStore.svelte";
   import DropdownFormFieldWrapped from "./DropdownFormFieldWrapped.svelte";
   import ActiveFiltersDisplayInForm from "../clients/ActiveFiltersDisplayInForm.svelte";
   import ActiveFavoritedPropertiesDisplayInForm from "../clients/ActiveFavoritedPropertiesDisplayInForm.svelte";
-  import { filtersStore } from "../../stores/filtersStore.svelte";
+  import { filtersStore } from "../../lib/stores/filtersStore.svelte";
 
   interface Props {
     onSubmit: () => Promise<boolean>;

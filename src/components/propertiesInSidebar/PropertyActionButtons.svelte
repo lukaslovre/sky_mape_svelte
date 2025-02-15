@@ -2,7 +2,7 @@
   import InternetIcon from "../../assets/icons/InternetIcon.svelte";
   import StarIcon from "../../assets/icons/StarIcon.svelte";
 
-  import { dataStore } from "../../stores/store.svelte";
+  import { dataStore } from "../../lib/stores/store.svelte";
   import type { Property } from "../../types";
 
   interface Props {

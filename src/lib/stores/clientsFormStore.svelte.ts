@@ -1,8 +1,8 @@
-import { getCurrentUser } from "../auth";
-import type { Client, FormFieldType } from "../types";
-import { FiltersSchemaWithDefaults, filtersStore } from "./filtersStore.svelte";
+import { getCurrentUser } from "../services/pocketbase/auth";
+import type { Client, FormFieldType } from "../../types";
+import { filtersStore } from "./filtersStore.svelte";
 import { dataStore } from "./store.svelte";
-import { validators } from "./utils/validators";
+import { validators } from "../utils/validators";
 
 // type FormFieldType<T> = {
 //   label: string;

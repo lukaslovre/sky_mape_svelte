@@ -1,6 +1,6 @@
 import type { LatLng } from "leaflet";
 import type { RecordModel } from "pocketbase";
-import type { Filter } from "./stores/filtersStore.svelte";
+import type { Filter } from "./lib/stores/filtersStore.svelte";
 
 //////////////
 // Pocketbase Collection Types/Schemas

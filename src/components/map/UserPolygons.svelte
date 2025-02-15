@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Polygon } from "sveaflet";
-  import { dataStore } from "../../stores/store.svelte";
+  import { dataStore } from "../../lib/stores/store.svelte";
   import { getColorForUser } from "./utils/userUtils";
 </script>
 

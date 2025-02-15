@@ -1,4 +1,4 @@
-import type { Property } from "../types";
+import type { Property } from "../../types";
 
 type OnlyNeededPropertyAttributes = Pick<Property, "type" | "hiddenOnWebsite" | "id">;
 

@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { LatLng } from "leaflet";
   import { Polygon } from "sveaflet";
-  import { filtersStore } from "../../stores/filtersStore.svelte";
+  import { filtersStore } from "../../lib/stores/filtersStore.svelte";
   import CirclesOnPolygonEdges from "./CirclesOnPolygonEdges.svelte";
 
   interface Props {

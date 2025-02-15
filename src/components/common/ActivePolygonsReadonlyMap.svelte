@@ -1,9 +1,8 @@
 <script lang="ts">
   import { Map, Polygon, TileLayer } from "sveaflet";
-  import { mapOptions } from "../../assets/mapConfigValues";
-
-  import { filtersStore } from "../../stores/filtersStore.svelte";
-  import { getBoundsForBounds } from "../../stores/utils/bounds";
+  import { mapOptions } from "../../lib/config/map";
+  import { filtersStore } from "../../lib/stores/filtersStore.svelte";
+  import { getBoundsForBounds } from "../../lib/utils/bounds";
   import { Polyline } from "leaflet";
 
   //   interface Props {}

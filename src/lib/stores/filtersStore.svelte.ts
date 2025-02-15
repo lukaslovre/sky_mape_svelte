@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Client } from "../types";
+import type { Client } from "../../types";
 
 export const FiltersSchema = z.object({
   maxArea: z.coerce.number(),

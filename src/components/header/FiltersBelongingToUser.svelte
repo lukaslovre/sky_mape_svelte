@@ -2,10 +2,10 @@
   import CheckmarkIcon from "../../assets/icons/CheckmarkIcon.svelte";
   import SaveIcon from "../../assets/icons/SaveIcon.svelte";
   import XIcon from "../../assets/icons/xIcon.svelte";
-  import { createUser } from "../../models/Clients";
-  import { clientFormStore } from "../../stores/clientsFormStore.svelte";
-  import { filtersStore } from "../../stores/filtersStore.svelte";
-  import { uiStateStore } from "../../stores/uiStateStore.svelte";
+  import { createUser } from "../../lib/models/Clients";
+  import { clientFormStore } from "../../lib/stores/clientsFormStore.svelte";
+  import { filtersStore } from "../../lib/stores/filtersStore.svelte";
+  import { uiStateStore } from "../../lib/stores/uiStateStore.svelte";
   import type { Client } from "../../types";
   import FilterDiffs from "./FilterDiffs.svelte";
 

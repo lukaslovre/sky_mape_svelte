@@ -1,11 +1,7 @@
 <script lang="ts">
-  import { pocketbaseUrl } from "../../PocketBaseInit";
-  import { dataStore } from "../../stores/store.svelte";
   import type { Property } from "../../types";
-  import { getDefaultImageURL } from "../../utils/image";
-  import { formatWithCommas } from "../../utils/numbers";
-  import { parsePaymentFrequency } from "../../utils/paymentFrequency";
-  import { getAttributesForProperty } from "../../utils/properties";
+  import { getDefaultImageURL } from "../../lib/utils/image";
+  import { getAttributesForProperty } from "../../lib/utils/properties";
 
   interface Props {
     property: Property;

@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { filtersStore } from "../../stores/filtersStore.svelte";
-  import { uiStateStore } from "../../stores/uiStateStore.svelte";
-  import { formatWithCommas } from "../../utils/numbers";
+  import { filtersStore } from "../../lib/stores/filtersStore.svelte";
+  import { uiStateStore } from "../../lib/stores/uiStateStore.svelte";
+  import { formatWithCommas } from "../../lib/utils/numbers";
   import ActivePolygonsReadonlyMap from "../common/ActivePolygonsReadonlyMap.svelte";
 
   let filters = $derived(filtersStore.filters);

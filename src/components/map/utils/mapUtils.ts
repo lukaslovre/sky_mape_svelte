@@ -1,5 +1,5 @@
 import { LatLng, type LeafletMouseEvent } from "leaflet";
-import { dataStore } from "../../../stores/store.svelte";
+import { dataStore } from "../../../lib/stores/store.svelte";
 
 /**
  * Handles adding clicks to polygons based on the drawing state.
@@ -55,6 +55,7 @@ export function addTemporaryProperty(e: LeafletMouseEvent): void {
       lng: e.latlng.lng,
       type: "House",
       price: 0,
+      paymentFrequency: null,
       // description: "",
       action: "Sale",
       imgUrl: [""],

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { FilterDifferences } from "../../stores/filtersStore.svelte";
+  import type { FilterDifferences } from "../../lib/stores/filtersStore.svelte";
 
   interface Props {
     filterDiffs: FilterDifferences | undefined | null;
