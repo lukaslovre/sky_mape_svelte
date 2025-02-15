@@ -149,7 +149,8 @@
   }
 
   .placeholder p {
-    color: #888888;
+    color: hsl(0, 0%, 60%);
+    font-weight: 500;
     font-size: 0.875rem;
   }
 

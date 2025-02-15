@@ -192,9 +192,6 @@
     opacity: 0.5;
     pointer-events: none;
   }
-  .dropdown-input.none-selected .dropdown-input-current {
-    color: hsl(0, 0%, 50%);
-  }
 
   .error {
     color: #ff0000;
@@ -217,13 +214,16 @@
     box-shadow: 0 2px 1px rgba(0, 0, 0, 0.05);
     background-color: #ffffff;
     font-size: 0.875rem;
-    font-weight: 400;
+    font-weight: 500;
     color: #1a1a1a;
 
     cursor: pointer;
     transition:
       outline 75ms ease-out,
       border 75ms ease-out;
+  }
+  .dropdown-input.none-selected .dropdown-input-current {
+    color: hsl(0, 0%, 60%);
   }
 
   .dropdown-input-current:hover {

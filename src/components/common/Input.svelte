@@ -113,7 +113,7 @@
     background-color: #ffffff;
 
     font-size: 0.875rem;
-    font-weight: 400;
+    font-weight: 500;
     color: #1a1a1a;
 
     transition:
@@ -126,7 +126,7 @@
   }
 
   input::placeholder {
-    color: hsl(0, 0%, 66%);
+    color: hsl(0, 0%, 60%);
   }
 
   input:hover {
