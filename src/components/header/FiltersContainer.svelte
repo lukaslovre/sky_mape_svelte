@@ -13,6 +13,13 @@
     propertyTypeDropdownOptions,
   } from "../../utils/properties";
   import FiltersBelongingToUser from "./FiltersBelongingToUser.svelte";
+  import SegmentedButton from "../common/SegmentedButton.svelte";
+  import HomeCircle from "../../assets/icons/mapMarkerCircles/HouseCircle.svelte";
+  import ApartmentCircle from "../../assets/icons/mapMarkerCircles/ApartmentCircle.svelte";
+  import CommercialCircle from "../../assets/icons/mapMarkerCircles/CommercialCircle.svelte";
+  import LandCircle from "../../assets/icons/mapMarkerCircles/LandCircle.svelte";
+  import type { Component } from "svelte";
+  import HouseCircle from "../../assets/icons/mapMarkerCircles/HouseCircle.svelte";
 
   $inspect(filtersStore.filters);
 
@@ -35,16 +42,21 @@
         idMin: keyof Filter;
       }
     | {
+        type: "segmented";
+        label: string;
+        id: keyof Filter;
+        options: { label: string | Component; value: string }[];
+      }
+    | {
         type: "divider";
       };
 
-  function resetValues() {
-    filtersStore.resetFilters();
-  }
-
-  function emptyFavoriteProperties() {
-    dataStore.resetFavoriteProperties();
-  }
+  const propertyTypeSegmentedIconOptions: { label: Component; value: string }[] = [
+    { label: HouseCircle, value: "House" },
+    { label: ApartmentCircle, value: "Apartment" },
+    { label: CommercialCircle, value: "Commercial" },
+    { label: LandCircle, value: "Land" },
+  ];
 
   let agentsOptions: { label: string; value: string }[] = $derived(
     dataStore.agents.map((agent) => {
@@ -54,13 +66,13 @@
 
   let inputs: InputType[] = $derived([
     {
-      type: "dropdown",
+      type: "segmented",
       label: "Tip nekretnine",
       id: "type",
-      options: propertyTypeDropdownOptions,
+      options: propertyTypeSegmentedIconOptions,
     },
     {
-      type: "dropdown",
+      type: "segmented",
       label: "Akcija",
       id: "action",
       options: propertyActionDropdownOptions,
@@ -81,7 +93,7 @@
       type: "divider",
     },
     {
-      type: "dropdown",
+      type: "segmented",
       label: "Vidljivost",
       id: "visibility",
       options: [
@@ -90,7 +102,7 @@
       ],
     },
     {
-      type: "dropdown",
+      type: "segmented",
       label: "Status",
       id: "status",
       options: propertyStatusDropdownOptions,
@@ -102,6 +114,17 @@
       options: agentsOptions,
     },
   ]);
+
+  function resetValues() {
+    filtersStore.resetFilters();
+  }
+
+  function emptyFavoriteProperties() {
+    dataStore.resetFavoriteProperties();
+  }
+
+  // temp
+  let selectedSegmentedValues: string[] = $state([]);
 </script>
 
 <div class="filters-container" class:highlight={uiStateStore.highlightFiltersContainer}>
@@ -135,8 +158,19 @@
     {#each inputs as input}
       {#if input.type === "dropdown"}
         <Dropdown
-          label={input.label}
           id={input.id}
+          label={input.label}
+          options={input.options}
+          selectedValues={filtersStore.filters[input.id] as string[]}
+          onValueChange={(newValues: string[]) => {
+            filtersStore.setField(input.id, newValues);
+          }}
+          multipleValues={true}
+        />
+      {:else if input.type === "segmented"}
+        <SegmentedButton
+          id={input.id}
+          label={input.label}
           options={input.options}
           selectedValues={filtersStore.filters[input.id] as string[]}
           onValueChange={(newValues: string[]) => {

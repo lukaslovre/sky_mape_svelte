@@ -64,6 +64,7 @@
       // If agency_id field is not empty, reset the form
       clientFormStore.resetForm();
     }
+
     filtersStore.belongsToClientId = undefined;
     clientFormStore.setFieldValue("userType", ["buyer"]);
     uiStateStore.clientFormVisible = true;
