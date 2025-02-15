@@ -71,13 +71,13 @@
     height: 2.5rem;
     padding: 0 1rem;
 
+    background-color: #ffffff;
     outline: 1px solid transparent;
     border: 1px solid #cccccc;
     box-shadow: 0 2px 1px rgba(0, 0, 0, 0.05);
-    background-color: #ffffff;
 
     font-size: 0.875rem;
-    font-weight: 400;
+    font-weight: 500;
     color: #1a1a1a; /* hsl(0, 0%, 10%); */
 
     transition:
@@ -87,6 +87,7 @@
 
   input.empty {
     color: hsl(0, 0%, 50%);
+    background-color: transparent;
   }
 
   .inputsContainer input:first-child {
