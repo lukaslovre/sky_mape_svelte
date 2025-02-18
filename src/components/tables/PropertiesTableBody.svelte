@@ -129,7 +129,7 @@
             {parseVisibility(property)}
           {:else if ["agent_id", "ownerId"].includes(column as string)}
             {parseId(property, column)}
-          {:else if column === "created"}
+          {:else if ["created", "updated"].includes(column as string)}
             {parseDate(property[column])}
           {:else if ["propertyNotes", "sellerNotes"].includes(column as string)}
             {trimText(property[column], 100)}

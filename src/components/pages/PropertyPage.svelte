@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { MenuItem, Property } from "../../types";
   import { dataStore } from "../../lib/stores/store.svelte";
-  import { sortProperties } from "../../lib/utils/properties";
   import PropertyForm from "../properties/PropertyForm/PropertyForm.svelte";
   import Header1 from "../common/Header1.svelte";
   import PropertyMenubar from "../properties/PropertyMenubar.svelte";
@@ -10,25 +9,19 @@
   import PropertiesTable from "../tables/PropertiesTable.svelte";
   import { uiStateStore } from "../../lib/stores/uiStateStore.svelte";
 
-  // uiStateStore.propertyFormVisible
-
   // Property sorting
   const sortOptions: (keyof Property)[] = [
-    "created",
+    "updated",
     "surfaceArea",
     "price",
     "bathrooms",
     "bedrooms",
   ];
-  let sortOptionIndex: number = $state(0);
+  let sortOptionIndex: number = $derived(sortOptions.indexOf(dataStore.propertySortKey));
 
   function cycleSortOption() {
-    sortOptionIndex = (sortOptionIndex + 1) % sortOptions.length;
+    dataStore.propertySortKey = sortOptions[(sortOptionIndex + 1) % sortOptions.length];
   }
-
-  let sortedProperties = $derived(
-    sortProperties(dataStore.filteredProperties, sortOptions[sortOptionIndex])
-  );
 
   $effect(() => {
     removeUnfilteredPropertiesFromSelection(dataStore.filteredProperties);
@@ -188,7 +181,7 @@
     <!-- TODO: mozda napravit generalnu table komponentu koja prima selectedFieldIds -->
     <PropertiesTable
       showHeader={true}
-      data={sortedProperties}
+      data={dataStore.filteredProperties}
       {handleCheckboxClick}
       selectedPropertyIds={dataStore.selectedPropertyIds}
       sortOptionField={sortOptions[sortOptionIndex]}

@@ -107,6 +107,11 @@
       visible: true,
     },
     {
+      key: "updated",
+      label: "Ažurirano",
+      visible: true,
+    },
+    {
       key: "id",
       label: "ID",
       visible: false,
@@ -119,11 +124,6 @@
     {
       key: "lng",
       label: "Longituda",
-      visible: false,
-    },
-    {
-      key: "updated",
-      label: "Ažurirano",
       visible: false,
     },
     {

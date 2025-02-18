@@ -11,6 +11,7 @@ import { emptyBoundsObject, getBoundsReducer } from "../utils/bounds";
 import { getAgentsFromDb } from "../models/Agents";
 import { FiltersSchemaWithDefaults, filtersStore } from "./filtersStore.svelte";
 import { propertyFormStore } from "./propertiesFormStore.svelte";
+import { sortProperties } from "../utils/properties";
 
 class DataStore {
   ////////
@@ -27,18 +28,27 @@ class DataStore {
   focusedPropertyId = $state<Property["id"] | null>(null);
 
   favoriteProperties = $state<Property["id"][]>([]);
+
   isDrawing = $state<boolean>(false);
+  propertySortKey = $state<keyof Property>("updated");
 
   ////////
   // Derived values
   ////////
 
   filteredProperties = $derived.by<Property[]>(() => {
-    if (filtersStore.isEmpty()) return this.properties;
+    let rawProperties: Property[] = [];
 
-    return this.properties.filter((property) =>
-      propertyMatchesFilter(property, filtersStore.filters)
-    );
+    if (filtersStore.isEmpty()) {
+      rawProperties = this.properties;
+    } else {
+      rawProperties = this.properties.filter((property) =>
+        propertyMatchesFilter(property, filtersStore.filters)
+      );
+    }
+
+    // Sort the properties
+    return sortProperties(rawProperties, this.propertySortKey);
   });
 
   filteredUsers = $derived.by<Client[]>(() => {
