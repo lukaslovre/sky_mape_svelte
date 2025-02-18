@@ -77,7 +77,7 @@
 <Marker
   latLng={new LatLng(property.lat, property.lng)}
   options={{
-    opacity: dataStore.filteredProperties.includes(property) ? 1 : 0.25,
+    // opacity: dataStore.filteredProperties.includes(property) ? 1 : 0.25, // Before the non-filtered properties were lower opacity
     ...markerOptions,
   }}
   bind:instance={markerInstance}

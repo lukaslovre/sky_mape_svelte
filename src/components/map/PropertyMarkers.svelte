@@ -4,6 +4,6 @@
 </script>
 
 <!-- Iterate over each property and render a Marker -->
-{#each dataStore.properties as property (property.id)}
+{#each dataStore.filteredProperties as property (property.id)}
   <PropertyMarker {property} />
 {/each}
