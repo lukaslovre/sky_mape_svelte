@@ -74,6 +74,28 @@
   function parseDate(dateString: string): string {
     return formatDateAndAgo(new Date(dateString));
   }
+
+  function tableCellClasses(column: keyof Property): string {
+    const classes: string[] = [];
+
+    // Determine sorting class
+    if (column === sortOptionField) {
+      classes.push("isSorting");
+    }
+
+    // Width classes
+    const minColumns = ["type", "bedrooms", "bathrooms", "websiteUrl"];
+    if (minColumns.includes(column as string)) {
+      classes.push("minWidth");
+    }
+
+    const readableColumns = ["propertyNotes", "sellerNotes"];
+    if (readableColumns.includes(column as string)) {
+      classes.push("readable");
+    }
+
+    return classes.join(" ");
+  }
 </script>
 
 <!-- Table Body -->
@@ -91,7 +113,12 @@
 
       <!-- Other, Dynamic Columns -->
       {#each columnsKeys as column}
-        <td class:isSorting={column === sortOptionField}>
+        <td
+          class={tableCellClasses(column)}
+          title={["propertyNotes", "sellerNotes"].includes(column as string)
+            ? property[column]
+            : ""}
+        >
           {#if !property[column] && typeof property[column] !== "boolean"}
             <span class="empty">N/A</span>
           {:else if column === "price"}
@@ -161,6 +188,15 @@
     border-right: 1px solid hsl(0, 0%, 75%);
     background-color: hsla(0, 0%, 100%, 0.75);
     font-weight: 500;
+  }
+
+  /* td width classes */
+  td.minWidth {
+    /* For some reason if you set to some fixed width it won't actually go below min-content*?? */
+    width: 1rem; /* min-content; */
+  }
+  td.readable {
+    max-width: 24rem;
   }
 
   tr:hover {

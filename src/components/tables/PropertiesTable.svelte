@@ -202,6 +202,7 @@
 
   table {
     border-collapse: collapse;
-    width: 100%;
+    width: max-content;
+    table-layout: fixed;
   }
 </style>
