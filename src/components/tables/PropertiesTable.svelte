@@ -46,24 +46,13 @@
       visible: true,
     },
     {
-      key: "surfaceArea",
-      label: "Površina",
-      visible: true,
-    },
-    {
       key: "price",
       label: "Cijena",
       visible: true,
     },
     {
-      key: "websiteUrl",
-      label: "Web URL",
-      visible: true,
-      copyable: true,
-    },
-    {
-      key: "hiddenOnWebsite",
-      label: "Vidljivost",
+      key: "surfaceArea",
+      label: "Površina",
       visible: true,
     },
     {
@@ -82,6 +71,11 @@
       visible: true,
     },
     {
+      key: "hiddenOnWebsite",
+      label: "Vidljivost",
+      visible: true,
+    },
+    {
       key: "ownerId",
       label: "Vlasnik",
       visible: true,
@@ -92,13 +86,19 @@
       visible: true,
     },
     {
-      key: "status",
-      label: "Status",
+      key: "agent_id",
+      label: "Agent",
       visible: true,
     },
     {
-      key: "agent_id",
-      label: "Agent",
+      key: "websiteUrl",
+      label: "Web URL",
+      visible: true,
+      copyable: true,
+    },
+    {
+      key: "status",
+      label: "Status",
       visible: true,
     },
     {
