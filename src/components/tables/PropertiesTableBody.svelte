@@ -132,7 +132,7 @@
           {:else if ["created", "updated"].includes(column as string)}
             {parseDate(property[column])}
           {:else if ["propertyNotes", "sellerNotes"].includes(column as string)}
-            {trimText(property[column], 100)}
+            {trimText(property[column], 200)}
           {:else if column === "type"}
             {parsePropertyType(property[column])}
           {:else if column === "action"}
@@ -173,7 +173,7 @@
   td {
     /* border: 1px solid hsl(0, 0%, 90%); */
     border-bottom: 1px solid hsl(0, 0%, 90%);
-    padding: 0.75rem 1.5rem;
+    padding: 0.75rem 1rem;
     font-size: 0.875rem;
     text-align: left;
 

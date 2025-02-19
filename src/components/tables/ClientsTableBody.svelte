@@ -160,7 +160,7 @@
   td {
     /* border: 1px solid hsl(0, 0%, 90%); */
     border-bottom: 1px solid hsl(0, 0%, 90%);
-    padding: 0.75rem 1.5rem;
+    padding: 0.75rem 1rem;
     font-size: 0.875rem;
     text-align: left;
 
