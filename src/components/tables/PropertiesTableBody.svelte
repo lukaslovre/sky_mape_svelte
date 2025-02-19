@@ -13,6 +13,7 @@
     parsePropertyStatus,
     parsePropertyType,
   } from "../../lib/utils/properties";
+  import { filtersStore } from "../../lib/stores/filtersStore.svelte";
 
   interface Props {
     selectedPropertyIds?: Property["id"][];
@@ -101,7 +102,7 @@
 <!-- Table Body -->
 <tbody>
   {#each data as property (property.id)}
-    <tr class:favorited={dataStore.favoriteProperties.includes(property.id)}>
+    <tr class:favorited={filtersStore.isFavoriteProperty(property.id)}>
       <!-- Checkbox Cell. First Column -->
       <td>
         <Checkbox

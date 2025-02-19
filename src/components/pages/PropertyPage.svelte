@@ -8,6 +8,7 @@
   import { deleteProperty } from "../../lib/models/Properties";
   import PropertiesTable from "../tables/PropertiesTable.svelte";
   import { uiStateStore } from "../../lib/stores/uiStateStore.svelte";
+  import { filtersStore } from "../../lib/stores/filtersStore.svelte";
 
   // Property sorting
   const sortOptions: (keyof Property)[] = [
@@ -133,16 +134,16 @@
     // If all are already in favoriteProperties -> remove all from favoriteProperties
 
     const newState: boolean = dataStore.selectedPropertyIds.some(
-      (id) => !dataStore.favoriteProperties.includes(id)
+      (id) => !filtersStore.isFavoriteProperty(id)
     );
 
     if (newState) {
       dataStore.selectedPropertyIds.forEach((id) => {
-        dataStore.addPropertyToFavorites(id);
+        filtersStore.addFavoriteProperty(id);
       });
     } else {
       dataStore.selectedPropertyIds.forEach((id) => {
-        dataStore.removePropertyFromFavorites(id);
+        filtersStore.removeFavoriteProperty(id); // Changed to use the correct method for removing
       });
     }
   }

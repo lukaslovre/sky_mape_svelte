@@ -10,23 +10,21 @@
   import {
     propertyActionDropdownOptions,
     propertyStatusDropdownOptions,
-    propertyTypeDropdownOptions,
   } from "../../lib/utils/properties";
   import FiltersBelongingToUser from "./FiltersBelongingToUser.svelte";
   import SegmentedButton from "../common/SegmentedButton.svelte";
-  import HomeCircle from "../../assets/icons/mapMarkerCircles/HouseCircle.svelte";
+  import HouseCircle from "../../assets/icons/mapMarkerCircles/HouseCircle.svelte";
   import ApartmentCircle from "../../assets/icons/mapMarkerCircles/ApartmentCircle.svelte";
   import CommercialCircle from "../../assets/icons/mapMarkerCircles/CommercialCircle.svelte";
   import LandCircle from "../../assets/icons/mapMarkerCircles/LandCircle.svelte";
   import type { Component } from "svelte";
-  import HouseCircle from "../../assets/icons/mapMarkerCircles/HouseCircle.svelte";
 
   $inspect(filtersStore.filters);
 
   let activeFiltersCount = $derived(
     Object.keys(filtersStore.removeEmptyFilterFields()).length
   );
-  let activeFavoritesCount = $derived(dataStore.favoriteProperties.length);
+  let activeFavoritesCount = $derived(filtersStore.favoriteProperties.length);
 
   type InputType =
     | {
@@ -120,11 +118,8 @@
   }
 
   function emptyFavoriteProperties() {
-    dataStore.resetFavoriteProperties();
+    filtersStore.resetFavoriteProperties();
   }
-
-  // temp
-  let selectedSegmentedValues: string[] = $state([]);
 </script>
 
 <div class="filters-container" class:highlight={uiStateStore.highlightFiltersContainer}>

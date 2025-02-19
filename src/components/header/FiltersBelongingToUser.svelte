@@ -36,17 +36,17 @@
     !filterDiferences || Object.keys(filterDiferences).length === 0
   );
 
-  function handleUpdateFiltersClick() {
+  async function handleUpdateFiltersClick() {
     if (!user) return;
 
     const partialUserObject: Pick<Client, "filters" | "favoriteProperties" | "id"> = {
       id: user.id,
       filters: filtersStore.filters,
-      favoriteProperties: user.favoriteProperties,
+      favoriteProperties: filtersStore.favoriteProperties,
     };
 
     try {
-      createUser(partialUserObject);
+      await createUser(partialUserObject);
       userUpdateResponseSuccess = 1;
     } catch (error) {
       console.error(error);

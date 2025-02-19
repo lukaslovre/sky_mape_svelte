@@ -1,73 +1,12 @@
-import { LatLng } from "leaflet";
 import type { Property, Client } from "../../types";
-import { latLngIsInPolygon } from "./geo";
 import type { Filter } from "../stores/filtersStore.svelte";
+import { LatLng } from "leaflet";
+import { latLngIsInPolygon } from "./geo";
 
 // TODO: napravit lijepo typescript da kad se promjeni u filters nešto da mi svugdje kaže gdje treba promjeniti
-// TODO: Ova cijela datoteka vidjet di se još koristi
-
-export function emptyFiltersObject(): Filter {
-  return {
-    action: [],
-    type: [],
-    minPrice: 0,
-    maxPrice: 0,
-    minArea: 0,
-    maxArea: 0,
-    visibility: [],
-    status: [],
-    agentIds: [],
-    polygons: [],
-  };
-}
-
-function parseNumber(value: unknown, defaultValue: number): number {
-  if (typeof value === "number") return value || defaultValue;
-  if (typeof value === "string") {
-    const parsedValue = parseFloat(value);
-    return isNaN(parsedValue) ? defaultValue : parsedValue;
-  }
-  return defaultValue;
-}
-
-export function parseFilterValues(filters: Partial<Filter>): Filter {
-  return {
-    action: filters.action || [],
-    type: filters.type || [],
-    minPrice: parseNumber(filters.minPrice, 0),
-    maxPrice: parseNumber(filters.maxPrice, Infinity),
-    minArea: parseNumber(filters.minArea, 0),
-    maxArea: parseNumber(filters.maxArea, Infinity),
-    visibility: filters.visibility || [],
-    status: filters.status || [],
-    agentIds: filters.agentIds || [],
-    polygons: filters.polygons || [],
-  };
-}
-
-export function filtersIsEmpty(filters: Filter): boolean {
-  const parsedFilters = parseFilterValues(filters);
-
-  return (
-    parsedFilters.action.length === 0 &&
-    parsedFilters.type.length === 0 &&
-    parsedFilters.minArea === 0 &&
-    parsedFilters.maxArea === Infinity &&
-    parsedFilters.minPrice === 0 &&
-    parsedFilters.maxPrice === Infinity &&
-    parsedFilters.visibility.length === 0 &&
-    parsedFilters.status.length === 0 &&
-    parsedFilters.agentIds.length === 0 &&
-    parsedFilters.polygons.length === 0
-  );
-}
 
 // TODO: Check more detailed this function after refactor
 export function propertyMatchesFilter(property: Property, filters: Filter): boolean {
-  // const parsedFilters = parseFilterValues(filters);
-  // console.log("Parsed filters:", parsedFilters);
-  // console.log("Property:", property);
-
   const {
     action,
     type,
@@ -134,27 +73,6 @@ export function propertyMatchesFilter(property: Property, filters: Filter): bool
 
   // console.log("Property passed all filters");
   return true;
-}
-
-export function removeEmptyValuesFromFilters(filters: Filter) {
-  console.log("Filters before removing empty values:", filters);
-
-  const filteredFilters = Object.fromEntries(
-    Object.entries(filters).filter(([key, value]) => {
-      if (value) {
-        if (Array.isArray(value)) {
-          return value.length > 0;
-        } else if (value === Infinity) {
-          return false;
-        }
-        return true;
-      }
-      return false;
-    })
-  );
-
-  console.log("Filters after removing empty values:", filteredFilters);
-  return filteredFilters;
 }
 
 // Imam: usere i filtrirane propertye

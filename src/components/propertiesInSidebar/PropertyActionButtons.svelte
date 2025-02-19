@@ -1,9 +1,8 @@
 <script lang="ts">
+  import type { Property } from "../../types";
   import InternetIcon from "../../assets/icons/InternetIcon.svelte";
   import StarIcon from "../../assets/icons/StarIcon.svelte";
-
-  import { dataStore } from "../../lib/stores/store.svelte";
-  import type { Property } from "../../types";
+  import { filtersStore } from "../../lib/stores/filtersStore.svelte";
 
   interface Props {
     property: Property;
@@ -11,14 +10,13 @@
 
   let { property }: Props = $props();
 
-  // Temporary for development
-  let isFavorite = $derived(dataStore.favoriteProperties.includes(property.id));
+  let isFavorite = $derived(filtersStore.isFavoriteProperty(property.id));
 
   function handleFavoriteClick() {
     if (isFavorite) {
-      dataStore.removePropertyFromFavorites(property.id);
+      filtersStore.removeFavoriteProperty(property.id);
     } else {
-      dataStore.addPropertyToFavorites(property.id);
+      filtersStore.addFavoriteProperty(property.id);
     }
   }
   function handleWebsiteClick() {

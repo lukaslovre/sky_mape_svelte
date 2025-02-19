@@ -7,6 +7,7 @@
   import PropertyCard from "../properties/PropertyCard.svelte";
   import { getIconForProperty } from "../../lib/utils/propertyIcons";
   import { toggleSelectedProperty } from "../../lib/stores/actions";
+  import { filtersStore } from "../../lib/stores/filtersStore.svelte";
 
   interface Props {
     property: Property;
@@ -33,7 +34,7 @@
           ...markerOptions,
           iconUrl: getIconForProperty(
             property,
-            dataStore.favoriteProperties.includes(property.id),
+            filtersStore.isFavoriteProperty(property.id),
             dataStore.selectedPropertyIds.includes(property.id)
           ),
         })
@@ -41,7 +42,7 @@
     }
   });
 
-  //   If this marker/property becomes focused programatically open popup
+  // If this marker/property becomes focused programmatically open popup
   $effect(() => {
     if (markerInstance) {
       if (dataStore.focusedPropertyId === property.id) {

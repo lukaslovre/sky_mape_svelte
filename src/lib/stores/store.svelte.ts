@@ -27,8 +27,6 @@ class DataStore {
   selectedOwnerIds = $state<Client["id"][]>([]);
   focusedPropertyId = $state<Property["id"] | null>(null);
 
-  favoriteProperties = $state<Property["id"][]>([]);
-
   isDrawing = $state<boolean>(false);
   propertySortKey = $state<keyof Property>("updated");
 
@@ -126,25 +124,6 @@ class DataStore {
     } else {
       this.focusedPropertyId = null;
     }
-  }
-
-  addPropertyToFavorites(propertyId: Property["id"]) {
-    // Check if the propertyId is valid (exists in the properties array)
-    const property = this.properties.find((property) => property.id === propertyId);
-    if (!property) return;
-
-    // Check if the property is already in the favorites
-    if (this.favoriteProperties.includes(propertyId)) return;
-
-    this.favoriteProperties.push(propertyId);
-  }
-
-  removePropertyFromFavorites(propertyId: Property["id"]) {
-    this.favoriteProperties = this.favoriteProperties.filter((id) => id !== propertyId);
-  }
-
-  resetFavoriteProperties() {
-    this.favoriteProperties = [];
   }
 }
 

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { filtersStore } from "../../lib/stores/filtersStore.svelte";
   import { dataStore } from "../../lib/stores/store.svelte";
   import PropertyRow from "../properties/propertyRow/PropertyRow.svelte";
 </script>
@@ -9,7 +10,7 @@
     <!-- <span class="icon">?</span> -->
   </div>
   <div class="values-container">
-    {#each dataStore.getPropertiesByIds(dataStore.favoriteProperties) as property (property.id)}
+    {#each dataStore.getPropertiesByIds(filtersStore.favoriteProperties) as property (property.id)}
       <PropertyRow {property} />
     {/each}
   </div>

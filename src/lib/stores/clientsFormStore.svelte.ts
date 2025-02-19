@@ -169,7 +169,7 @@ class ClientFormStore {
 
     // Add filters and favorited properties
     formattedData.filters = filtersStore.filters;
-    formattedData.favoriteProperties = dataStore.favoriteProperties;
+    formattedData.favoriteProperties = filtersStore.favoriteProperties;
 
     return formattedData;
   };
@@ -212,7 +212,6 @@ class ClientFormStore {
 
     // Set filters and favorite properties
     filtersStore.loadFiltersFromClient(client);
-    dataStore.favoriteProperties = [...client.favoriteProperties];
   };
 }
 

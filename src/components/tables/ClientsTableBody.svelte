@@ -92,11 +92,6 @@
   const handleApplyFilters = (user: Client) => {
     dataStore.selectedClientIds = [user.id];
     filtersStore.loadFiltersFromClient(user);
-
-    dataStore.resetFavoriteProperties();
-    user.favoriteProperties.forEach((propertyId) => {
-      dataStore.addPropertyToFavorites(propertyId);
-    });
   };
 </script>
 

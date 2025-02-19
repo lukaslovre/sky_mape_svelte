@@ -1,16 +1,8 @@
 import { z } from "zod";
-import type { Client } from "../../types";
+import type { Client, Property } from "../../types";
+import { dataStore } from "./store.svelte";
 
 export const FiltersSchema = z.object({
-  maxArea: z.coerce.number(),
-  minArea: z.coerce.number(),
-  maxPrice: z.coerce.number(),
-  minPrice: z.coerce.number(),
-  type: z.array(z.enum(["Apartment", "House", "Land", "Commercial"])),
-  action: z.array(z.enum(["Rent", "Sale"])),
-  visibility: z.array(z.enum(["Visible", "Hidden"])),
-  status: z.array(z.enum(["available", "processing", "sold"])),
-  agentIds: z.array(z.string()),
   polygons: z.array(
     z.array(
       z.object({
@@ -19,40 +11,57 @@ export const FiltersSchema = z.object({
       })
     )
   ),
+  type: z.array(z.enum(["Apartment", "House", "Land", "Commercial"])),
+  action: z.array(z.enum(["Rent", "Sale"])),
+  maxPrice: z.coerce.number(),
+  minPrice: z.coerce.number(),
+  maxArea: z.coerce.number(),
+  minArea: z.coerce.number(),
+  visibility: z.array(z.enum(["Visible", "Hidden"])),
+  status: z.array(z.enum(["available", "processing", "sold"])),
+  agentIds: z.array(z.string()),
 });
 
 export const FiltersSchemaWithDefaults = FiltersSchema.partial().transform((data) => ({
-  ...emptyFilters,
+  ...getEmptyFilters(),
   ...data,
 }));
+
+const FavoritePropertiesSchema = z.array(z.string());
 
 export type Filter = z.infer<typeof FiltersSchema>;
 export type FilterDifferences = Record<keyof Filter, { removed: any[]; added: any[] }>;
 
-// TODO: maybe make this a function that returns a new object
-const emptyFilters: Filter = {
-  maxArea: 0,
-  minArea: 0,
-  maxPrice: 0,
-  minPrice: 0,
-  type: [],
-  action: [],
-  visibility: [],
-  status: [],
-  agentIds: [],
-  polygons: [],
-};
+function getEmptyFilters(): Filter {
+  return {
+    polygons: [],
+    type: [],
+    action: [],
+    maxPrice: 0,
+    minPrice: 0,
+    maxArea: 0,
+    minArea: 0,
+    visibility: [],
+    status: [],
+    agentIds: [],
+  };
+}
 
 class FiltersStore {
-  filters = $state<Filter>(emptyFilters);
+  filters = $state<Filter>(getEmptyFilters());
+  favoriteProperties = $state<Property["id"][]>([]);
   belongsToClientId = $state<Client["id"] | undefined>();
 
   ////////
   // General methods
   ////////
 
-  resetFilters = () => {
-    this.filters = emptyFilters;
+  resetFilters = (
+    additional: { favorites?: boolean; belongsToClient?: boolean } = {}
+  ) => {
+    this.filters = getEmptyFilters();
+    if (additional.favorites) this.resetFavoriteProperties();
+    if (additional.belongsToClient) this.belongsToClientId = undefined;
   };
 
   setField = (field: keyof Filter, newValue: any) => {
@@ -66,9 +75,7 @@ class FiltersStore {
     }
   };
 
-  removeEmptyFilterFields: (data?: Filter) => Partial<Filter> = (data) => {
-    // The values are either number or array, so we have to check for falsy values and empty arrays
-
+  removeEmptyFilterFields = (data?: Filter): Partial<Filter> => {
     const targetData = data || this.filters; // It can use either the internal state or an external object
 
     const nonEmptyFields = Object.entries(targetData).filter(
@@ -78,25 +85,31 @@ class FiltersStore {
     return Object.fromEntries(nonEmptyFields);
   };
 
-  isEmpty = () => {
-    return Object.keys(this.removeEmptyFilterFields()).length === 0;
+  isEmpty = (data?: Filter): boolean => {
+    const targetData = data || this.filters; // It can use either the internal state or an external object
+
+    return Object.keys(this.removeEmptyFilterFields(targetData)).length === 0;
   };
 
   loadFiltersFromClient = (client: Client) => {
-    const zodResult = FiltersSchema.safeParse(client.filters);
+    const zodResult = FiltersSchemaWithDefaults.safeParse(client.filters);
+    const favoritePropertiesResult = FavoritePropertiesSchema.safeParse(
+      client.favoriteProperties
+    );
     console.log(zodResult);
-    if (zodResult.success) {
+
+    if (zodResult.success && favoritePropertiesResult.success) {
       this.filters = zodResult.data;
       this.belongsToClientId = client.id;
+      this.favoriteProperties = favoritePropertiesResult.data;
     } else {
       console.log(zodResult.error);
+      console.log(favoritePropertiesResult.error);
     }
   };
 
   // A method to get the differences between two filters. Like a diff method.
-  // It should return an object with the differences between the two filters, where the key is the field name and the value is an array with the differences in the form of {removed: [], added: []}
-  // The method should be able to compare two filters and return the differences between them
-
+  // Returns an object with the differences between two filters, where key is field name and value is {removed: [], added: []}
   getFilterDifferences = (
     baselineFilter: Filter,
     newFilter: Filter
@@ -164,6 +177,30 @@ class FiltersStore {
     this.filters.polygons = this.filters.polygons.filter(
       (currentPolygon) => currentPolygon !== polygon
     );
+  };
+
+  ////////
+  // Favorite properties methods
+  ////////
+  addFavoriteProperty = (propertyId: Property["id"]) => {
+    const property: Property[] = dataStore.getPropertiesByIds([propertyId]);
+    if (property.length === 0) return;
+
+    if (this.favoriteProperties.includes(propertyId)) return;
+
+    this.favoriteProperties.push(propertyId);
+  };
+
+  removeFavoriteProperty = (propertyId: Property["id"]) => {
+    this.favoriteProperties = this.favoriteProperties.filter((id) => id !== propertyId);
+  };
+
+  resetFavoriteProperties = () => {
+    this.favoriteProperties = [];
+  };
+
+  isFavoriteProperty = (propertyId: Property["id"]): boolean => {
+    return this.favoriteProperties.includes(propertyId);
   };
 }
 

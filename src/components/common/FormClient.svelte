@@ -42,7 +42,7 @@
       setTimeout(() => {
         close();
         clientFormStore.resetForm();
-        filtersStore.resetFilters();
+        filtersStore.resetFilters({ belongsToClient: true, favorites: true });
       }, 2000);
     }
   }}
