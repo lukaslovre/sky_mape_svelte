@@ -30,7 +30,10 @@ export const FiltersSchemaWithDefaults = FiltersSchema.partial().transform((data
 const FavoritePropertiesSchema = z.array(z.string());
 
 export type Filter = z.infer<typeof FiltersSchema>;
-export type FilterDifferences = Record<keyof Filter, { removed: any[]; added: any[] }>;
+export type FilterDifferences = Record<
+  keyof Filter | "favoriteProperties",
+  { removed: any[]; added: any[] }
+>;
 
 function getEmptyFilters(): Filter {
   return {
@@ -85,10 +88,16 @@ class FiltersStore {
     return Object.fromEntries(nonEmptyFields);
   };
 
-  isEmpty = (data?: Filter): boolean => {
+  isEmpty = (data?: Filter, includeFavorites?: boolean): boolean => {
     const targetData = data || this.filters; // It can use either the internal state or an external object
 
-    return Object.keys(this.removeEmptyFilterFields(targetData)).length === 0;
+    const onlyFiltersAreEmpty =
+      Object.keys(this.removeEmptyFilterFields(targetData)).length === 0;
+
+    const favoritesAreEmpty = includeFavorites
+      ? this.favoriteProperties.length === 0
+      : true;
+    return onlyFiltersAreEmpty && favoritesAreEmpty;
   };
 
   loadFiltersFromClient = (client: Client) => {
@@ -112,7 +121,9 @@ class FiltersStore {
   // Returns an object with the differences between two filters, where key is field name and value is {removed: [], added: []}
   getFilterDifferences = (
     baselineFilter: Filter,
-    newFilter: Filter
+    baselineFavoriteProperties: Property["id"][],
+    newFilter: Filter,
+    newFavoriteProperties: Property["id"][]
   ): FilterDifferences => {
     const differences = {} as FilterDifferences;
 
@@ -160,6 +171,15 @@ class FiltersStore {
           };
         }
       }
+    }
+
+    // Favorite properties diff
+    const favoriteDiff = arrayDifference(
+      baselineFavoriteProperties,
+      newFavoriteProperties
+    );
+    if (favoriteDiff.removed.length > 0 || favoriteDiff.added.length > 0) {
+      differences.favoriteProperties = favoriteDiff;
     }
 
     return differences;

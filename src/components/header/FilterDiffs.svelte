@@ -17,7 +17,7 @@
         <p>{key}:</p>
 
         {#if value.removed.length > 0}
-          {#if key === "polygons"}
+          {#if ["polygons", "favoriteProperties"].includes(key)}
             <p class="removed">{value.removed.length} removed</p>
           {:else}
             <p class="removed">{value.removed.join(", ")}</p>
@@ -25,7 +25,7 @@
         {/if}
 
         {#if value.added.length > 0}
-          {#if key === "polygons"}
+          {#if ["polygons", "favoriteProperties"].includes(key)}
             <p class="added">{value.added.length} new</p>
           {:else}
             <p class="added">{value.added.join(", ")}</p>

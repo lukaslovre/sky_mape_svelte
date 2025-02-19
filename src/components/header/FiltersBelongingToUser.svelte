@@ -13,6 +13,8 @@
     user: Client | undefined;
   }
 
+  // Context for Copilot: incorporating favoriteProperties into the diff process
+
   let { user }: Props = $props();
 
   let userUpdateResponseSuccess: number = $state(0); // -1 for error, 0 default, 1 for success
@@ -22,19 +24,6 @@
     uiStateStore.activeTab = "Buyers";
     uiStateStore.clientFormVisible = true;
   }
-
-  function handleXClick() {
-    filtersStore.belongsToClientId = undefined;
-  }
-
-  let filterDiferences = $derived(
-    user?.filters && filtersStore.getFilterDifferences(user.filters, filtersStore.filters)
-  );
-  $inspect(filterDiferences);
-
-  let noDifference = $derived(
-    !filterDiferences || Object.keys(filterDiferences).length === 0
-  );
 
   async function handleUpdateFiltersClick() {
     if (!user) return;
@@ -57,6 +46,28 @@
       userUpdateResponseSuccess = 0;
     }, 2000);
   }
+
+  function handleXClick() {
+    filtersStore.belongsToClientId = undefined;
+  }
+
+  let filterDifferences = $derived.by(() => {
+    if (!user) return;
+
+    return (
+      user.filters &&
+      filtersStore.getFilterDifferences(
+        user.filters,
+        user.favoriteProperties,
+        filtersStore.filters,
+        filtersStore.favoriteProperties
+      )
+    );
+  });
+
+  let noDifference = $derived(
+    !filterDifferences || Object.keys(filterDifferences).length === 0
+  );
 </script>
 
 <!-- 
@@ -87,7 +98,7 @@ SPECIFICATION:
       </button>
 
       <div class="hover-filter-diffs">
-        <FilterDiffs filterDiffs={filterDiferences} />
+        <FilterDiffs filterDiffs={filterDifferences} />
       </div>
 
       <button onclick={handleXClick} title="Unselect user">
@@ -99,7 +110,7 @@ SPECIFICATION:
   <button
     class="no-user-selected"
     onclick={handleAddUserClick}
-    disabled={filtersStore.isEmpty()}
+    disabled={filtersStore.isEmpty(undefined, true)}
   >
     <SaveIcon color="hsl(0, 0%, 20%)" />
     Spremi filtere
