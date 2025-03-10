@@ -97,7 +97,8 @@
     />
   </div>
 
-  <Thumbnail imageUrl={property.imgUrl[0] || defaultImageUrl} />
+  <!-- accept all images -->
+  <Thumbnail imageUrls={property.imgUrl.length ? property.imgUrl : [defaultImageUrl]} />
 
   <!-- type and visibility (using color) -->
   <div class="coloredStripe">
